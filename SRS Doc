@@ -40,14 +40,24 @@ In addition:
 - "Listeners" will refer to a user that listens to the DJs. This is the standard user in our application. 
 - "DJs" will refer to a user that is offering their music services to the listeners.
 
-# **2. Overall Description**
----
-## **2.1 User Needs**
---- 
-Type Stuff Here
-## **2.2 Assumptions and Dependencies**
---- 
-Type Stuff Here
+2. Overall Description
+2.1 User Needs
+Verge attempts to solve four core user problems:
+Listeners cannot follow and connect with their favorite DJs on a single platform that will also let them know when the DJ has dropped a new mix or are live at an in-person event. 
+Simultaneously, it is difficult for new and upcoming DJs to expand their marketability and increase their listening audience. While having the ability to grow - DJs will still be able to be in control of their mix choices. 
+Currently, it is difficult for listeners to request songs at live events - you have to yell over loud crowds, be turned down with requesting music, make your way to the DJ in a sea of people, and so many more unfortunate situations.
+ While Spotify allows you to share playlists with others if the playlist is locked - the person it is shared with will not be able to add any music. There is no way around this other than making the said friend a contributor on the main user's end. We have worked around this with a passcode option. With the passcode shared with friends in a private playlist, they can add music and contribute to it. 
+Our targeted users need an app that is more than watching a DJ live stream and more than listening to famous DJ's pre-recorded songs on a playlist. There are other ways to hear DJs mixes (Spotify, Twitch), but they do not offer a connection between DJs and their Listeners seamlessly. 
+2.2 Assumptions and Dependencies
+This app makes 3 major assumptions:
+As covid restrictions are easing up, demand for DJs at live events is increasing. 
+Back-to-back DJing is becoming increasingly popular as more DJs enter the industry.  To avoid overcrowding in festivals, organizers would pair DJs together.
+Many users wish the DJ would play their favorite song, but they either don't have the opportunity to speak with the DJ or are too shy to request a song in person.
+Other major dependencies:
+Our intent is to launch the app in the App Store and Google Play Store, which means that we have a hard dependency on Google and Apple's willingness to host our product. We do not anticipate this being a serious concern.
+Spotify’s API is a key component of our project. If Spotify is not working, our app will not function properly.
+There are countless tools at the disposal of a modern DJ. There are so many plugins and VST’s available that our app must offer unique functionality to make it desirable to our user base.
+
 # **3. System Features and Requirements**
 ---
 ## **3.1 Functional Requirements**
