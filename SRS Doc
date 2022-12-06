@@ -146,10 +146,15 @@ Acceptance criteria:
 
 ## **3.2 External Interface Requirements**
 --- 
-Type Stuff Here
+See our Figma file here: https://www.figma.com/file/WU8gp8hLu8ApWYinHcOOta/Capstone-Project---Verge?node-id=203%3A1142&t=BJPjE1xq3qH9e2ga-1
+
 ## **3.3 System Requirements**
 --- 
-Type Stuff Here
+1. Verge requires location services enabled for a DJ to share their location
+2. Every functionality of Verge will require an internet connection, preferably 4G, wifi, or stronger.
+3. Apps like Spotify have most of their data stored on the back end, so we estimate that our app will similarly occupy about 75-100MB of space on the user's device.
+
 ## **3.4 Nonfunctional Requirements**
 ---
-Type Stuff Here
+1. The Layout of Verge should feel natural and intuitive for the listener. They should not have to work hard to figure out how to add a song to their DJ’s set.
+2. Certain sections of Verge should reflect real-life DJ culture and tools. Someone who has never used the app should be able to take one look at the homepage and know that Verge is music-centric.
