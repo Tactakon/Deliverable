@@ -26,17 +26,12 @@
 | Add a search bar for song requests | Kirstyn Fagnani | P1 | 3 | Being able to search the song the listener wants to add|
 | In song requests, ability to verify songs genre matches the DJs set genre for mix | John Bergen | P1 | 5 | If, else loop. If it matches and meets the criteria - yes. If not - no. |
 | Ability to suggest songs | Derrick Hood | P3 | 8 | When the listener wants to queue a song, suggestions that match the genre will be shown. It might take some extra time to research. |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
-| (insert task) | (insert name) | (insert number) | (insert days) | (insert notes) |
+| Design UI for DJs POV | Kirstyn Fagnani | P2 | 8 | Live location, notifications of Listener requesting song, genre selection of mix, |
+| Implement location services | John Bergen | P2  | 3 | For the DJ and Listeners |
+| Set aside time to learn about algorithms/machine learning | Kinjal Rele | P2 | 6 | For DJ recommendations, For song recommendations when they need to be added to the playlist |
+| Implement Genre Selection | Derrick Hood | P1 | 3 | If the DJ wants to set a genre or not or allow the Listeners to queue songs. |
+| Implement notifications | Derrick Hood | P2 | 4 | First-time users - web app notifications, when their favorite DJs go live, invited to a playlist, etc. |
+| Create UI designs for implemented notifications | Kirstyn Fagnani | P3 | 5 | UI for the above |
+| Adding an AI chatbot | Kinjal Rele | P3 | 8 | Learn more about users and gather Data for better recommendations for listeners |
+| Integrating Voice search | John Bergen | P3 | 4 | To enhance accessibility and expand our Listeners' |
+
