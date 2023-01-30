@@ -6,7 +6,13 @@
     <body>
         
         <h1><u>Login</u> | Sign Up</h1>
-        <form>
+        {% block body %}
+        {% if session['logged_in'] %}
+        
+        You're logged in already!
+        
+        {% else %}
+        <form action="/login" method="POST">
           <!--<div class="logoimage">
             <img src="" alt="Verge Logo" class="Logo">
           </div> -->
@@ -30,6 +36,7 @@
           </label>
             <button type="submit">Login</button>
         </form>
-        
+        {% endif %}
+        {% endblock %}
         </body>
 </html>
