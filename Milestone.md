@@ -25,11 +25,14 @@
     - i.e., a playlist owner (Tom) has shared his playlist passcode with the listener (Jerry). Jerry enters the passcode for Tom’s playlist. Jerry requests to add a song. There is a notification pop-up on Tom’s end, and he is prompted to select to add this song or deny adding this song. 
     - This is different from MVP because the MVP will add the song with the passcode and the owner of the playlist will have to manually go back and remove it rather than being prompted by a popup box.
 - Search bar connected with a database finding a person’s playlist.
+- Implementing and Designing for MFA for new users and log-in.
+- Integrating social media for login and signup.
+- Ability to like and follow.
+- Add animations to buttons.
+- Genre selection/ filtering for playlists.
 
 ### **3. If you have extra time, what stretch features will you implement?** ###
-- Genre selection/ filtering for playlists.
 - Recommendations of DJs according to the listener's preferences.
-- Optional feature for passwcode. It’s optional have a passcode on the playlist.
 - Set up error states.
 - Add the ability to generate QR codes with the DJs link.
 - Location services.
@@ -37,12 +40,15 @@
 - AI Chatbot.
 - Voice Search.
 - In song requests, the ability to verify songs genre matches the set genre for a mix.
-- Genre Selections.
 - AI Song suggestions. 
+- Create a separate database for DJs (are you a listener or a DJ?) - would have to be a separate experience.
 
 ### **4. If you are behind schedule, what items on the roadmap will you de-prioritize?** ###
 - Implementing and Designing for MFA for new users and log-in.
-- Create a separate database for DJs (are you a listener or a DJ?) - would have to be a separate experience.
 - Integrating social media for login and signup.
 - Ability to like and follow.
+- Genre selection/ filtering for playlists.
 - Add animations to buttons.
+- Possible onboarding screen when first signing up / new user.
+
+
