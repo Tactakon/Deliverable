@@ -5,7 +5,7 @@
     </head>
     <body>
         
-        <h1><u>Login</u> | Sign Up</h1>
+        <h1><u>Login</u> | <a href="{{ url_for('signup') }}">Signup</a></h1>
         {% block body %}
         {% if session['logged_in'] %}
         
