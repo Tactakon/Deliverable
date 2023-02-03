@@ -28,5 +28,6 @@ header{
     padding: 12px 24px;
     font-size: 14px;
     border-radius: 10px;
-    margin-right: 144px;;
+    margin-right: 144px;
+    cursor: pointer;
     }
