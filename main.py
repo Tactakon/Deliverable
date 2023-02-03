@@ -10,7 +10,7 @@ def main():
     #if session.get('logged_in'):
         #header icon change
     #else:
-    return flask.render_template('login.html')
+    return flask.render_template('landingpage.html')
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
