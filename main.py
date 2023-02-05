@@ -10,7 +10,7 @@ def main():
     #if session.get('logged_in'):
         #header icon change
     #else:
-    return flask.render_template('landingpage.html')
+    return flask.render_template('login.html')
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -19,6 +19,7 @@ def signup():
 def login():
     if flask.request.form['psw'] == 'password' and flask.request.form['email'] == 'admin':
         session['logged_in'] = True
+        return flask.render_template('playlist.html')
     else:
         flask.flash('wrong password!')
         return login()
