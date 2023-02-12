@@ -21,14 +21,16 @@ class Users(db.Model):
     created_playlists = db.Column(db.String(1024))
     playlists_shared_with = db.Column(db.String(1024))
     followers = db.Column(db.String(1024))
+    playlists = db.relationsip("Playlists", back_populates="user")
 
 class Playlists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     password = db.Column(db.String(16))
     songs = db.Column(db.String(10000))
-    creator = db.Column(db.Integer(2))
+    creator = db.Column(db.Integer, db.ForeignKey('Users.id'))
     listeners_shared_to = db.Column(db.String(1024))
+    user = db.relationship("Users", back_populates="playlists")
 
 #landing page
 @app.route("/")
