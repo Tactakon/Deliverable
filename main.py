@@ -2,8 +2,36 @@ import flask
 import random
 import os
 from flask import Flask, flash, redirect, render_template, request, session, abort
+from flask_sqlalchemy import SQLAlchemy
 
 app = flask.Flask(__name__)
+
+#database boilerplate code
+app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + os.path.join(basedir, 'database.db')
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+#database models
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(256))
+    username = db.Column(db.String(16))
+    password = db.Column(db.String(16))
+    created_playlists = db.Column(db.String(1024))
+    playlists_shared_with = db.Column(db.String(1024))
+    followers = db.Column(db.String(1024))
+    playlists = db.relationsip("Playlists", back_populates="user")
+
+class Playlists(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+    password = db.Column(db.String(16))
+    songs = db.Column(db.String(10000))
+    creator = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    listeners_shared_to = db.Column(db.String(1024))
+    user = db.relationship("Users", back_populates="playlists")
+
 #landing page
 @app.route("/")
 def main():
