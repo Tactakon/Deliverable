@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="../static/createPlaylistPage.css">
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+        integrity="sha384-ajZ0XmMa8d6HPlDyG7nKSJlBdxn1fKs3U6Zf3TJvXG1xUceMkP5FFwVEva/SOQdJ" crossorigin="anonymous">
+
+    <div id="header1">
+        <h1> VERGE</h1>
+    </div>
+    <div id="header2">
+        <h2>Create your Playlist!</h2>
+    </div>
+
+    <script>
+        //To toggle the hide/show of the Playlist Passcode
+        function togglePasswordVisibility(inputId) {
+            var passwordInput = document.getElementById(inputId);
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                document.querySelector(".password-toggle-icon i").classList.remove("fas fa-eye");
+                document.querySelector(".password-toggle-icon i").classList.add("fas fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                document.querySelector(".password-toggle-icon i").classList.remove("fas fa-eye-slash");
+                document.querySelector(".password-toggle-icon i").classList.add("fas fa-eye");
+            }
+        }
+
+        //To view the image which the user uploads
+        var loadFile = function (event) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+        };
+    </script>
+
+</head>
+
+<body>
+    <div class="margins">
+        <form action="/create-playlist" method="POST" enctype="multipart/form-data">
+            <!--Name of the playlist-->
+            <div>
+                <label for="playlist-name">Playlist Name:</label>
+                <input type="text" id="playlist-name" name="playlist-name" required>
+            </div>
+            <br>
+
+            <!--Passcode of the playlist-->
+            <div>
+                <label for="playlist-passcode">Playlist Passcode:</label>
+                <input type="password" id="playlist-passcode" name="playlist-passcode" required>
+                <span class="password-toggle-icon" onclick="togglePasswordVisibility('password')">
+                    <i class='fas fa-eye-slash'></i>
+            </div>
+            <br>
+
+            <!--Icon for the playlist-->
+            <!--It lets the user upload an icon from their local computer--><!--not part of the MVP-->
+            <div>
+                <label for="playlist-image">Playlist Image:</label>
+                <input type="file" id="playlist-image" name="playlist-image" accept="image/*"
+                    onchange="loadFile(event)">
+                <p><img id="output" width="200" /></p>
+            </div>
+
+            <!--Submit-->
+            <button type="button" onclick="history.go(-1)">Cancel</button>
+            <button type="submit">Create Playlist</button>
+
+        </form>
+
+    </div>
+</body>
+
+</html>

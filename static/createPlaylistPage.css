@@ -1,0 +1,17 @@
+.margins {
+  margin-left: 140px;
+  margin-right: 140px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  display: flex;
+}
+#header1 {
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+}
+#header2 {
+    font-size: 20px;
+    font-weight: 800;
+    text-align: center;
+  }
