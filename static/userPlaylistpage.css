@@ -1,19 +1,20 @@
 .margins {
   margin-left: 140px;
   margin-right: 140px;
-  margin-top: -auto;
   margin-bottom: 50px;
   display: flex;
 }
+
 #header1 {
   font-size: 20px;
   font-weight: 800;
   text-align: center;
 }
-.pagecontents{
+
+.pagecontents {
   display: flex;
   height: 100%;
-  width:100%;
+  width: 100%;
 }
 
 /* 
@@ -36,20 +37,23 @@ The left container
   justify-content: center;
 
 }
+
 .empty-box-left {
   width: 100%;
-  height: 800px;  
+  height: 800px;
   max-height: 800px;
   display: flex;
   justify-content: space-between;
-  
+
 }
-.Most-Listened-To{
+
+.Most-Listened-To {
   justify-content: space-between;
   display: flex;
-  
+
 }
-.More-Most-Listened-To{
+
+.More-Most-Listened-To {
   background-color: transparent;
   color: black;
   padding: 10px 20px;
@@ -59,7 +63,8 @@ The left container
   text-decoration: none;
   cursor: pointer;
 }
-.left-img-box{
+
+.left-img-box {
   width: 30%;
   height: 100%;
   background-color: lightgrey;
@@ -88,34 +93,39 @@ Top Right Side
   display: flex;
   flex-direction: column;
   height: 100%;
-  
+
 }
+
 .empty-box-right {
-  width: 100%;  
+  width: 100%;
   height: 340px;
-  max-height: 390px; 
+  max-height: 390px;
   display: flex;
-  justify-content: space-between;  
+  justify-content: space-between;
 }
-.right-img-box{
+
+.right-img-box {
   width: 30%;
   height: 100%;
   background-color: lightgrey;
 }
+
 .top-right-container {
   background-color: light grey;
   padding: 19px 20px;
-  
+
   text-align: left;
   height: 40%;
   width: 100%;
   margin-bottom: 20px;
 }
-.Created-Mixes{
+
+.Created-Mixes {
   justify-content: space-between;
   display: flex;
 }
-.More-Created-Mixes{
+
+.More-Created-Mixes {
   background-color: transparent;
   color: black;
   padding: 10px 20px;
@@ -125,6 +135,7 @@ Top Right Side
   text-decoration: none;
   cursor: pointer;
 }
+
 .bottom-right-container {
   background-color: light grey;
   padding: 18px 20px;
@@ -132,11 +143,13 @@ Top Right Side
   height: 40%;
   width: 100%;
 }
-.Liked-Mixes{
+
+.Liked-Mixes {
   justify-content: space-between;
   display: flex;
 }
-.More-Liked-Mixes{
+
+.More-Liked-Mixes {
   background-color: transparent;
   color: black;
   padding: 10px 20px;
