@@ -3,18 +3,9 @@
 
 <head>
     <link rel="stylesheet" href="../static/createPlaylistPage.css">
-    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
-        integrity="sha384-ajZ0XmMa8d6HPlDyG7nKSJlBdxn1fKs3U6Zf3TJvXG1xUceMkP5FFwVEva/SOQdJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" integrity="sha384-ajZ0XmMa8d6HPlDyG7nKSJlBdxn1fKs3U6Zf3TJvXG1xUceMkP5FFwVEva/SOQdJ" crossorigin="anonymous">
 
-    <div id="header1">
-        <h1> VERGE</h1>
-    </div>
-    <div id="header2">
-        <h2>Create your Playlist!</h2>
-    </div>
-
-    <script>
+<script>
         //To toggle the hide/show of the Playlist Passcode
         function togglePasswordVisibility(inputId) {
             var passwordInput = document.getElementById(inputId);
@@ -35,10 +26,13 @@
             image.src = URL.createObjectURL(event.target.files[0]);
         };
     </script>
-
 </head>
 
 <body>
+    <iframe src="homeheader.html" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
+    <div id="header2">
+        <h2>Create your Playlist!</h2>
+    </div>
     <div class="margins">
         <form action="/create-playlist" method="POST" enctype="multipart/form-data">
             <!--Name of the playlist-->
