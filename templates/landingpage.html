@@ -4,7 +4,7 @@
 	<link rel="stylesheet" href="../static/landingpage.css">
 </head>
 <body>
-  <iframe src="landheader.html" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
+  <iframe name="header" src="{{ url_for('header')}}"  frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
 	<header>
 		<div class="margins">
 			<div class="header">
@@ -61,7 +61,7 @@
 		</div>
 	</div>
   <footer>
-    <iframe src="landfooter.html" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
+    <iframe src="{{ url_for('footer')}}" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
   </footer>
 </body>
 </html>
