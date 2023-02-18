@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="../static/login.css">
     </head>
     <body>
-        
+      <iframe src="landheader.html" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
         <h1><u>Login</u> | <a href="{{ url_for('signup') }}">Signup</a></h1>
         {% block body %}
         {% if session['logged_in'] %}
@@ -16,7 +16,6 @@
           <!--<div class="logoimage">
             <img src="" alt="Verge Logo" class="Logo">
           </div> -->
-        
           <div class="container">
             <label for="email"><b>Email</b></label>
             <br>
@@ -38,5 +37,6 @@
         </form>
         {% endif %}
         {% endblock %}
+        <iframe src="landfooter.html" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
         </body>
 </html>
