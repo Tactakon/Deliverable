@@ -1,17 +1,16 @@
 import flask
-import random
 import os
-from flask import Flask, flash, redirect, render_template, request, session, abort
+from flask import Flask, flash, redirect, render_template, request, session, abort, url_for
 import logging
+import requests
 
 from flask_sqlalchemy import SQLAlchemy
 
 app = flask.Flask(__name__)
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 #database boilerplate code
-current_dir = os.path.dirname(os.path.abspath(__file__)) #temporary for logging in without database info
-basedir = os.path.join(current_dir, "Verge")
-my_file_path = os.path.join(basedir, "data", "myfile.txt") 
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -33,9 +32,46 @@ class Playlists(db.Model):
     name = db.Column(db.String(64))
     password = db.Column(db.String(16))
     songs = db.Column(db.String(10000))
-    creator = db.Column(db.Integer, db.ForeignKey('Users.id'))
+    creator = db.Column(db.Integer, db.ForeignKey('users.id'))
     listeners_shared_to = db.Column(db.String(1024))
     user = db.relationship("Users", back_populates="playlists")
+
+
+with app.app_context():
+        db.create_all()
+
+#displaying the Users and Playlist model
+@app.route('/UsersAndPlaylist')
+def UsersAndPlaylist():
+    users = Users.query.all()
+    playlists = Playlists.query.all()
+    return render_template("UsersAndPlaylist.html", users=users, playlists=playlists)
+
+#adding values to Users table:
+@app.route('/add_user', methods=['POST'])
+def add_user():
+    add_email = flask.request.form.get('email')
+    add_username = flask.request.form.get('username')
+    add_password = flask.request.form.get('password')
+
+    new_user = Users(
+        email = add_email,
+        username = add_username,
+        password = add_password
+    )
+
+    db.session.add(new_user)
+    db.session.commit()
+    return redirect(url_for('UsersAndPlaylist'))
+
+#deleting values from Users table
+@app.route('/delete_user', methods=['POST'])
+def delete_user():
+    user_email = flask.request.form.get('user_email')
+    user = Users.query.filter_by(email=user_email).first()
+    db.session.delete(user)
+    db.session.commit()   
+    return redirect(url_for('UsersAndPlaylist'))
 
 #landing page
 @app.route("/")
