@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Users and Playlists</title>
+  </head>
+  <body>
+    <!--Users Model Display-->
+    <h1>Users</h1>
+
+    <!--Adding to Users -->
+    <form method="POST" action="/add_user">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br><br>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <button type="submit">Add User</button>
+    </form>
+
+    <br>
+
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Created Playlists</th>
+        <th>Playlists Shared With</th>
+        <th>Followers</th>
+      </tr>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.username }}</td>
+          <td>{{ user.password }}</td>
+          <td>{{ user.created_playlists }}</td>
+          <td>{{ user.playlists_shared_with }}</td>
+          <td>{{ user.followers }}</td>
+          <td><!--Deleting from Users -->
+            <form method="POST" action="{{ url_for('delete_user') }}">
+              <input type="hidden" name="user_email" value="{{ user.email }}">
+              <button type="submit">Delete</button>
+            </form>
+           </td>>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <br>
+    
+    <!--Playlist Model Display-->
+    <h1>Playlists</h1>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Password</th>
+        <th>Songs</th>
+        <th>Creator</th>
+        <th>Listeners Shared To</th>
+      </tr>
+      {% for playlist in playlists %}
+        <tr>
+          <td>{{ playlist.id }}</td>
+          <td>{{ playlist.name }}</td>
+          <td>{{ playlist.password }}</td>
+          <td>{{ playlist.songs }}</td>
+          <td>{{ playlist.creator }}</td>
+          <td>{{ playlist.listeners_shared_to }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>
