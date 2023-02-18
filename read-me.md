@@ -22,7 +22,10 @@
 ## Resources
 + [Reference for API endpoints](https://developer.spotify.com/documentation/web-api/reference/#/)
 + [Syntax for Web Playback SDK](https://developer.spotify.com/documentation/web-playback-sdk/reference/)
-+ [Python library to simplify API interaction](https://pypi.org/project/tekore/)
 + [Example projects with open source code](https://developer.spotify.com/community/showcase/open-source/)
+
+**Python Libraries**
++ [spotipy](https://github.com/spotipy-dev/spotipy)
++ [tekore](https://pypi.org/project/tekore/)
 
 
