@@ -2,24 +2,38 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title> Register </title>
         <link rel="stylesheet" href="../static/signup.html">             
     </head>
     <body>
+        <div align="left">
+          <div align="left" class="border">
       <iframe src="landheader.html" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
     </br></br></br></br></br>
         <div align="center">
           <div align="center" class="border">
              <div class="header">
-                <h1 class="word">Register</h1>
-             </div></br></br></br>
-            <h2 class="word">
+              <h1><a href="{{ url_for('login') }}">Login</a> | <u>Signup</u></h1>
+             </div>
                 <form action="/signup" method="POST">
-                  <div class="msg">{{ msg }}</div>
-                    <input id="username" name="username" type="text" placeholder="Enter Your Username" class="textbox"/></br></br>
-                    <input id="password" name="password" type="password" placeholder="Enter Your Password" class="textbox"/></br></br>
-                    <input id="email" name="email" type="text" placeholder="Enter Your Email ID" class="textbox"/></br></br>
-                    <input type="submit" class="btn" value="Sign Up"></br>
+                  <div class="container">
+                    <label for="name"><b>Name</b></label>
+                    <br>
+                    <input type="text" placeholder="First Name" name="name" required>
+                </div>
+                <div class="container">
+                    <label for="email"><b>Email</b></label>
+                    <br>
+                    <input type="password" placeholder="Email Address" name="email" required>
+                </div>
+                <div class="container">
+                  <label for="psw"><b>Password</b></label>
+                  <br>
+                  <input type="password" placeholder="Password" name="psw" required>
+              </div>
+                  <label>
+                    <input type="checkbox" checked="checked" name="t&pp"> I agree to the <a href="#">terms</a> and <a href="#">Privacy Policy</a>.
+                  </label>
+                    <button type="submit">Sign Up</button>
                 </form>
             </h2>
             <p class="bottom">Already have an account?  <a class="bottom" href="{{ url_for('login') }}"> Log In here</a></p>
