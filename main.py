@@ -3,6 +3,7 @@ import os
 from flask import Flask, flash, redirect, render_template, request, session, abort, url_for
 import logging
 import requests
+from search import search_song
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -112,6 +113,17 @@ def login():
 @app.route('/userpl')
 def userpl():
     return flask.render_template('userPlaylistpage.html')
+
+#playlistpage.html
+@app.route('/playlistpage')
+def playlist_page():
+    form_data = flask.request.args
+    query = form_data.get("song", "smooth operator")
+    results = search_song(query)
+    return flask.render_template(
+        'playlistpage.html',
+        results = results
+        )
 
 app.secret_key = os.urandom(12)
 app.run(debug=True)
