@@ -6,12 +6,21 @@
     <body>
       <iframe src="landheader.html" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
         <h1><u>Login</u> | <a href="{{ url_for('signup') }}">Signup</a></h1>
-        {% block body %}
+        <!-- {% block body %}
         {% if session['logged_in'] %}
         
         You're logged in already!
         
-        {% else %}
+        {% else %} -->
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="notification is-danger">
+          {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+
         <form action="/login" method="POST">
           <!--<div class="logoimage">
             <img src="" alt="Verge Logo" class="Logo">
@@ -22,12 +31,12 @@
             <input type="text" placeholder="Email Address" name="email" required>
         </div>
         <div class="container">
-            <label for="psw"><b>Password</b></label>
+            <label for="password"><b>Password</b></label>
             <br>
-            <input type="password" placeholder="Password" name="psw" required>
+            <input type="password" placeholder="Password" name="password" required>
         </div>
         <div class="container">
-            <span class="psw">Forgot <a href="#">password?</a></span>
+            <span class="password">Forgot <a href="#">Password?</a></span>
           </div>
 
           <label>

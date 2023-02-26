@@ -1,44 +1,57 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="../static/signup.html">             
-    </head>
-    <body>
-        <div align="left">
-          <div align="left" class="border">
-      <iframe src="landheader.html" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
-    </br></br></br></br></br>
-        <div align="center">
-          <div align="center" class="border">
-             <div class="header">
-              <h1><a href="{{ url_for('login') }}">Login</a> | <u>Signup</u></h1>
-             </div>
-                <form action="/signup" method="POST">
-                  <div class="container">
-                    <label for="name"><b>Name</b></label>
-                    <br>
-                    <input type="text" placeholder="First Name" name="name" required>
-                </div>
-                <div class="container">
-                    <label for="email"><b>Email</b></label>
-                    <br>
-                    <input type="password" placeholder="Email Address" name="email" required>
-                </div>
-                <div class="container">
-                  <label for="psw"><b>Password</b></label>
-                  <br>
-                  <input type="password" placeholder="Password" name="psw" required>
-              </div>
-                  <label>
-                    <input type="checkbox" checked="checked" name="t&pp"> I agree to the <a href="#">terms</a> and <a href="#">Privacy Policy</a>.
-                  </label>
-                    <button type="submit">Sign Up</button>
-                </form>
-            </h2>
-            <p class="bottom">Already have an account?  <a class="bottom" href="{{ url_for('login') }}"> Log In here</a></p>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../static/signup.css">
+</head>
+
+<body>
+  <div align="left">
+    <div align="left" class="border">
+      <iframe src="landheader.html" frameborder="0" scrolling="no" width="100%" height="100%"
+        style="margin-top: -6px; "></iframe>
+      </br></br></br></br></br>
+      <div align="center">
+        <div align="center" class="border">
+          <div class="header">
+            <h1><a href="{{ url_for('login') }}">Login</a> | <u>Signup</u></h1>
           </div>
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <div class="notification is-danger"> <!---herrrreee-->
+            {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
+          </div>
+          {% endif %}
+          {% endwith %}
+          <form action="/signup" method="POST">
+            <div class="container">
+              <label for="username"><b>Username</b></label>
+              <br>
+              <input type="text" placeholder="Username" name="username" required>
+            </div>
+            <div class="container">
+              <label for="email"><b>Email</b></label>
+              <br>
+              <input type="email" placeholder="Email Address" name="email" required>
+            </div>
+            <div class="container">
+              <label for="password"><b>Password</b></label>
+              <br>
+              <input type="password" placeholder="Password" name="password" required>
+            </div>
+            <label>
+              <input type="checkbox" checked="checked" name="t&pp"> I agree to the <a href="#">terms</a> and <a
+                href="#">Privacy Policy</a>.
+            </label>
+            <button type="submit">Sign Up</button>
+          </form>
+          </h2>
+          <p class="bottom">Already have an account? <a class="bottom" href="{{ url_for('login') }}"> Log In here</a>
+          </p>
         </div>
-        <iframe src="landfooter.html" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
-    </body>
+      </div>
+      <iframe src="landfooter.html" frameborder="0" scrolling="no" width="100%" height="304px;"></iframe>
+</body>
+
 </html>
