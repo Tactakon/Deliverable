@@ -115,14 +115,17 @@ def userpl():
     return flask.render_template('userPlaylistpage.html')
 
 #playlistpage.html
-@app.route('/playlistpage')
+@app.route('/playlistpage', methods=['POST', 'GET'])
 def playlist_page():
     form_data = flask.request.args
     query = form_data.get("song", "smooth operator")
     results = search_song(query)
+    (songResults, artistResults, songIDs) = results
     return flask.render_template(
         'playlistpage.html',
-        results = results
+        songResults = songResults,
+        artistResults = artistResults,
+        songIDs = songIDs
         )
 
 app.secret_key = os.urandom(12)

@@ -27,12 +27,17 @@
             </div>
           </form>
           <br>
-          <ol>    
+          <!-- can't figure out how make add button appear inline. see .results class -->
+          <ol class = "results">    
             {%for i in range(0,3)%}
-              <li>{{results[i]}}</li>
+              <li>{{songResults[i]}} by {{artistResults[i]}} 
+              <form method="POST" action="/">
+                <input type="hidden" name="songID" value="{{songIDs[i]}}"/>
+                <input type="submit" value="Add"/>
+              </form>
+              </li>
             {%endfor%}
-          </ol> 
-              <!--<span class="submitadd">Add</span>-->
+          </ol>
     </div>
     </div>
     <!-- Container2 is left side -->
@@ -155,6 +160,10 @@ body {
 }
 .add {
   margin-top: 100px;
+}
+.results {
+  white-space: nowrap;
+  display: inline-block;
 }
 .submitadd {
   margin-left: 140px;
