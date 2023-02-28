@@ -1,9 +1,14 @@
 import flask
 import os
+
 from flask import Flask, flash, redirect, render_template, request, session, abort, url_for
 import logging
 import requests
 from search import search_song
+
+from flask import Flask, flash, redirect, render_template, request, url_for
+from flask_login import login_required, current_user, login_user, UserMixin, LoginManager
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,14 +16,28 @@ app = flask.Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+# each user of the app need their secret key #in .env as SECRET_KEY
+# app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+# will be done in the later sprints
+
 #database boilerplate code
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + os.path.join(basedir, 'database.db')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
+# Flask-Login setup
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.init_app(app)
+
+#user loader
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(int(user_id))
+
 #database models
-class Users(db.Model):
+class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(256))
     username = db.Column(db.String(16))
@@ -27,6 +46,10 @@ class Users(db.Model):
     playlists_shared_with = db.Column(db.String(1024))
     followers = db.Column(db.String(1024))
     playlists = db.relationship("Playlists", back_populates="user")
+
+# define the get_id method for Flask-Login
+    def get_id(self):
+        return self.id
 
 class Playlists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -37,9 +60,8 @@ class Playlists(db.Model):
     listeners_shared_to = db.Column(db.String(1024))
     user = db.relationship("Users", back_populates="playlists")
 
-
 with app.app_context():
-        db.create_all()
+    db.create_all()
 
 #displaying the Users and Playlist model
 @app.route('/UsersAndPlaylist')
@@ -58,7 +80,7 @@ def add_user():
     new_user = Users(
         email = add_email,
         username = add_username,
-        password = add_password
+        password = generate_password_hash(add_password, method='sha256')
     )
 
     db.session.add(new_user)
@@ -96,23 +118,61 @@ def footer():
 #signup.html
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
-    return flask.render_template('signup.html')
+    if request.method == 'POST':
+        email = request.form.get('email')
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # if this returns a user, then the email already exists in database
+        user = Users.query.filter_by(email=email).first() 
+        if user:
+            flash('Email address already exists')
+            return flask.render_template('signup.html')
+    
+        #if the email address is not in the database
+        new_user = Users(
+            email = email,
+            username = username,
+            #hashing the password
+            password = generate_password_hash(password, method='sha256')
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        flash('Account created!')   
+        return redirect(url_for('login'))
+    
+    return render_template('signup.html')
+
 
 #login.html
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
-        if flask.request.form['psw'] == 'password' and flask.request.form['email'] == 'admin':
-            session['logged_in'] = True
-            return redirect('/userpl')
-        else:
-            flash('wrong password!')
-    return flask.render_template('login.html') 
+        email = request.form.get('email')
+        password = request.form.get('password')
+        remember = True if request.form.get('remember') else False
+
+        user = Users.query.filter_by(email=email).first()
+
+        # check if the user actually exists
+        # take the user-supplied password, hash it, and compare it to the hashed password in the database
+        if not user or not check_password_hash(user.password, password):
+            flash('Please check your login details and try again.')
+            return redirect(url_for('login')) # if the user doesn't exist or password is wrong, reload the page
+
+        # if the above check passes, then we know the user has the right credentials
+        login_user(user, remember=remember)
+        return flask.render_template('userPlaylistpage.html', username=current_user.username)
+
+    return flask.render_template('login.html')
 
 #userPlaylistpage.html
-@app.route('/userpl')
-def userpl():
-    return flask.render_template('userPlaylistpage.html')
+@app.route('/userPlaylistpage')
+@login_required
+def userPlaylistpage():
+   return flask.render_template('userPlaylistpage.html', username=current_user.username)
 
 #playlistpage.html
 @app.route('/playlistpage', methods=['POST', 'GET'])
