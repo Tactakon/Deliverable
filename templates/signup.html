@@ -7,10 +7,12 @@
 </head>
 
 <body>
+  <iframe name="header" src="{{ url_for('header')}}" frameborder="0" scrolling="no" width="100%" height="100%"
+    style="margin-top: -6px; "></iframe>
+  <br>
   <div align="left">
     <div align="left" class="border">
-      <iframe src="landheader.html" frameborder="0" scrolling="no" width="100%" height="100%"
-        style="margin-top: -6px; "></iframe>
+  
       </br></br></br></br></br>
       <div align="center">
         <div align="center" class="border">
@@ -51,7 +53,11 @@
           </p>
         </div>
       </div>
-      <iframe src="landfooter.html" frameborder="0" scrolling="no" width="100%" height="304px;"></iframe>
+      <br>
+  <footer>
+    <iframe src="{{ url_for('footer')}}" frameborder="0" scrolling="no" width="100%" height="100%"
+      style="position: fixed;"></iframe>
+  </footer>
 </body>
 
 </html>

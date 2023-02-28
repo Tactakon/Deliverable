@@ -6,11 +6,12 @@
 </head>
 
 <body>
-  <iframe src="homeheader.html" frameborder="0" scrolling="no" width="100%" height="100%"
+  <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%"
     style="margin-top: -6px; "></iframe>
+  <br>
   <div style="padding-left: 10%;">
     <h1>
-      Welcome @user!
+      Welcome {{username}}!
     </h1>
   </div>
   <div class="margins">
@@ -72,9 +73,9 @@
       </div>
     </div>
   </div>
-  <footer>
-     <iframe src="uponsigninfooter.html" frameborder="0" scrolling="no" width="100%" height="100%"
-    style="margin-bottom: auto; "></iframe>
-  </footer>
+  <br>
+<footer>
+  <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%" height="304px;"></iframe>
+</footer>
 </body>
 </html>
