@@ -26,8 +26,6 @@
         <th>Email</th>
         <th>Username</th>
         <th>Password</th>
-        <th>Created Playlists</th>
-        <th>Playlists Shared With</th>
         <th>Followers</th>
       </tr>
       {% for user in users %}
@@ -36,8 +34,6 @@
           <td>{{ user.email }}</td>
           <td>{{ user.username }}</td>
           <td>{{ user.password }}</td>
-          <td>{{ user.created_playlists }}</td>
-          <td>{{ user.playlists_shared_with }}</td>
           <td>{{ user.followers }}</td>
           <td><!--Deleting from Users -->
             <form method="POST" action="{{ url_for('delete_user') }}">
@@ -61,6 +57,7 @@
         <th>Songs</th>
         <th>Creator</th>
         <th>Listeners Shared To</th>
+        <th>Playlist Image</th> <!-- added playlist image column -->
       </tr>
       {% for playlist in playlists %}
         <tr>
@@ -70,8 +67,9 @@
           <td>{{ playlist.songs }}</td>
           <td>{{ playlist.creator }}</td>
           <td>{{ playlist.listeners_shared_to }}</td>
+          <!--playlist image displayed-->>
         </tr>
       {% endfor %}
     </table>
   </body>
-</html>
+</html

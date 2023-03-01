@@ -11,6 +11,7 @@ from flask_login import login_required, current_user, login_user, UserMixin, Log
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from flask_sqlalchemy import SQLAlchemy
+import json
 
 app = flask.Flask(__name__)
 
@@ -43,8 +44,6 @@ class Users(UserMixin, db.Model):
     email = db.Column(db.String(256))
     username = db.Column(db.String(16))
     password = db.Column(db.String(16))
-    created_playlists = db.Column(db.String(1024))
-    playlists_shared_with = db.Column(db.String(1024))
     followers = db.Column(db.String(1024))
     playlists = db.relationship("Playlists", back_populates="user")
 
@@ -56,11 +55,13 @@ class Playlists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     password = db.Column(db.String(16))
+    playlist_image = db.Column(db.LargeBinary)
     songs = db.Column(db.String(10000))
-    creator = db.Column(db.Integer, db.ForeignKey('users.id'))
+    creator = db.Column(db.Integer, db.ForeignKey('users.id')) #user.id stored
     listeners_shared_to = db.Column(db.String(1024))
     user = db.relationship("Users", back_populates="playlists")
 
+    
 with app.app_context():
     db.create_all()
 
@@ -126,6 +127,10 @@ def homeheader():
 def uponsigninfooter():
     return flask.render_template('uponsigninfooter.html')
 
+# Json objects declared
+# while creating a new user
+# followers --> user ids
+
 # signup.html
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
@@ -139,13 +144,16 @@ def signup():
         if user:
             flash('Email address already exists')
             return flask.render_template('signup.html')
+        
+        followers_user_ids = {} #empty json object
 
         # if the email address is not in the database
         new_user = Users(
             email=email,
             username=username,
             # hashing the password
-            password=generate_password_hash(password, method='sha256')
+            password=generate_password_hash(password, method='sha256'),
+            followers = json.dumps(followers_user_ids)
         )
         db.session.add(new_user)
         db.session.commit()
@@ -178,13 +186,52 @@ def login():
 
     return flask.render_template('login.html')
 
+# Json objects declared
+# while creating a new playlist
+# listeners shared to -- > user ids
+# songs --> song ids
 
 # createPlaylistPage.html
-@app.route('/createPlaylistPage')
+@app.route('/createPlaylistPage', methods=['GET', 'POST'])
 @login_required
 def createPlaylistPage():
+    if request.method == 'POST':
+        # Retrieve form data
+        playlist_name = request.form.get('playlist-name')
+        playlist_passcode = request.form.get('playlist-passcode')
+        playlist_image = request.files.get('playlist-image')
+
+        #intialize empty json objects of the songs and listeners_shared_to
+        songs = {}
+        listeners_shared_to = {}
+        
+        # Create new playlist object
+        new_playlist = Playlists(
+            name=playlist_name, 
+            password=playlist_passcode, 
+            creator=current_user.id,
+            songs=json.dumps(songs),
+            listeners_shared_to=json.dumps(listeners_shared_to) 
+        )
+        
+        #If a playlist image was uploaded, save it to the new playlist  
+        if playlist_image:
+            new_playlist.playlist_image = playlist_image.read()
+
+        # Add new playlist to the database
+        db.session.add(new_playlist)
+        db.session.commit()
+
+        flash('Playlist created!')
+        return flask.render_template('userPlaylistpage.html', username=current_user.username)
+      
     return flask.render_template('createPlaylistPage.html', username=current_user.username)
 
+#playlistPage.html
+@app.route('/playlistPage')
+@login_required
+def playlistPage():
+    return flask.render_template('playlistPage.html', username=current_user.username)
 
 # userPlaylistpage.html
 @app.route('/userPlaylistpage')
