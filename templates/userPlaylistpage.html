@@ -6,11 +6,12 @@
 </head>
 
 <body>
-  <iframe src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%"
+  <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%"
     style="margin-top: -6px; "></iframe>
+  <br>
   <div style="padding-left: 10%;">
     <h1>
-      Welcome @user!
+      Welcome {{username}}!
     </h1>
   </div>
   <div class="margins">
