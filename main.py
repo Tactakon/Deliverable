@@ -120,11 +120,6 @@ def homeheader():
 def footer():
     return flask.render_template('landfooter.html')
 
-# homeheader.html
-@app.route('/homeheader')
-def homeheader():
-    return flask.render_template('homeheader.html')
-
 # uponsigninfooter.html
 @app.route('/uponsigninfooter')
 def uponsigninfooter():
