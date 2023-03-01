@@ -29,12 +29,16 @@
 </head>
 
 <body>
-    <iframe src="{{ url_for('homeheader')}}" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
+    <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%"
+        style="margin-top: -6px; "></iframe>
+    <br>
+    Welcome {{username}}
+
     <div id="header2">
         <h2>Create your Playlist!</h2>
     </div>
     <div class="margins">
-        <form action="/create-playlist" method="POST" enctype="multipart/form-data">
+        <form action="/createPlaylistPage" method="POST" enctype="multipart/form-data">
             <!--Name of the playlist-->
             <div>
                 <label for="playlist-name">Playlist Name:</label>
