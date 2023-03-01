@@ -6,7 +6,7 @@
 </head>
 
 <body>
-  <iframe src="homeheader.html" frameborder="0" scrolling="no" width="100%" height="100%"
+  <iframe src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%"
     style="margin-top: -6px; "></iframe>
   <div style="padding-left: 10%;">
     <h1>
@@ -72,5 +72,8 @@
       </div>
     </div>
   </div>
+  <footer>
+    <iframe src="{{ url_for('footer')}}" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
+  </footer>
 </body>
 </html>

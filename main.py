@@ -51,6 +51,13 @@ def main():
 def header():
     return flask.render_template('landheader.html')
 
+#homeheader.html
+@app.route('/homeheader')
+def homeheader():
+    if request.method == 'POST':
+        session['logged_in'] = False
+    return flask.render_template('homeheader.html')
+
 #landfooter.html
 @app.route('/footer')
 def footer():
@@ -76,6 +83,16 @@ def login():
 @app.route('/userpl')
 def userpl():
     return flask.render_template('userPlaylistpage.html')
+
+#playlistpage.html
+@app.route('/playlist')
+def playlist():
+    return flask.render_template('playlistpage.html')
+
+# createPlaylistPage.html
+@app.route('/createPlaylistPage')
+def createPlaylistPage():
+    return flask.render_template('createPlaylistPage.html')
 
 app.secret_key = os.urandom(12)
 app.run(debug=True)

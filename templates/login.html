@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="../static/login.css">
     </head>
     <body>
-      <iframe src="landheader.html" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
+      <iframe name="header" src="{{ url_for('header')}}" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
         <h1><u>Login</u> | <a href="{{ url_for('signup') }}">Signup</a></h1>
         {% block body %}
         {% if session['logged_in'] %}
@@ -37,6 +37,6 @@
         </form>
         {% endif %}
         {% endblock %}
-        <iframe src="landfooter.html" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
+        <iframe src="{{ url_for('footer')}}" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
         </body>
 </html>

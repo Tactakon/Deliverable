@@ -29,7 +29,7 @@
 </head>
 
 <body>
-    <iframe src="homeheader.html" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
+    <iframe src="{{ url_for('homeheader')}}" frameborder="0" scrolling ="no" width="100%" height="100%" style="margin-top: -6px; "></iframe>
     <div id="header2">
         <h2>Create your Playlist!</h2>
     </div>
@@ -67,6 +67,9 @@
         </form>
 
     </div>
+    <footer>
+        <iframe src="{{ url_for('footer')}}" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
+      </footer>
 </body>
 
 </html>
