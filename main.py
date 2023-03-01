@@ -1,8 +1,15 @@
 import flask
 import os
+
+from flask import Flask, flash, redirect, render_template, request, session, abort, url_for
+import logging
+import requests
+from search import search_song
+
 from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_login import login_required, current_user, login_user, UserMixin, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
+
 from flask_sqlalchemy import SQLAlchemy
 
 app = flask.Flask(__name__)
@@ -192,6 +199,20 @@ def playlist():
 @app.route('/createPlaylistPage')
 def createPlaylistPage():
     return flask.render_template('createPlaylistPage.html')
+
+#playlistpage.html
+@app.route('/playlistpage', methods=['POST', 'GET'])
+def playlist_page():
+    form_data = flask.request.args
+    query = form_data.get("song", "smooth operator")
+    results = search_song(query)
+    (songResults, artistResults, songIDs) = results
+    return flask.render_template(
+        'playlistpage.html',
+        songResults = songResults,
+        artistResults = artistResults,
+        songIDs = songIDs
+        )
 
 app.secret_key = os.urandom(12)
 app.run(debug=True)
