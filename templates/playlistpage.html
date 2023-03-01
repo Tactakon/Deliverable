@@ -23,13 +23,24 @@
     <div class="add">
         <span>Add song to playlist</span>
         <hr/>
-        <form action="/playlistpage" method="POST">
+        <form action="/playlistpage" method="GET">
             <div class="textcontainer">
               <input id="songtoadd" name="song" type="text" placeholder="Search Song" class="textbox"/>
+              <input type="submit" value="Search!"/>
             </div>
           </form>
           <br>
-          <span class="submitadd">Add</span>
+          <!-- can't figure out how make add button appear inline. see .results class -->
+          <ol class = "results">    
+            {%for i in range(0,3)%}
+              <li>{{songResults[i]}} by {{artistResults[i]}} 
+              <form method="POST" action="/">
+                <input type="hidden" name="songID" value="{{songIDs[i]}}"/>
+                <input type="submit" value="Add"/>
+              </form>
+              </li>
+            {%endfor%}
+          </ol>
     </div>
     </div>
     <!-- Container2 is left side -->
@@ -155,6 +166,10 @@ body {
 }
 .add {
   margin-top: 100px;
+}
+.results {
+  white-space: nowrap;
+  display: inline-block;
 }
 .submitadd {
   margin-left: 140px;

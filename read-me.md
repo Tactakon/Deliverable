@@ -1,3 +1,5 @@
+# How to run the application
+Go to https://developer.spotify.com/dashboard/ and login with Spotify account. From here, click create an app and fill out the required fields. Once your app is created, make a .env file with variables named SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET corresponding to your client ID and client secret on the app dashboard.
 # Spotify API
 ## Basics
 + There are two separate services that we will need to achieve our goals in Verge
