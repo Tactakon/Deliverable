@@ -1,15 +1,12 @@
 import flask
 import os
-
 from flask import Flask, flash, redirect, render_template, request, session, abort, url_for
 import logging
 import requests
 from search import search_song
-
 from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_login import login_required, current_user, login_user, UserMixin, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from flask_sqlalchemy import SQLAlchemy
 
 app = flask.Flask(__name__)
