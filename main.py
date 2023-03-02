@@ -72,7 +72,7 @@ def UsersAndPlaylist():
     playlists = Playlists.query.all()
     return render_template("UsersAndPlaylist.html", users=users, playlists=playlists)
 
-# manually adding values to Users table using the UsersandPlaylis.html:
+# manually adding values to Users table using the UsersandPlaylist.html:
 @app.route('/add_user', methods=['POST'])
 def add_user():
     add_email = flask.request.form.get('email')
@@ -145,7 +145,7 @@ def signup():
             flash('Email address already exists')
             return flask.render_template('signup.html')
         
-        followers_user_ids = {} #empty json object
+        followers_user_ids = [] #empty json object
 
         # if the email address is not in the database
         new_user = Users(
@@ -182,7 +182,7 @@ def login():
 
         # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
-        return flask.render_template('userPlaylistpage.html', username=current_user.username)
+        return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=Playlists.query.filter_by(creator=current_user.id).all())
 
     return flask.render_template('login.html')
 
@@ -202,16 +202,16 @@ def createPlaylistPage():
         playlist_image = request.files.get('playlist-image')
 
         #intialize empty json objects of the songs and listeners_shared_to
-        songs = {}
-        listeners_shared_to = {}
+        songs = []
+        listeners_shared_to = []
         
         # Create new playlist object
         new_playlist = Playlists(
             name=playlist_name, 
             password=playlist_passcode, 
             creator=current_user.id,
-            songs=json.dumps(songs),
-            listeners_shared_to=json.dumps(listeners_shared_to) 
+            songs=json.dumps(songs), # now a json string
+            listeners_shared_to=json.dumps(listeners_shared_to)  # now a json string
         )
         
         #If a playlist image was uploaded, save it to the new playlist  
@@ -223,35 +223,45 @@ def createPlaylistPage():
         db.session.commit()
 
         flash('Playlist created!')
-        return flask.render_template('userPlaylistpage.html', username=current_user.username)
-      
+        print(current_user.username) #debugging
+        return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs))
+    
     return flask.render_template('createPlaylistPage.html', username=current_user.username)
 
-#playlistPage.html
-@app.route('/playlistPage')
+# playlistpage
 @login_required
-def playlistPage():
-    return flask.render_template('playlistPage.html', username=current_user.username)
+@app.route('/playlistpage', methods=['POST', 'GET'])
+def playlistpage():
+    username = request.args.get('username')
+    playlist_name = request.args.get('playlist_name')
+    print(request.args.keys())
+    if 'songs' in request.args.keys():
+        print(request.args.get('songs'))
+        songs = json.loads(request.args.get('songs'))
+    else:
+        songs = []
+
+    #API
+    form_data = request.args
+    query = form_data.get("song", "smooth operator")
+    results = search_song(query)
+    (songResults, artistResults, songIDs) = results
+
+    return render_template(
+        'playlistpage.html',
+        username=username,
+        playlist_name=playlist_name,
+        songs=songs,
+        songResults=songResults,
+        artistResults=artistResults,
+        songIDs=songIDs
+    )
 
 # userPlaylistpage.html
 @app.route('/userPlaylistpage')
 @login_required
 def userPlaylistpage():
-    return flask.render_template('userPlaylistpage.html', username=current_user.username)
-
-#playlistpage.html
-@app.route('/playlistpage', methods=['POST', 'GET'])
-def playlist_page():
-    form_data = flask.request.args
-    query = form_data.get("song", "smooth operator")
-    results = search_song(query)
-    (songResults, artistResults, songIDs) = results
-    return flask.render_template(
-        'playlistpage.html',
-        songResults = songResults,
-        artistResults = artistResults,
-        songIDs = songIDs
-        )
+    return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=Playlists.query.filter_by(creator=current_user.id).all())
 
 app.secret_key = os.urandom(12)
 app.run(debug=True)
