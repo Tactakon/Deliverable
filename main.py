@@ -266,5 +266,11 @@ def playlistpage():
 def userPlaylistpage():
     return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=Playlists.query.filter_by(creator=current_user.id).all())
 
+# PlaylistMore.html
+@app.route('/PlaylistMore')
+def PlaylistMore():
+    return flask.render_template('PlaylistMore.html')
+
+
 app.secret_key = os.urandom(12)
 app.run(debug=True)
