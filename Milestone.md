@@ -10,7 +10,7 @@
 - Spotify API  - we need the music for the playlists. 
 - Functionality to add to a shared playlist.
 - Passcode function, a playlist can be modified upon passcode entry.
-- The queued song will refresh and now show as an upcoming song, implement a queue.
+- The queued song will refresh and now show as an item, implement a queue (songs will not be playing from MVP).
 - The ability to remove songs from playlists (very simple and basic).
 
 ### **2. What features or additional engineering work will it take to get you to a project you’d be comfortable inviting other people to use?** ###
