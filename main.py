@@ -112,8 +112,6 @@ def header():
 #homeheader.html
 @app.route('/homeheader')
 def homeheader():
-    if request.method == 'POST':
-        session['logged_in'] = False
     return flask.render_template('homeheader.html')
 
 #landfooter.html
