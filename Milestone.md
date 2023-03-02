@@ -8,8 +8,6 @@
 - Functionality to share playlist (a button).
 - Be able to add music to that playlist.
 - Spotify API  - we need the music for the playlists. 
-- Functionality to add to a shared playlist.
-- Passcode function, a playlist can be modified upon passcode entry.
 - The queued song will refresh and now show as an item, implement a queue (songs will not be playing from MVP).
 - The ability to remove songs from playlists (very simple and basic).
 
@@ -28,6 +26,8 @@
 - Ability to like the playlist and follow the playlist owner.
 - Add animations to buttons.
 - Genre selection/filtering for playlists.
+- Functionality to add to a shared playlist.
+- Passcode function, a playlist can be modified upon passcode entry.
 
 ### **3. If you have extra time, what stretch features will you implement?** ###
 - Recommendations of DJs according to the listener's preferences.
