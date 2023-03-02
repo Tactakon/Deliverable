@@ -1,15 +1,12 @@
 import flask
 import os
-
 from flask import Flask, flash, redirect, render_template, request, session, abort, url_for
 import logging
 import requests
 from search import search_song
-
 from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_login import login_required, current_user, login_user, UserMixin, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from flask_sqlalchemy import SQLAlchemy
 import json
 
@@ -112,15 +109,17 @@ def main():
 def header():
     return flask.render_template('landheader.html')
 
-# landfooter.html
+#homeheader.html
+@app.route('/homeheader')
+def homeheader():
+    if request.method == 'POST':
+        session['logged_in'] = False
+    return flask.render_template('homeheader.html')
+
+#landfooter.html
 @app.route('/footer')
 def footer():
     return flask.render_template('landfooter.html')
-
-# homeheader.html
-@app.route('/homeheader')
-def homeheader():
-    return flask.render_template('homeheader.html')
 
 # uponsigninfooter.html
 @app.route('/uponsigninfooter')
