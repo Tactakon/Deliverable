@@ -1,7 +1,7 @@
-Flask==2.2.2
-Flask_Login==0.6.2
-flask_sqlalchemy==3.0.3
-python-dotenv==1.0.0
-requests==2.22.0
-spotipy==2.22.1
-Werkzeug==2.2.2
+Flask
+Flask_Login
+flask_sqlalchemy
+python-dotenv
+requests
+spotipy
+Werkzeug
