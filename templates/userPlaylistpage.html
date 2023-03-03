@@ -48,10 +48,11 @@
             <button class="More-Created-Mixes"><b>More ></b> </button>
           </div>
           <div class="empty-box-right">
-            <!--Img add-->
-            <div class="right-img-box">Playlist 4</div>
-            <div class="right-img-box">Playlist 5</div>
-            <div class="right-img-box">Playlist 6</div>
+            {% for playlist in current_user_playlists %}
+            <div class="right-img-box"><a
+            href="{{ url_for('playlistpage', username=username, playlist_name=playlist.name, playlist_id=playlist.id, songs=songs) }}">{{ playlist.name }}</a>
+            </div>
+            {% endfor %}
           </div>
         </div>
         <!--Bottom Right-->
