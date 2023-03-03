@@ -12,12 +12,12 @@
   <br>
   <div class="container">
     <div class="header">
-      <a href="#" class="back-link">
+      <a href="{{ url_for('userPlaylistpage')}}" class="back-link">
         <svg onclick="history.back()" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left-circle back-button" viewBox="0 0 16 16">
           <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
         </svg>
       </a>
-      <h3 class="playlist-title">User's Playlists</h3>
+      <h3 class="playlist-title">Created Mixes</h3>
     </div>
     
     <div class="scroll-container">
@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <div class="playlist-bar">
+  <!--<div class="playlist-bar">
     <div class="song-info">
       <img src="https://i.scdn.co/image/ab67616d0000b273d1cb2d4b98fd058189c14ecb" alt="Song Cover">
       <div class="song-details">
@@ -55,13 +55,12 @@
     <div class="progress-container">
       <div class="progress-bar"></div>
     </div>
-  </div>
-  <br>
-<footer>
-  <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%" height="304px;"></iframe>
-</footer>
+  </div> -->
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </body>
+<footer>
+  <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%" height="304px;"></iframe>
+</footer>
 </html>
