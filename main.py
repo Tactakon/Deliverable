@@ -222,17 +222,13 @@ def createPlaylistPage():
         db.session.commit()
 
         flash('Playlist created!')
-        return flask.render_template('userPlaylistpage.html', username=current_user.username)
-      
+        print(current_user.username) #debugging
+        return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs))
+    
     return flask.render_template('createPlaylistPage.html', username=current_user.username)
 
 # playlistpage
 @login_required
-def userPlaylistpage():
-    return flask.render_template('userPlaylistpage.html', username=current_user.username)
-
-<<<<<<< HEAD
-#playlistpage.html
 @app.route('/playlistpage', methods=['POST', 'GET'])
 def playlistpage():
     username = request.args.get('username')
@@ -265,12 +261,6 @@ def playlistpage():
 @login_required
 def userPlaylistpage():
     return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=Playlists.query.filter_by(creator=current_user.id).all())
-
-# PlaylistMore.html
-@app.route('/PlaylistMore')
-def PlaylistMore():
-    return flask.render_template('PlaylistMore.html')
-
 
 app.secret_key = os.urandom(12)
 app.run(debug=True)
