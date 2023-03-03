@@ -10,7 +10,7 @@ Go to https://developer.spotify.com/dashboard/ and login with Spotify account. F
 	+ A guide for creating a search function (less work for us)
 	+ Syntax for every type of endpoint that we would be seeking whether it is song, album, or artist
 	+ A guide for pulling album covers
-+ A specific set of rules for what we can do with API data. They are very particular about the use                                                 of their logo and color scheme. We also must display album covers and song data in a specific way as well (no cropping or modulation of any kind allowed)
+	+ A specific set of rules for what we can do with API data. They are very particular about the use                                                 of their logo and color scheme. We also must display album covers and song data in a specific way as well (no cropping or modulation of any kind allowed)
 + The Web Playback SDK is where things become less familiar.
 	+ It allows song playback of a song inside of our 3rd party application
 	+ We can use data from our API calls to play the specific song we want
