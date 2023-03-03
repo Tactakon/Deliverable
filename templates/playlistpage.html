@@ -4,6 +4,7 @@
    <!-- Add fonts -->
   <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../static/playlistpage.css">
 </head>
 <body>
   <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="60"
@@ -35,8 +36,7 @@
               <input hidden="true" name="username" value={{username}} />
               <input hidden= "true" name ="playlist_name" value={{playlist_name}} />
               <input hidden="true" name="songs" value={{songs}} />
-
-              <input type="submit" value="Search!"/>
+               <input type="submit" value="Search!"/>
             </div>
           </form>
           <br>
@@ -44,9 +44,14 @@
           <ol class = "results">    
             {%for i in range(0,3)%}
               <li>{{songResults[i]}} by {{artistResults[i]}} 
-              <form method="POST" action="/">
-                <input type="hidden" name="songID" value="{{songIDs[i]}}"/>
-                <input type="submit" value="Add"/>
+              <form method="POST" action="/AddSong">
+                <input type="hidden" name="songID" value="{{songIDs[i]}}" /> <!--API SONG ID-->
+                <input type="hidden" name="songResult" value="{{songResults[i]}}" /><!--SONG RESULT-->
+                <input type="hidden" name="artistResult" value="{{artistResults[i]}}" /><!--SONG ARTIST-->
+                <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
+                <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
+                <input hidden="true" name="songs" value={{songs}} />
+                <button type="submit">Add</button>
               </form>
               </li>
             {%endfor%}
@@ -78,10 +83,11 @@
         {% for song in songs %}
         <div class="song">
           <span class="number">{{ loop.index }}</span>
-          <span class="title">{{ song.title }}</span>
+          <span class="songID">{{ song.songID }}</span>
+          <span class="songResult">{{ song.songResult}}</span>
           <br>
-          <span class="artist">{{ song.artist }}</span>
-          <span class="time">{{ song.time }}</span>
+          <span class="songArtist">{{ song.artistResult }}</span>
+          <!-- <span class="time">{{ song.time }}</span> -->
         </div>
         {% endfor %}
       </div>
@@ -98,131 +104,3 @@
   </footer>
 </body>
 </html>
-<style>
-footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-}
-hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: 1px solid #ccc;
-  margin: 1em 0;
-  padding: 0;
-}
-body {
-  display: flex;
-  flex-direction: row;
-  margin-top: 20px;;
-}
-
-.container1, .container2, .container3 {
-  width: 33.33%;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.container1 {
-  margin-top: 30px;
-  padding-left: 20px;
-  width: 25%;
-  padding-top: 100px;
-}
-.follow {
-  display: inline-block;
-  padding: 10px 10px;
-  font-size: 14px;
-  text-align: center;
-  background-color: lightgrey;
-  border: none;
-  border-radius: 10px;
-  margin-left: 40px;
-}
-.add {
-  margin-top: 100px;
-}
-.results {
-  white-space: nowrap;
-  display: inline-block;
-}
-.submitadd {
-  margin-left: 140px;
-}
-.container2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1px;
-  padding-left: 250px;
-}
-img {
-  border-radius: 50%;
-  width: 400px;
-  height: 400px;
-}
-.currentsong {
-  text-align: center;
-}
-
-.container3 {
-  display: flex;
-  justify-content: center;
-  margin-top: 40px;
-  padding-left: 250px;
-}
-.g1 {
-  display: inline-block;
-  padding: 15px 15px;
-  font-size: 20px;
-  text-align: center;
-  background-color: lightgrey;
-  border: none;
-  border-radius: 15px;
-}
-.g2 {
-  display: inline-block;
-  padding: 15px 15px;
-  font-size: 20px;
-  text-align: center;
-  background-color: lightgrey;
-  border: none;
-  border-radius: 15px;
-}
-.song {
-  margin-top: 10px;
-}
-.time {
-  margin-left: 100px;
-}
-.musicplayer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  color: #ffffff;
-  background-color: lightgrey;
-  padding: 30px;
-  margin-right: 65%;
-}
-.playbutton {
-    width: 20px;
-    height: auto;
-    margin-left: 50%;
-}
-.song-length {
-  height: 10px;
-  width: 30%;
-  background-color: #e4e4e4;
-  border-radius: 10px;
-  margin-left: 36%;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 40%; /* Set the width to the current progress percentage */
-  background-color: black;
-  border-radius: 10px;
-}
-</style>

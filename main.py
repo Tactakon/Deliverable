@@ -58,7 +58,6 @@ class Playlists(db.Model):
     listeners_shared_to = db.Column(db.String(1024))
     user = db.relationship("Users", back_populates="playlists")
 
-    
 with app.app_context():
     db.create_all()
 
@@ -98,11 +97,11 @@ def delete_user():
 # landing page
 @app.route("/")
 def main():
-    # if session.get('logged_in'):
-    # goes straight to playlist page if user already logged in. will finish this when we have log out function
-    # return flask.render_template('userPlaylistpage.html')
-    # else:
-    return flask.render_template('landingpage.html')
+    if session.get('logged_in'):
+    #goes straight to playlist page if user already logged in. will finish this when we have log out function
+        return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=Playlists.query.filter_by(creator=current_user.id).all())
+    else:
+        return flask.render_template('landingpage.html')
 
 # landheader.html
 @app.route('/header')
@@ -222,8 +221,7 @@ def createPlaylistPage():
         db.session.commit()
 
         flash('Playlist created!')
-        print(current_user.username) #debugging
-        return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs))
+        return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs)) ## want to send a dict so that it could loop
     
     return flask.render_template('createPlaylistPage.html', username=current_user.username)
 
@@ -234,11 +232,15 @@ def playlistpage():
     username = request.args.get('username')
     playlist_name = request.args.get('playlist_name')
     print(request.args.keys())
-    if 'songs' in request.args.keys():
-        print(request.args.get('songs'))
-        songs = json.loads(request.args.get('songs'))
+ 
+    playlist = Playlists.query.filter_by(
+        name=playlist_name, creator=current_user.id).first()
+    if playlist.songs:
+        songs = json.loads(playlist.songs)
     else:
         songs = []
+    
+    print("PlaylistPage" , songs)
 
     #API
     form_data = request.args
@@ -250,11 +252,54 @@ def playlistpage():
         'playlistpage.html',
         username=username,
         playlist_name=playlist_name,
-        songs=songs,
+        songs=songs, #dict
         songResults=songResults,
         artistResults=artistResults,
         songIDs=songIDs
     )
+
+
+@app.route("/AddSong", methods=["POST"])
+@login_required
+def AddSong():
+    username = request.form.get('username')
+    playlist_name = request.form.get('playlist_name')
+    print("addsong keys", request.form)
+    print(playlist_name)
+   
+    playlist = Playlists.query.filter_by(
+        name=playlist_name, creator=current_user.id).first()
+    print("Current Playlist", playlist)
+    if playlist.songs != '[]':
+        songs = json.loads(playlist.songs)
+    else:
+        songs = []
+
+    print("Add Songs:" , songs)
+
+    songID = request.form.get('songID')
+    print(songID)
+    songResult = request.form.get('songResult')
+    print(songResult)
+    artistResult = request.form.get('artistResult')
+    print(artistResult)
+
+    song = {
+        "songID": songID,
+        "songResult": songResult,
+        "artistResult": artistResult
+    }
+
+    songs.append(song)
+    print("Addes SONG: " , songs)
+    playlist = Playlists.query.filter_by(name=playlist_name, creator=current_user.id).first()
+    print("Playlist in which the song is added: ", playlist)
+    if playlist is not None:
+        playlist.songs = json.dumps(songs)
+
+    db.session.commit()
+
+    return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs))
 
 # userPlaylistpage.html
 @app.route('/userPlaylistpage')
