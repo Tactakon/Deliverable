@@ -4,7 +4,6 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import logging
 import requests
 from search import search_song
-from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_login import login_required, current_user, login_user, UserMixin, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -52,7 +51,7 @@ class Playlists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     password = db.Column(db.String(16))
-    playlist_image = db.Column(db.LargeBinary)
+   # playlist_image = db.Column(db.LargeBinary)
     songs = db.Column(db.String(10000))
     creator = db.Column(db.Integer, db.ForeignKey('users.id')) #user.id stored
     listeners_shared_to = db.Column(db.String(1024))
@@ -299,6 +298,50 @@ def AddSong():
 
     return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs))
 
+@app.route("/DeleteSong", methods=["POST"])
+@login_required
+def DeleteSong():
+    username = request.form.get('username')
+    playlist_name = request.form.get('playlist_name')
+    print("addsong keys", request.form)
+    print(playlist_name)
+
+    playlist = Playlists.query.filter_by(
+        name=playlist_name, creator=current_user.id).first()
+    print("Current Playlist", playlist)
+    if playlist.songs != '[]':
+        songs = json.loads(playlist.songs)
+    else:
+        songs = []
+
+    print("remove Songs:", songs)
+
+    songID = request.form.get('songID')
+    print(songID)
+    songResult = request.form.get('songResult')
+    print(songResult)
+    artistResult = request.form.get('artistResult')
+    print(artistResult)
+
+    song = {
+        "songID": songID,
+        "songResult": songResult,
+        "artistResult": artistResult
+    }
+
+    songs.remove(song)
+    print("removed SONG: ", songs)
+    playlist = Playlists.query.filter_by(
+        name=playlist_name, creator=current_user.id).first()
+    print("Playlist in which the song is removes: ", playlist)
+    if playlist is not None:
+        playlist.songs = json.dumps(songs)
+
+    db.session.commit()
+
+    return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs))
+
+    
 # userPlaylistpage.html
 @app.route('/userPlaylistpage')
 @login_required
