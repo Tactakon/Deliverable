@@ -61,9 +61,6 @@ class Playlists(db.Model):
 with app.app_context():
     db.create_all()
 
-# with app.app_context():
-#     db.drop_all()
-
 # displaying the Users and Playlist model
 @app.route('/UsersAndPlaylist')
 def UsersAndPlaylist():
@@ -100,11 +97,11 @@ def delete_user():
 # landing page
 @app.route("/")
 def main():
-    # if session.get('logged_in'):
-    # goes straight to playlist page if user already logged in. will finish this when we have log out function
-    # return flask.render_template('userPlaylistpage.html')
-    # else:
-    return flask.render_template('landingpage.html')
+    if session.get('logged_in'):
+    #goes straight to playlist page if user already logged in. will finish this when we have log out function
+        return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=Playlists.query.filter_by(creator=current_user.id).all())
+    else:
+        return flask.render_template('landingpage.html')
 
 # landheader.html
 @app.route('/header')
@@ -234,7 +231,8 @@ def createPlaylistPage():
 def playlistpage():
     username = request.args.get('username')
     playlist_name = request.args.get('playlist_name')
-    # debugging - print(request.args.keys())
+    print(request.args.keys())
+ 
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
     if playlist.songs:
@@ -267,10 +265,11 @@ def AddSong():
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
     print("addsong keys", request.form)
-    # debugging print(playlist_name)
+    print(playlist_name)
+   
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
-    # debugging print("Current Playlist", playlist)
+    print("Current Playlist", playlist)
     if playlist.songs != '[]':
         songs = json.loads(playlist.songs)
     else:
@@ -279,11 +278,11 @@ def AddSong():
     print("Add Songs:" , songs)
 
     songID = request.form.get('songID')
-    # debugging print(songID)
+    print(songID)
     songResult = request.form.get('songResult')
-    # debugging print(songResult)
+    print(songResult)
     artistResult = request.form.get('artistResult')
-    # debugging print(artistResult)
+    print(artistResult)
 
     song = {
         "songID": songID,
@@ -297,6 +296,7 @@ def AddSong():
     print("Playlist in which the song is added: ", playlist)
     if playlist is not None:
         playlist.songs = json.dumps(songs)
+
     db.session.commit()
 
     return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs))
