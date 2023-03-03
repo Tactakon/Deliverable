@@ -4,6 +4,8 @@
    <!-- Add fonts -->
   <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
   <link rel="stylesheet" href="../static/playlistpage.css">
 </head>
 <body>
@@ -18,7 +20,41 @@
   <div class="container1">
     <div class="jammingwith">
         <!-- <span>Your currenly jamming with</span> --> 
+        <!------------------------ MODAL BOX FOR SHARING ------------------------> 
         <span>{{ playlist_name }}</span>
+          <button onclick="document.getElementById('id01').style.display='block'" class="btn btn-rounded btn-outline-dark ml-auto" style="width:auto; float: right;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+          </svg> Share </button>
+
+<div id="id01" class="modal">
+  
+  <form class="modal-content animate" action="/action_page.php" method="post">
+
+    <div class="container">
+      <label for="uname"><b>Share Playlist With </b></label>
+      <input type="text" placeholder="Enter Username" name="uname" required>
+        
+      <button type="submit">Share</button>
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
         <hr/>
         <span class="user">{{ username }}</span>
         <!-- <span class="follow">Follow</span> -->
@@ -100,7 +136,7 @@
     </div>
   </div>
   <footer>
-    <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
-  </footer>
+    <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%" height="100px"style="position: fixed; bottom: 0; left: 0; right: 0;"></iframe>
+  </footer>  
 </body>
 </html>
