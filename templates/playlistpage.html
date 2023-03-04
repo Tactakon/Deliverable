@@ -15,7 +15,7 @@
     <br>
     <br>
     <br>
-  
+
   <!-- Container1 is right side -->
   <div class="container1">
     <div class="jammingwith">
@@ -119,10 +119,20 @@ window.onclick = function(event) {
         {% for song in songs %}
         <div class="song">
           <span class="number">{{ loop.index }}</span>
-          <span class="songID">{{ song.songID }}</span>
-          <span class="songResult">{{ song.songResult}}</span>
+          <span class="title">{{ song.title }}</span>
           <br>
           <span class="songArtist">{{ song.artistResult }}</span>
+<!--Delete work-->
+<form method="POST" action="/DeleteSong">
+  <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
+  <input type="hidden" name="songResult" value="{{song.songResult}}" /><!--SONG RESULT-->
+  <input type="hidden" name="artistResult" value="{{song.artistResult}}" /><!--SONG ARTIST-->
+  <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
+  <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
+  <input hidden="true" name="songs" value={{songs}} />
+  <button type="submit">Delete</button>
+<!-- <span class="time">{{ song.time }}</span> -->
+</form>
           <!-- <span class="time">{{ song.time }}</span> -->
         </div>
         {% endfor %}

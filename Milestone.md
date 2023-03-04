@@ -8,7 +8,7 @@
 - Functionality to share playlist (a button).
 - Be able to add music to that playlist.
 - Spotify API  - we need the music for the playlists. 
-- The queued song will refresh and now show as an item, implement a queue (songs will not be playing from MVP).
+- The queued song will refresh and now show as an item, implement a queue (songs will not be playing for MVP).
 - The ability to remove songs from playlists (very simple and basic).
 
 ### **2. What features or additional engineering work will it take to get you to a project you’d be comfortable inviting other people to use?** ###
