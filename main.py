@@ -96,11 +96,11 @@ def delete_user():
 # landing page
 @app.route("/")
 def main():
-    if session.get('logged_in'):
-    #goes straight to playlist page if user already logged in. will finish this when we have log out function
-        return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=Playlists.query.filter_by(creator=current_user.id).all())
-    else:
-        return flask.render_template('landingpage.html')
+    # if session.get('logged_in'):
+    # goes straight to playlist page if user already logged in. will finish this when we have log out function
+    # return flask.render_template('userPlaylistpage.html')
+    # else:
+    return flask.render_template('landingpage.html')
 
 # landheader.html
 @app.route('/header')
@@ -177,7 +177,10 @@ def login():
 
         # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
-        return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=Playlists.query.filter_by(creator=current_user.id).all())
+        
+
+        playlists = Playlists.query.filter_by(creator=current_user.id).all()[:3]
+        return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=playlists)
 
     return flask.render_template('login.html')
 
@@ -346,7 +349,8 @@ def DeleteSong():
 @app.route('/userPlaylistpage')
 @login_required
 def userPlaylistpage():
-    return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=Playlists.query.filter_by(creator=current_user.id).all())
+    playlists = Playlists.query.filter_by(creator=current_user.id).all()[:3]
+    return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=playlists)
 
 # PlaylistMore.html
 @app.route('/PlaylistMore')
