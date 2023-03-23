@@ -28,15 +28,17 @@
 
 <div id="id01" class="modal">
   
-  <form class="modal-content animate" action="/action_page.php" method="post">
-
+  <form class="modal-content animate" action="/AddSharedUserByPlaylistOwner" method="POST">
+    <div id="success-message" style="display:none">USER SUCCESSFULLY ADDED</div>
     <div class="container">
       <label for="uname"><b>Share Playlist With </b></label>
-      <input type="text" placeholder="Enter Username" name="uname" required>
-        
-      <button type="submit">Share</button>
+      <input type="text" placeholder="Enter Username" name="shareduser_username" required>
+      <!--Taking current user, playlist name and songs to redirect to the playlist page after the user is added-->
+      <input hidden="true" name="username" value={{username}} />
+      <input hidden="true" name="playlist_name" value={{playlist_name}} />
+      <input hidden="true" name="songs" value={{songs}} />
+      <button type="submit" id= "share-btn">Share</button>
     </div>
-
     <div class="container" style="background-color:#f1f1f1">
       <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
     </div>
@@ -53,6 +55,24 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+
+  // add event listener to the form submit button
+  document.getElementById('share-btn').addEventListener('click', function (event) {
+    event.preventDefault();
+    var form = document.querySelector('form');
+    var successMessage = document.getElementById('success-message');
+
+    // submit the form using AJAX
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form)
+    })
+      .then(response => {
+        if (response.ok) {
+          successMessage.style.display = 'block';
+        }
+      })
+  });
 </script>
 
         <hr/>
