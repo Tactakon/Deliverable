@@ -294,9 +294,7 @@ def login():
 
 
         playlists = Playlists.query.filter_by(creator=current_user.id).all()[:3]
-        return flask.render_template('userPlaylistpage.html',
-        username=current_user.username,
-        current_user_playlists=playlists)
+        return redirect(url_for('userPlaylistpage'))
 
     return flask.render_template('login.html')
 
