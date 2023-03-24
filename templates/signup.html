@@ -1,30 +1,29 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="../static/signup.css">
-</head>
-
-<body>
-  <iframe name="header" src="{{ url_for('header')}}" frameborder="0" scrolling="no" width="100%" height="100%"
-    style="margin-top: -6px; "></iframe>
-  <br>
-  <div align="left">
-    <div align="left" class="border">
-  
-      </br></br></br></br></br>
-      <div align="center">
-        <div align="center" class="border">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/signup.css">
+  </head>
+  <body>
+    <!-- Include header -->
+    <iframe name="header" src="{{ url_for('header') }}" frameborder="0" scrolling="no" width="100%" height="100%" style="margin-top: -6px;"></iframe>
+    <br>
+    <!-- Add class to outermost div -->
+    <div class="content-container">
+      <!-- Use class instead of align -->
+      <div class="border">
+        <div class="border">
           <div class="header">
+            <!-- Use proper HTML tags -->
             <h1><a href="{{ url_for('login') }}">Login</a> | <u>Signup</u></h1>
           </div>
           {% with messages = get_flashed_messages() %}
-          {% if messages %}
-          <div class="notification is-danger"> <!---herrrreee-->
-            {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
-          </div>
-          {% endif %}
+            {% if messages %}
+              <!-- Use proper class name -->
+              <div class="notification is-danger">
+                {{ messages[0] }}. Go to <a href="{{ url_for('login') }}">login page</a>.
+              </div>
+            {% endif %}
           {% endwith %}
           <form action="/signup" method="POST">
             <div class="container">
@@ -43,21 +42,18 @@
               <input type="password" placeholder="Password" name="password" required>
             </div>
             <label>
-              <input type="checkbox" checked="checked" name="t&pp"> I agree to the <a href="#">terms</a> and <a
-                href="#">Privacy Policy</a>.
+              <input type="checkbox" checked="checked" name="t&pp"> I agree to the <a href="#">terms</a> and <a href="#">Privacy Policy</a>.
             </label>
             <button type="submit">Sign Up</button>
           </form>
-          </h2>
-          <p class="bottom">Already have an account? <a class="bottom" href="{{ url_for('login') }}"> Log In here</a>
-          </p>
+          <p class="bottom">Already have an account? <a class="bottom" href="{{ url_for('login') }}">Log In here</a></p>
         </div>
       </div>
-      <br>
-  <footer>
-    <iframe src="{{ url_for('footer')}}" frameborder="0" scrolling="no" width="100%" height="100%"
-      style="position: fixed;"></iframe>
-  </footer>
-</body>
-
+    </div>
+    <br>
+    <!-- Include footer -->
+    <footer>
+      <iframe src="{{ url_for('footer') }}" frameborder="0" scrolling="no" width="100%" height="100%" style="position: fixed;"></iframe>
+    </footer>
+  </body>
 </html>

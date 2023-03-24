@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <link rel="stylesheet" href="../static/userPlaylistpage.css">
 </head>
-
 <body>
-  <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%"
-    style="margin-top: -6px; "></iframe>
+  <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%" style="margin-top: -6px;"></iframe>
   <br>
-  <div style="padding-left: 10%;">
-    <h1>
-      Welcome {{username}}!
-    </h1>
+  <div class="container">
+    <div style="padding-left: 10%;">
+      <h1>Welcome {{username}}!</h1>
+    </div>
   </div>
   <div class="margins">
-
     <!--Page Contents-->
     <div class="pagecontents">
-
       <!--Left side of the page-->
       <div class="left-container">
         <div class="Most-Listened-To">
@@ -26,7 +21,7 @@
           <h2>Most Listened To</h2>
           <!--button to show all/More-->
           <!--Link here to the HTML of Most Listened To-->
-          <button class="More-Most-Listened-To"> <b>More ></b> </button>
+          <button class="More-Most-Listened-To"><b>More ></b></button>
         </div>
         <div class="empty-box-left">
           <!--Img add-->
@@ -35,7 +30,6 @@
           <div class="left-img-box">Playlist 3</div>
         </div>
       </div>
-
       <!--Right side of the page-->
       <div class="right-container">
         <!--Top Right-->
@@ -45,14 +39,26 @@
             <h2>Created Mixes</h2>
             <!--button to show all/More-->
             <!--Link here to the HTML of Created Mixes-->
-            <button class="More-Created-Mixes"><b>More ></b> </button>
+            <button class="More-Created-Mixes"><a href="{{ url_for('PlaylistMore')}}"><b>More ></b></a></button>
           </div>
           <div class="empty-box-right">
-            <!--Img add-->
-            <div class="right-img-box">Playlist 4</div>
-            <div class="right-img-box">Playlist 5</div>
-            <div class="right-img-box">Playlist 6</div>
-          </div>
+            {% set images_dir = url_for('static', filename='images/imgsmall') %}
+            <div class="row">
+              <!-- PlaylistMore.html -->
+              {% for playlist in playlists %}
+                <div class="empty-box">
+                  <a href="{{ url_for('playlistpage', username=current_user.username, playlist_name=playlist.name, playlist_id=playlist.id, songs=songs) }}" class="playlist-link">
+                    {% if playlist.image_filename %}
+                      <img src="{{ url_for('static', filename='images/' + playlist.image_filename) }}" alt="{{ playlist.name }}">
+                    {% else %}
+                      <img src="{{ url_for('static', filename='images/imgsmall/' + random_image) }}" alt="{{ playlist.name }}">
+                    {% endif %}
+                    <div class="playlist-name">{{ playlist.name }}</div>
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>          
         </div>
         <!--Bottom Right-->
         <div class="bottom-right-container">
@@ -61,7 +67,7 @@
             <h2>Liked Mixes</h2>
             <!--button to show all/More-->
             <!--Link here to the HTML of Liked Mixes-->
-            <button class="More-Liked-Mixes"><b>More ></b> </button>
+            <button class="More-Liked-Mixes"><b>More ></b></button>
           </div>
           <div class="empty-box-right">
             <!--Img add-->
@@ -73,8 +79,9 @@
       </div>
     </div>
   </div>
+</div>
   <footer>
-    <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
+    <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling ="no" width="100%" height="100%;"></iframe>
   </footer>
 </body>
 </html>

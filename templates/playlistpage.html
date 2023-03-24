@@ -4,6 +4,8 @@
    <!-- Add fonts -->
   <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
   <link rel="stylesheet" href="../static/playlistpage.css">
 </head>
 <body>
@@ -18,7 +20,61 @@
   <div class="container1">
     <div class="jammingwith">
         <!-- <span>Your currenly jamming with</span> --> 
+        <!------------------------ MODAL BOX FOR SHARING ------------------------> 
         <span>{{ playlist_name }}</span>
+          <button onclick="document.getElementById('id01').style.display='block'" class="btn btn-rounded btn-outline-dark ml-auto" style="width:auto; float: right;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+          </svg> Share </button>
+
+<div id="id01" class="modal">
+  
+  <form class="modal-content animate" action="/AddSharedUserByPlaylistOwner" method="POST">
+    <div id="success-message" style="display:none">USER SUCCESSFULLY ADDED</div>
+    <div class="container">
+      <label for="uname"><b>Share Playlist With </b></label>
+      <input type="text" placeholder="Enter Username" name="shareduser_username" required>
+      <!--Taking current user, playlist name and songs to redirect to the playlist page after the user is added-->
+      <input hidden="true" name="username" value={{username}} />
+      <input hidden="true" name="playlist_name" value={{playlist_name}} />
+      <input hidden="true" name="songs" value={{songs}} />
+      <button type="submit" id= "share-btn">Share</button>
+    </div>
+    <div class="container" style="background-color:#f1f1f1">
+      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+    </div>
+  </form>
+</div>
+
+<script>
+// Get the modal
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+  // add event listener to the form submit button
+  document.getElementById('share-btn').addEventListener('click', function (event) {
+    event.preventDefault();
+    var form = document.querySelector('form');
+    var successMessage = document.getElementById('success-message');
+
+    // submit the form using AJAX
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form)
+    })
+      .then(response => {
+        if (response.ok) {
+          successMessage.style.display = 'block';
+        }
+      })
+  });
+</script>
+
         <hr/>
         <span class="user">{{ username }}</span>
         <!-- <span class="follow">Follow</span> -->
@@ -82,10 +138,10 @@
       <div class="song-list">  <!--Made a loop-->
         {% for song in songs %}
         <div class="song">
-          <span class="number">{{ loop.index }}</span>
-          <span class="title">{{ song.title }}</span>
+          <span class="number">{{ loop.index }}.</span>
+          <span class="title">{{ song.songResult}}</span>
           <br>
-          <span class="songArtist">{{ song.artistResult }}</span>
+          <span class="songArtist">by {{ song.artistResult }}</span>
 <!--Delete work-->
 <form method="POST" action="/DeleteSong">
   <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
@@ -110,7 +166,7 @@
     </div>
   </div>
   <footer>
-    <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling ="no" width="100%" height="304px;"></iframe>
-  </footer>
+    <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%" height="100px"style="position: fixed; bottom: 0; left: 0; right: 0;"></iframe>
+  </footer>  
 </body>
 </html>
