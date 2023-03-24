@@ -9,6 +9,7 @@ from flask_login import login_required, current_user, login_user, UserMixin, Log
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 import json
+from databasefunctions import AddSongtoPlaylist, RemoveSongFromPlaylist, AddSharedUserByPlaylistCreator
 
 app = flask.Flask(__name__)
 
@@ -179,7 +180,6 @@ def login():
         # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
         
-
         playlists = Playlists.query.filter_by(creator=current_user.id).all()[:3]
         return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=playlists)
 
@@ -232,7 +232,6 @@ def createPlaylistPage():
 def playlistpage():
     username = request.args.get('username')
     playlist_name = request.args.get('playlist_name')
-    print(request.args.keys())
  
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
@@ -241,8 +240,6 @@ def playlistpage():
     else:
         songs = []
     
-    print("PlaylistPage" , songs)
-
     #API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
@@ -259,92 +256,64 @@ def playlistpage():
         songIDs=songIDs
     )
 
+@app.route("/AddSharedUserByPlaylistOwner", methods=["POST"])
+def AddSharedUserByPlaylistOwner():
+    username = request.form.get('username')
+    playlist_name = request.form.get('playlist_name')
+    shareduser_username = request.form.get('shareduser_username')
 
+    shareduser = Users.query.filter_by(username=shareduser_username).first()
+
+    playlist = Playlists.query.filter_by(
+        name=playlist_name, creator=current_user.id).first()
+
+    playlist.listeners_shared_to = AddSharedUserByPlaylistCreator(
+        playlist.listeners_shared_to, shareduser.id)
+    
+    db.session.commit()
+
+    return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=json.loads(playlist.songs)))
+    
 @app.route("/AddSong", methods=["POST"])
 @login_required
 def AddSong():
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
-    print("addsong keys", request.form)
-    print(playlist_name)
    
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
-    print("Current Playlist", playlist)
-    if playlist.songs != '[]':
-        songs = json.loads(playlist.songs)
-    else:
-        songs = []
-
-    print("Add Songs:" , songs)
-
+ 
     songID = request.form.get('songID')
-    print(songID)
     songResult = request.form.get('songResult')
-    print(songResult)
     artistResult = request.form.get('artistResult')
-    print(artistResult)
 
-    song = {
-        "songID": songID,
-        "songResult": songResult,
-        "artistResult": artistResult
-    }
-
-    songs.append(song)
-    print("Addes SONG: " , songs)
-    playlist = Playlists.query.filter_by(name=playlist_name, creator=current_user.id).first()
-    print("Playlist in which the song is added: ", playlist)
-    if playlist is not None:
-        playlist.songs = json.dumps(songs)
+    #calling AddSongToPlaylist function from databasefunctions.py
+    playlist.songs = AddSongtoPlaylist(playlist.songs, songID, songResult, artistResult)
 
     db.session.commit()
 
-    return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs))
+    return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=json.loads(playlist.songs)))
 
 @app.route("/DeleteSong", methods=["POST"])
 @login_required
 def DeleteSong():
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
-    print("addsong keys", request.form)
-    print(playlist_name)
 
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
-    print("Current Playlist", playlist)
-    if playlist.songs != '[]':
-        songs = json.loads(playlist.songs)
-    else:
-        songs = []
-
-    print("remove Songs:", songs)
-
+     
     songID = request.form.get('songID')
-    print(songID)
     songResult = request.form.get('songResult')
-    print(songResult)
     artistResult = request.form.get('artistResult')
-    print(artistResult)
 
-    song = {
-        "songID": songID,
-        "songResult": songResult,
-        "artistResult": artistResult
-    }
-
-    songs.remove(song)
-    print("removed SONG: ", songs)
-    playlist = Playlists.query.filter_by(
-        name=playlist_name, creator=current_user.id).first()
-    print("Playlist in which the song is removes: ", playlist)
-    if playlist is not None:
-        playlist.songs = json.dumps(songs)
+    # calling RemoveSongFromPlaylist function from databasefunctions.py
+    playlist.songs = RemoveSongFromPlaylist(
+        playlist.songs, songID, songResult, artistResult)
 
     db.session.commit()
 
-    return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=songs))
-
+    return redirect(url_for('playlistpage', username=current_user.username, playlist_name=playlist_name, songs=json.loads(playlist.songs)))
     
 # userPlaylistpage.html
 @app.route('/userPlaylistpage')
