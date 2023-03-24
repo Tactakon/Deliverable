@@ -32,7 +32,7 @@
     - **Enter a Playlist Passcode**
     - *Playlist Image* (this is not functional yet - it will open your files, but not fully operational)
 - After entering your information, click on the **Create Playlist** button. 
-- -Once the playlist is created, it shows on the user's homepage (created mixes).
+- - Once the playlist is created, it shows on the user's homepage (created mixes).
 
 ### **Adding Songs to Playlist** ###
 - Now with your playlist created, you can search and add songs to the playlist!

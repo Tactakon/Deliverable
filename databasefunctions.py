@@ -1,17 +1,27 @@
+"""
+This module contains functions for manipulating data in the database.
+
+Functions:
+- AddSongtoPlaylist: add a song to a playlist
+- RemoveSongFromPlaylist: remove a song from a playlist
+- AddSharedUserByPlaylistCreator: add a shared user to a playlist
+"""
+
 import json
 
-"""
-Takes the json string from playlist.songs
-songID, songResult, artistResult of the song to be added
-
-first converts it into python dict
-then adds the song
-then converts it backs to the string
-
-retuns songs as string
-
-"""
+# pylint: disable=invalid-name
 def AddSongtoPlaylist(songs, songID, songResult, artistResult):
+    """
+    Takes the json string from playlist.songs
+    songID, songResult, artistResult of the song to be added
+
+    first converts it into python dict
+    then adds the song
+    then converts it backs to the string
+
+    retuns songs as string
+
+    """
     new_songs = json.loads(songs)
     song = {
         "songID": songID,
@@ -21,21 +31,21 @@ def AddSongtoPlaylist(songs, songID, songResult, artistResult):
 
     new_songs.append(song)
     songs = json.dumps(new_songs)
-    
+
     return songs
 
-"""
-Takes the json string from playlist.songs
-songID, songResult, artistResult of the song to be removed
-
-first converts it into python dict
-then removes the song
-then converts it backs to the string
-
-retuns songs as string
-
-"""
 def RemoveSongFromPlaylist(songs, songID, songResult, artistResult):
+    """
+    Takes the json string from playlist.songs
+    songID, songResult, artistResult of the song to be removed
+
+    first converts it into python dict
+    then removes the song
+    then converts it backs to the string
+
+    retuns songs as string
+
+    """
     new_songs = json.loads(songs)
     song = {
         "songID": songID,
@@ -49,19 +59,19 @@ def RemoveSongFromPlaylist(songs, songID, songResult, artistResult):
     return songs
 
 
-"""
-Takes the json string from playlist.listeners_shared_to
-sharedUserID --> UserID of the shareduser of the playlist to be added
-
-first converts it into python dict
-then adds the sharedUserID
-then converts it backs to the string
-
-retuns listeners_shared_to as string
-
-"""
 
 def AddSharedUserByPlaylistCreator(listeners_shared_to, sharedUserID):
+    """
+    Takes the json string from playlist.listeners_shared_to
+    sharedUserID --> UserID of the shareduser of the playlist to be added
+
+    first converts it into python dict
+    then adds the sharedUserID
+    then converts it backs to the string
+
+    retuns listeners_shared_to as string
+
+    """
     print("In Database functions")
 
     add_isteners_shared_to = json.loads(listeners_shared_to)
