@@ -138,10 +138,10 @@ window.onclick = function(event) {
       <div class="song-list">  <!--Made a loop-->
         {% for song in songs %}
         <div class="song">
-          <span class="number">{{ loop.index }}</span>
-          <span class="title">{{ song.title }}</span>
+          <span class="number">{{ loop.index }}.</span>
+          <span class="title">{{ song.songResult}}</span>
           <br>
-          <span class="songArtist">{{ song.artistResult }}</span>
+          <span class="songArtist">by {{ song.artistResult }}</span>
 <!--Delete work-->
 <form method="POST" action="/DeleteSong">
   <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
