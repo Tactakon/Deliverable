@@ -3,6 +3,7 @@ import os
 from flask import Flask, flash, redirect, render_template, request, session, abort, url_for
 import logging
 import requests
+import random
 from search import search_song
 from flask_login import login_required, current_user, login_user, UserMixin, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -350,12 +351,22 @@ def DeleteSong():
 @login_required
 def userPlaylistpage():
     playlists = Playlists.query.filter_by(creator=current_user.id).all()[:3]
-    return flask.render_template('userPlaylistpage.html', username=current_user.username, current_user_playlists=playlists)
+    playlists.reverse()
+    images_dir = os.path.join(app.static_folder, 'images', 'imgsmall')
+    random_image = random.choice(os.listdir(images_dir))
+    return render_template('userPlaylistpage.html', username=current_user.username, playlists=playlists, random_image=random_image)
+
 
 # PlaylistMore.html
 @app.route('/PlaylistMore')
+@login_required
 def PlaylistMore():
-    return flask.render_template('PlaylistMore.html')
+    playlists = Playlists.query.filter_by(creator=current_user.id).all()
+    playlists.reverse()
+    images_dir = os.path.join(app.static_folder, 'images', 'imglarge')
+    random_image = random.choice(os.listdir(images_dir))
+    return render_template('PlaylistMore.html', playlists=playlists, random_image=random_image)
+
     
 app.secret_key = os.urandom(12)
 app.run(debug=True)
