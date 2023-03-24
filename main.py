@@ -67,7 +67,7 @@ def UsersAndPlaylist():
     users = Users.query.all()
     playlists = Playlists.query.all()
     return render_template("UsersAndPlaylist.html", users=users, playlists=playlists)
-
+ 
 # manually adding values to Users table using the UsersandPlaylist.html:
 @app.route('/add_user', methods=['POST'])
 def add_user():
@@ -265,9 +265,13 @@ def AddSharedUserByPlaylistOwner():
 
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
+    print(playlist)
+    print(playlist.listeners_shared_to)
+    print(shareduser.id)
 
     playlist.listeners_shared_to = AddSharedUserByPlaylistCreator(
         playlist.listeners_shared_to, shareduser.id)
+    print(playlist.listeners_shared_to)
     
     db.session.commit()
 

@@ -71,8 +71,6 @@ def AddSharedUserByPlaylistCreator(listeners_shared_to, sharedUserID):
     print(sharedUser)
 
     add_isteners_shared_to.append(sharedUser)
-    print("listeners_shared_to: " )
-    print(add_isteners_shared_to)
     listeners_shared_to = json.dumps(add_isteners_shared_to)
 
     return listeners_shared_to
