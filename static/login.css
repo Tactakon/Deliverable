@@ -1,8 +1,9 @@
 body {
-    color:#1D1D1D;
+    color: #1D1D1D;
     background-color: #FFFFFF;
 }
-.content-container{
+
+.content-container {
     padding-left: 104px;
     padding-bottom: 104px;
 }

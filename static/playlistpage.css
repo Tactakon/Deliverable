@@ -3,139 +3,158 @@ footer {
   bottom: 0;
   left: 0;
   right: 0;
-  max-height:fit-content;
+  max-height: fit-content;
 }
 
 
-  hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-  }
-  body {
-    display: flex;
-    flex-direction: row;
-    margin-top: 20px;;
-  }
-  
-  .container1, .container2, .container3 {
-    width: 33.33%;
-    padding: 10px;
-    box-sizing: border-box;
-  }
-  
-  .container1 {
-    margin-top: 30px;
-    padding-left: 20px;
-    width: 25%;
-    padding-top: 100px;
-    max-height: 100%;
-  }
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+}
 
-  .follow {
-    display: inline-block;
-    padding: 10px 10px;
-    font-size: 14px;
-    text-align: center;
-    background-color: lightgrey;
-    border: none;
-    border-radius: 10px;
-    margin-left: 40px;
-  }
-  .add {
-    margin-top: 100px;
-  }
-  .results {
-    white-space: nowrap;
-    display: inline-block;
-  }
-  .submitadd {
-    margin-left: 140px;
-  }
-  .container2 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1px;
-    padding-left: 250px;
-    height: 1000px;
-  }
-  img {
-    border-radius: 50%;
-    width: 400px;
-    height: 400px;
-  }
-  .currentsong {
-    text-align: center;
-  }
-  
-  .container3 {
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
-    padding-left: 250px;
-    max-height: max-content;
+body {
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+  ;
+}
 
-  }
-  .g1 {
-    display: inline-block;
-    padding: 15px 15px;
-    font-size: 20px;
-    text-align: center;
-    background-color: lightgrey;
-    border: none;
-    border-radius: 15px;
-  }
-  .g2 {
-    display: inline-block;
-    padding: 15px 15px;
-    font-size: 20px;
-    text-align: center;
-    background-color: lightgrey;
-    border: none;
-    border-radius: 15px;
-  }
-  .song {
-    margin-top: 10px;
-  }
-  .time {
-    margin-left: 100px;
-  }
-  .musicplayer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    color: #ffffff;
-    background-color: lightgrey;
-    padding: 30px;
-    margin-right: 65%;
-  }
-  .playbutton {
-      width: 20px;
-      height: auto;
-      margin-left: 50%;
-  }
-  .song-length {
-    height: 10px;
-    width: 30%;
-    background-color: #e4e4e4;
-    border-radius: 10px;
-    margin-left: 36%;
-  }
-  
-  .progress-bar {
-    height: 100%;
-    width: 40%; /* Set the width to the current progress percentage */
-    background-color: black;
-    border-radius: 10px;
-  }
+.container1,
+.container2,
+.container3 {
+  width: 33.33%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.container1 {
+  margin-top: 30px;
+  padding-left: 20px;
+  width: 25%;
+  padding-top: 100px;
+  max-height: 100%;
+}
+
+.follow {
+  display: inline-block;
+  padding: 10px 10px;
+  font-size: 14px;
+  text-align: center;
+  background-color: lightgrey;
+  border: none;
+  border-radius: 10px;
+  margin-left: 40px;
+}
+
+.add {
+  margin-top: 100px;
+}
+
+.results {
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.submitadd {
+  margin-left: 140px;
+}
+
+.container2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1px;
+  padding-left: 250px;
+  height: 1000px;
+}
+
+img {
+  border-radius: 50%;
+  width: 400px;
+  height: 400px;
+}
+
+.currentsong {
+  text-align: center;
+}
+
+.container3 {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  padding-left: 250px;
+  max-height: max-content;
+
+}
+
+.g1 {
+  display: inline-block;
+  padding: 15px 15px;
+  font-size: 20px;
+  text-align: center;
+  background-color: lightgrey;
+  border: none;
+  border-radius: 15px;
+}
+
+.g2 {
+  display: inline-block;
+  padding: 15px 15px;
+  font-size: 20px;
+  text-align: center;
+  background-color: lightgrey;
+  border: none;
+  border-radius: 15px;
+}
+
+.song {
+  margin-top: 10px;
+}
+
+.time {
+  margin-left: 100px;
+}
+
+.musicplayer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  color: #ffffff;
+  background-color: lightgrey;
+  padding: 30px;
+  margin-right: 65%;
+}
+
+.playbutton {
+  width: 20px;
+  height: auto;
+  margin-left: 50%;
+}
+
+.song-length {
+  height: 10px;
+  width: 30%;
+  background-color: #e4e4e4;
+  border-radius: 10px;
+  margin-left: 36%;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 40%;
+  /* Set the width to the current progress percentage */
+  background-color: black;
+  border-radius: 10px;
+}
 
 /* -------------------------------------------------------------------------*/
 
 /* Full-width input fields */
-input[type=text], input[type=password] {
+input[type=text],
+input[type=password] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -189,25 +208,35 @@ span.psw {
 
 /* The Modal (background) */
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4);
+  /* Black w/ opacity */
   padding-top: 60px;
 }
 
 /* Modal Content/Box */
 .modal-content {
   background-color: #fefefe;
-  margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+  margin: 5% auto 15% auto;
+  /* 5% from the top, 15% from the bottom and centered */
   border: 1px solid #888;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 80%;
+  /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button (x) */
@@ -233,22 +262,33 @@ span.psw {
 }
 
 @-webkit-keyframes animatezoom {
-  from {-webkit-transform: scale(0)} 
-  to {-webkit-transform: scale(1)}
+  from {
+    -webkit-transform: scale(0)
+  }
+
+  to {
+    -webkit-transform: scale(1)
+  }
 }
-  
+
 @keyframes animatezoom {
-  from {transform: scale(0)} 
-  to {transform: scale(1)}
+  from {
+    transform: scale(0)
+  }
+
+  to {
+    transform: scale(1)
+  }
 }
 
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
   span.psw {
-     display: block;
-     float: none;
+    display: block;
+    float: none;
   }
+
   .cancelbtn {
-     width: 100%;
+    width: 100%;
   }
 }

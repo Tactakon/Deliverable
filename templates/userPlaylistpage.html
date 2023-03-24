@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="stylesheet" href="../static/userPlaylistpage.css">
 </head>
+
 <body>
-  <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%" style="margin-top: -6px;"></iframe>
+  <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%"
+    style="margin-top: -6px;"></iframe>
   <br>
   <div class="container">
     <div style="padding-left: 10%;">
@@ -46,19 +49,22 @@
             <div class="row">
               <!-- PlaylistMore.html -->
               {% for playlist in playlists %}
-                <div class="empty-box">
-                  <a href="{{ url_for('playlistpage', username=current_user.username, playlist_name=playlist.name, playlist_id=playlist.id, songs=songs) }}" class="playlist-link">
-                    {% if playlist.image_filename %}
-                      <img src="{{ url_for('static', filename='images/' + playlist.image_filename) }}" alt="{{ playlist.name }}">
-                    {% else %}
-                      <img src="{{ url_for('static', filename='images/imgsmall/' + random_image) }}" alt="{{ playlist.name }}">
-                    {% endif %}
-                    <div class="playlist-name">{{ playlist.name }}</div>
-                  </a>
-                </div>
+              <div class="empty-box">
+                <a href="{{ url_for('playlistpage', username=current_user.username, playlist_name=playlist.name, playlist_id=playlist.id, songs=songs) }}"
+                  class="playlist-link">
+                  {% if playlist.image_filename %}
+                  <img src="{{ url_for('static', filename='images/' + playlist.image_filename) }}"
+                    alt="{{ playlist.name }}">
+                  {% else %}
+                  <img src="{{ url_for('static', filename='images/imgsmall/' + random_image) }}"
+                    alt="{{ playlist.name }}">
+                  {% endif %}
+                  <div class="playlist-name">{{ playlist.name }}</div>
+                </a>
+              </div>
               {% endfor %}
             </div>
-          </div>          
+          </div>
         </div>
         <!--Bottom Right-->
         <div class="bottom-right-container">
@@ -79,9 +85,10 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
   <footer>
-    <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling ="no" width="100%" height="100%;"></iframe>
+    <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%" height="100%;"></iframe>
   </footer>
 </body>
+
 </html>
