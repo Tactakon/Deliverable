@@ -30,4 +30,26 @@ Go to https://developer.spotify.com/dashboard/ and login with Spotify account. F
 + [spotipy](https://github.com/spotipy-dev/spotipy)
 + [tekore](https://pypi.org/project/tekore/)
 
-
+**Linting**
++ In databasefunctions.py:
+	+ #pylint: disable=invalid-name:
+		+ 11 errors due to snake_case so applied a disable. 
++ In search.py
+	+ #pylint: disable=unused-import: 
+		+ 'import requests' pulled an unused-import. I am not in charge of the API info and this is John's work. Everything works fine with it there. Not changing anything. 
+	+ #pylint: disable=unused-variable:
+		+ 'for idx, track in enumerate(results['tracks']['items']):' stated that 'idx' was an unused-variable, but again, same as above. 
++ In testingplaylistfunctions.py
+	+ #pylint: disable=invalid-name:
+		+ Errors due to snake_case so applied a disable.
++ In main.py
+	+ #pylint: disable=too-few-public-methods:
+		+ Line 82, 'class Playlists(db.Model):'. As this is not a real issue with our code, I applied a disable. 
+	+ #pylint: disable=invalid-name:
+		+ Errors due to snake_case so applied a disable.
+	+ #pylint: disable=attribute-defined-outside-init:
+		+ Line 343, 'new_playlist.playlist_image = playlist_image.read()'. This flagged but I applied a disable because there is no real issue with the code. As stated before, it works and not changing anything.
+	+ #pylint: disable=unused-variable:
+		+ Line 413, 'username = request.form.get('username')'. 'username' is a used variable and it is needed. There is no error. 
+		+ Line 446, 'username = request.form.get('username')'. 'username' is a used variable and it is needed. There is no error. 
+		+ Line 476, username = request.form.get('username'). 'username' is a used variable and it is needed. There is no error.

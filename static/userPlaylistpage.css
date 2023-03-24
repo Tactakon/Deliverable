@@ -6,12 +6,12 @@ body {
 
 /* ------------------ Headers ------------------ */
 
-h1{
+h1 {
   font-weight: 600;
-  font-size:xx-large;
+  font-size: xx-large;
 }
 
-h2{
+h2 {
   font-weight: 500;
   font-size: x-large;
 }
@@ -76,7 +76,8 @@ a.playlist-link:hover {
 }
 
 .playlist-name {
-  margin-top: 8px; /* add 8px of margin to the top of the playlist name */
+  margin-top: 8px;
+  /* add 8px of margin to the top of the playlist name */
 }
 
 /* 

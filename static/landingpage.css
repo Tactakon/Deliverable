@@ -1,170 +1,174 @@
-/* ------------------ Left & Right Margins ------------------ */ 
+/* ------------------ Left & Right Margins ------------------ */
 .margins {
-    margin-left: 200px;
-    margin-right: 200px;
-  }
-  
-  /* ------------------ General Typography ------------------ */ 
-   #header1 {
-      font-size: 90px;
-      font-weight: 800;
-   }
-   #header2{
-      font-size: 64px;
-      font-weight: 800;
-   } 
-  
-   #header3{
-      font-size: 45px;
-      font-weight: 800;
-   }
-  
-   #header4{
-      font-size: 32px;
-      font-weight: 800;
-   }
-  
-   #paragraph1{
-      font-size: 23px;
-   }
-  
-   #paragraph2{
+  margin-left: 200px;
+  margin-right: 200px;
+}
+
+/* ------------------ General Typography ------------------ */
+#header1 {
+  font-size: 90px;
+  font-weight: 800;
+}
+
+#header2 {
+  font-size: 64px;
+  font-weight: 800;
+}
+
+#header3 {
+  font-size: 45px;
+  font-weight: 800;
+}
+
+#header4 {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+#paragraph1 {
+  font-size: 23px;
+}
+
+#paragraph2 {
   font-size: 16px;
-  
-  }
-  
-  /* ------------------ Header ------------------ */
-  
-  .header {
-    margin-top: 124px;
-    margin-bottom: 0px;
-    text-align: center;
-    display:block;
-    justify-content: center;
-    align-items: center;
-  }
-  
-   /* ------------------ Page Content ------------------ */
-   .pagecontents {
-      display: grid;
-      grid-template-columns: auto auto;
-      margin-top: 124px;
-      margin-bottom: 124px;
-   }
-   
-   #page_contentleft {
-      float:left;
-      padding: 0px 32px;
-   }
-  
-   #page_contentright {
-      float:left;
-      padding: 0px 32px;
-   }
-  
-   .button {
-      background-color: #1D1D1D;
-      color: #f1f1f1;
-      border: 1px, #1D1D1D ;;
-      padding: 16px 32px;
-      font-size: 16px;
-      margin: 24px 0px;
-      border-radius: 10px;
-      }
-   
-   /* ------------------ PCA Card Styles ------------------ */
-  * {
-      box-sizing: border-box;
-  
-    }
-    
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    
-    .center {
-      display:flex;
-      justify-content: center;
-      align-items: center;
-    }
-  
-    /* Float three columns side by side */
-    .column {
-      float: left;
-      width: 400px;
-      padding: 24px 0px;
-    }
-    
-    /* Remove extra left and right margins, due to padding in columns */
-    .row {
-      margin: 0px 0px;
-  }
-    
-    /* Clear floats after the columns */
-    .row:after {
-      content: "";
-      display: table;
-      clear: both;
-      
-    }
-    
-    /* Style the counter cards */
-    .cards {
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* this adds the "card" effect */
-      padding: 32px 32px;
-      text-align: left;
-      background-color: #f1f1f1;
-    }
-  
-    #card1 {
-      background-color: #1D1D1D;
-      color: #f1f1f1;
-    }
-  
-    #card2 {
-      background-color: #4A4A4A;
-      color: #f1f1f1;
-    }
-  
-    #card3 {
-      background-color: #777777;
-      color: #f1f1f1;
-    }
-    
-    /* Responsive columns - one column layout (vertical) on small screens */
-    @media screen and (max-width: 500px) {
-      .column {
-        width: 100%;
-        display: block;
-        margin-bottom: 20px;
-      }
-    }
-  
-  /* ------------------ Call To Action ------------------ */
-  .callaction {
-      margin-top: 124px;
-      margin-bottom: 124px;
-      text-align: center;
-      margin-left: 200px;
-      margin-right: 200px;
-  }
-  
-  .button1 {
+
+}
+
+/* ------------------ Header ------------------ */
+
+.header {
+  margin-top: 124px;
+  margin-bottom: 0px;
+  text-align: center;
+  display: block;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ------------------ Page Content ------------------ */
+.pagecontents {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin-top: 124px;
+  margin-bottom: 124px;
+}
+
+#page_contentleft {
+  float: left;
+  padding: 0px 32px;
+}
+
+#page_contentright {
+  float: left;
+  padding: 0px 32px;
+}
+
+.button {
   background-color: #1D1D1D;
   color: #f1f1f1;
-  border: 1px, #1D1D1D ;;
+  border: 1px, #1D1D1D;
+  ;
+  padding: 16px 32px;
+  font-size: 16px;
+  margin: 24px 0px;
+  border-radius: 10px;
+}
+
+/* ------------------ PCA Card Styles ------------------ */
+* {
+  box-sizing: border-box;
+
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Float three columns side by side */
+.column {
+  float: left;
+  width: 400px;
+  padding: 24px 0px;
+}
+
+/* Remove extra left and right margins, due to padding in columns */
+.row {
+  margin: 0px 0px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+
+}
+
+/* Style the counter cards */
+.cards {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  /* this adds the "card" effect */
+  padding: 32px 32px;
+  text-align: left;
+  background-color: #f1f1f1;
+}
+
+#card1 {
+  background-color: #1D1D1D;
+  color: #f1f1f1;
+}
+
+#card2 {
+  background-color: #4A4A4A;
+  color: #f1f1f1;
+}
+
+#card3 {
+  background-color: #777777;
+  color: #f1f1f1;
+}
+
+/* Responsive columns - one column layout (vertical) on small screens */
+@media screen and (max-width: 500px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+/* ------------------ Call To Action ------------------ */
+.callaction {
+  margin-top: 124px;
+  margin-bottom: 124px;
+  text-align: center;
+  margin-left: 200px;
+  margin-right: 200px;
+}
+
+.button1 {
+  background-color: #1D1D1D;
+  color: #f1f1f1;
+  border: 1px, #1D1D1D;
+  ;
   padding: 16px 32px;
   font-size: 20px;
   margin: 32px 32px;
   border-radius: 10px;
-  }
-  
-  .button2 {
+}
+
+.button2 {
   background-color: whitesmoke;
   color: #1D1D1D;
-  border: 1px, #1D1D1D ;
+  border: 1px, #1D1D1D;
   padding: 16px 24px;
   font-size: 20px;
   margin: 32px 32px;
   border-radius: 10px;
-  }
+}
