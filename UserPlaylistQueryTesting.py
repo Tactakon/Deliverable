@@ -1,22 +1,24 @@
 # pylint: disable=invalid-name
 """
-Test case for the `AddUserToDB()` function.
+Module for testing user playlist queries.
 
-Tests the functionality of the function by creating a new user, adding them to the database,
-retrieving the user from the database, and checking that the user was added correctly and
-that their password is properly hashed. Also tests adding a user with an existing email.
-
-Returns: None
+Defines a `TestMyModule` class that contains test cases for functions related to
+user playlists. The tests use a mock database and cover scenarios such as retrieving
+playlists by user ID. To run the tests, execute this module as a script using the
+`unittest` module.
 """
 import unittest
 from flask import Flask
-from werkzeug.security import check_password_hash
-from main import db, Users, Playlists, AddUserToDB
+from main import db, Users, Playlists, get_playlists_by_user_id
 
 class TestMyModule(unittest.TestCase):
     """
-    Test case for the user creation module. Sets up a test environment with a mock database, 
-    adds test data to the database, and tests the user creation functionality.
+    Test class for user playlist queries.
+
+    This class contains test cases for functions related to user playlists, such as
+    retrieving playlists by user ID. The tests use a mock database to avoid modifying
+    the production database. The test database is created and populated with some
+    test data during the `setUp()` method, and deleted during the `tearDown()` method.
     """
     def setUp(self):
         """
@@ -73,37 +75,26 @@ class TestMyModule(unittest.TestCase):
         db.session.remove()
         db.drop_all()
 
-    def testAddUser(self):
+    def test_get_playlists_by_user_id(self):
         """
-        Test the AddUserToDB function.
+        Test `get_playlists_by_user_id()` function.
 
-        This function tests the functionality of the AddUserToDB function.
-        It creates a new user, adds them to the database, and then 
-        retrieves the user from the database.
-        It checks that the user was added correctly and that their 
-        password is properly hashed.
-        It also tests adding a user with an existing email.
+        Adds a playlist associated with user ID 1 to the database, calls the function with
+        that user ID, and checks that the expected playlist is returned.
 
         Returns:
-        None
+            None
         """
+        # Add a playlist associated with user ID 1
+        playlist = Playlists(name='playlist1', password='password1',
+                             songs='song1,song2', creator=1)
+        db.session.add(playlist)
+        db.session.commit()
 
-        # Create a new user and add them to the database
-        AddUserToDB(email='user3@test.com',
-                    username='user3', password='password3')
-
-        # Retrieve the user from the database
-        user = Users.query.filter_by(email='user3@test.com').first()
-
-        # Check that the user was added correctly
-        self.assertIsNotNone(user)
-        self.assertEqual(user.username, 'user3')
-        self.assertTrue(check_password_hash(user.password, 'password3'))
-
-        # Test adding a user with an existing email
-        result = AddUserToDB(email='user1@test.com',
-                             username='user4', password='password4')
-        self.assertFalse(result)
+        # Call the function and check the result
+        actual_playlists = get_playlists_by_user_id(1)
+        expected_playlists = [playlist]
+        self.assertEqual(actual_playlists, expected_playlists)
 
 if __name__ == '__main__':
     unittest.main()

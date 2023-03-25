@@ -311,7 +311,7 @@ def login():
         # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
 
-
+        # pylint: disable=unused-variable
         playlists = Playlists.query.filter_by(creator=current_user.id).all()[:3]
         return redirect(url_for('userPlaylistpage'))
 
@@ -611,11 +611,26 @@ def PlaylistMore():
     Returns:
         A rendered HTML template displaying the user's playlists.
     """
-    playlists = Playlists.query.filter_by(creator=current_user.id).all()
+    playlists = get_playlists_by_user_id(current_user.id)
     playlists.reverse()
     images_dir = os.path.join(app.static_folder, 'images', 'imglarge')
     random_image = random.choice(os.listdir(images_dir))
     return render_template('PlaylistMore.html', playlists=playlists, random_image=random_image)
+
+
+def get_playlists_by_user_id(user_id):
+    """
+    Queries the database for all playlists created by the user with the given ID.
+
+    Args:
+        user_id: The ID of the user.
+
+    Returns:
+        A list of playlist objects created by the user.
+    """
+    playlists = Playlists.query.filter_by(creator=user_id).all()
+    return playlists
+
 
 
 app.secret_key = os.urandom(12)
