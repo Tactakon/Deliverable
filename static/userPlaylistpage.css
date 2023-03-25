@@ -1,20 +1,83 @@
-.margins {
-  margin-left: 140px;
-  margin-right: 140px;
-  margin-bottom: 50px;
-  display: flex;
+/* ------------------ Body ------------------ */
+body {
+  color: #1D1D1D;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-#header1 {
-  font-size: 20px;
-  font-weight: 800;
+/* ------------------ Headers ------------------ */
+
+h1 {
+  font-weight: 600;
+  font-size: xx-large;
+}
+
+h2 {
+  font-weight: 500;
+  font-size: x-large;
+}
+
+/* ------------------ img boxes (top right) ------------------ */
+
+img {
+  max-width: 250px;
+  max-height: 250px;
+  margin-right: 16px;
+}
+
+.empty-box-right {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: -40px;
+}
+
+.right-img-box {
+  width: 250px;
+  height: 250px;
+  background-color: lightgrey;
+  color: black;
   text-align: center;
+  margin-right: 16px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/* ------------------ page formatting ------------------ */
+
+.container {
+  margin-top: -48px;
+}
+
+.margins {
+  margin-left: 104px;
+  margin-right: 104px;
+  margin-bottom: -64px;
+  display: flex;
 }
 
 .pagecontents {
   display: flex;
   height: 100%;
   width: 100%;
+}
+
+/* ------------------ playlist link stuff ------------------ */
+
+a.playlist-link {
+  color: #1D1D1D;
+}
+
+a.playlist-link:hover {
+  color: #7f7f7f;
+}
+
+.playlist-name {
+  margin-top: 8px;
+  /* add 8px of margin to the top of the playlist name */
 }
 
 /* 
@@ -27,12 +90,13 @@ The left container
   Empty Box left
     left-img-box for playlist icons
 */
+
 .left-container {
   width: 50%;
   background-color: light grey;
-  padding: 20px;
+  padding: 16px;
   text-align: left;
-  height: 100%;
+  height: 800px;
   margin-right: 20px;
   justify-content: center;
 
@@ -40,7 +104,7 @@ The left container
 
 .empty-box-left {
   width: 100%;
-  height: 800px;
+  height: 808px;
   max-height: 800px;
   display: flex;
   justify-content: space-between;
@@ -56,7 +120,7 @@ The left container
 .More-Most-Listened-To {
   background-color: transparent;
   color: black;
-  padding: 10px 20px;
+  padding: 0px 0px;
   border: none;
   border-radius: 5px;
   font-size: 16px;
@@ -66,7 +130,7 @@ The left container
 
 .left-img-box {
   width: 30%;
-  height: 100%;
+  height: 608px;
   background-color: lightgrey;
 }
 
@@ -96,25 +160,10 @@ Top Right Side
 
 }
 
-.empty-box-right {
-  width: 100%;
-  height: 340px;
-  max-height: 390px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.right-img-box {
-  width: 30%;
-  height: 100%;
-  background-color: lightgrey;
-  color: black;
-  text-decoration: none;
-}
 
 .top-right-container {
   background-color: light grey;
-  padding: 19px 20px;
+  padding: 16px 16px;
 
   text-align: left;
   height: 40%;
@@ -130,7 +179,7 @@ Top Right Side
 .More-Created-Mixes {
   background-color: transparent;
   color: black;
-  padding: 10px 20px;
+  padding-right: 48px;
   border: none;
   border-radius: 5px;
   font-size: 16px;
@@ -140,7 +189,7 @@ Top Right Side
 
 .bottom-right-container {
   background-color: light grey;
-  padding: 18px 20px;
+  padding: 16px 16px;
   text-align: left;
   height: 40%;
   width: 100%;
@@ -154,7 +203,7 @@ Top Right Side
 .More-Liked-Mixes {
   background-color: transparent;
   color: black;
-  padding: 10px 20px;
+  padding-right: 48px;
   border: none;
   border-radius: 5px;
   font-size: 16px;
