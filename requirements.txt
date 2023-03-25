@@ -7,7 +7,6 @@ spotipy
 Werkzeug
 flask
 flask_login
-werkzeug.security
 flask_sqlalchemy
 spotipy
 spotipy.oauth2
