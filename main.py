@@ -238,29 +238,48 @@ def signup():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        # if this returns a user, then the email already exists in database
-        user = Users.query.filter_by(email=email).first()
-        if user:
+        added_to_db = AddUserToDB(email, username, password)
+        if added_to_db:
+            flash('Account created!')
+            return redirect(url_for('login'))
+        else:
             flash('Email address already exists')
-            return flask.render_template('signup.html')
-
-        followers_user_ids = [] #empty json object
-
-        # if the email address is not in the database
-        new_user = Users(
-            email=email,
-            username=username,
-            # hashing the password
-            password=generate_password_hash(password, method='sha256'),
-            followers = json.dumps(followers_user_ids)
-        )
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash('Account created!')
-        return redirect(url_for('login'))
+            return render_template('signup.html')
 
     return render_template('signup.html')
+
+
+def AddUserToDB(email, username, password):
+    """
+    Adds a new user to the database.
+
+    Args:
+        email (str): The email address of the new user.
+        username (str): The username of the new user.
+        password (str): The password of the new user.
+
+    Returns:
+        bool: True if the user was added to the database successfully, False if a user with the same email already exists in the database.
+
+    """
+    # Check if user already exists
+    user = Users.query.filter_by(email=email).first()
+    if user:
+        return False
+
+    # Add new user to database
+    followers_user_ids = []  # empty json object
+    new_user = Users(
+        email=email,
+        username=username,
+        password=generate_password_hash(password, method='sha256'),
+        followers=json.dumps(followers_user_ids)
+    )
+    db.session.add(new_user)
+    db.session.commit()
+
+    return True
+
 
 # login.html
 @app.route('/login', methods=['POST', 'GET'])
@@ -292,7 +311,7 @@ def login():
         # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
 
-
+        # pylint: disable=unused-variable
         playlists = Playlists.query.filter_by(creator=current_user.id).all()[:3]
         return redirect(url_for('userPlaylistpage'))
 
@@ -463,6 +482,74 @@ def AddSong():
     playlist_name=playlist_name,
     songs=json.loads(playlist.songs)))
 
+# sharedplaylistpage
+@login_required
+@app.route('/sharedplaylistpage', methods=['POST', 'GET'])
+def sharedplaylistpage():
+    username = request.args.get('username')
+    playlist_name = request.args.get('playlist_name')
+ 
+    playlist = Playlists.query.filter_by(
+        name=playlist_name, creator=current_user.id).first()
+    if playlist.songs:
+        songs = json.loads(playlist.songs)
+    else:
+        songs = []
+    
+    #API
+    form_data = request.args
+    query = form_data.get("song", "smooth operator")
+    results = search_song(query)
+    (songResults, artistResults, songIDs) = results
+
+    return render_template(
+        'sharedplaylistpage.html',
+        username=username,
+        playlist_name=playlist_name,
+        songs=songs, #dict
+        songResults=songResults,
+        artistResults=artistResults,
+        songIDs=songIDs
+    )
+    
+    
+@app.route("/AddSongBySharedUser", methods=["POST"])
+@login_required
+def AddSongBySharedUser():
+    username = request.form.get('username')
+    playlist_name = request.form.get('playlist_name')
+    password = request.form.get('password')
+    playlist = Playlists.query.filter_by(name=playlist_name).first()
+
+    print("addsong keys", request.form)
+    print(playlist_name)
+    print(playlist.password)
+    print (password)
+   
+    # Check if the password entered by the user matches the password in the database
+    if playlist.password == password:
+        print('Song Added')
+    else:
+        print('Password is incorrect.')
+        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name))
+    
+    playlist = Playlists.query.filter_by(
+        name=playlist_name, creator=current_user.id).first()
+
+    songID = request.form.get('songID')
+    songResult = request.form.get('songResult')
+    artistResult = request.form.get('artistResult')
+
+    #calling AddSongToPlaylist function from databasefunctions.py
+    playlist.songs = AddSongtoPlaylist(playlist.songs, songID, songResult, artistResult)
+
+    db.session.commit()
+    #no longer requires password after first song added
+    return redirect(url_for('playlistpage',
+    username=current_user.username,
+    playlist_name=playlist_name,
+    songs=json.loads(playlist.songs)))
+
 @app.route("/DeleteSong", methods=["POST"])
 @login_required
 def DeleteSong():
@@ -524,11 +611,26 @@ def PlaylistMore():
     Returns:
         A rendered HTML template displaying the user's playlists.
     """
-    playlists = Playlists.query.filter_by(creator=current_user.id).all()
+    playlists = get_playlists_by_user_id(current_user.id)
     playlists.reverse()
     images_dir = os.path.join(app.static_folder, 'images', 'imglarge')
     random_image = random.choice(os.listdir(images_dir))
     return render_template('PlaylistMore.html', playlists=playlists, random_image=random_image)
+
+
+def get_playlists_by_user_id(user_id):
+    """
+    Queries the database for all playlists created by the user with the given ID.
+
+    Args:
+        user_id: The ID of the user.
+
+    Returns:
+        A list of playlist objects created by the user.
+    """
+    playlists = Playlists.query.filter_by(creator=user_id).all()
+    return playlists
+
 
 
 app.secret_key = os.urandom(12)
