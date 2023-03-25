@@ -238,29 +238,48 @@ def signup():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        # if this returns a user, then the email already exists in database
-        user = Users.query.filter_by(email=email).first()
-        if user:
+        added_to_db = AddUserToDB(email, username, password)
+        if added_to_db:
+            flash('Account created!')
+            return redirect(url_for('login'))
+        else:
             flash('Email address already exists')
-            return flask.render_template('signup.html')
-
-        followers_user_ids = [] #empty json object
-
-        # if the email address is not in the database
-        new_user = Users(
-            email=email,
-            username=username,
-            # hashing the password
-            password=generate_password_hash(password, method='sha256'),
-            followers = json.dumps(followers_user_ids)
-        )
-        db.session.add(new_user)
-        db.session.commit()
-
-        flash('Account created!')
-        return redirect(url_for('login'))
+            return render_template('signup.html')
 
     return render_template('signup.html')
+
+
+def AddUserToDB(email, username, password):
+    """
+    Adds a new user to the database.
+
+    Args:
+        email (str): The email address of the new user.
+        username (str): The username of the new user.
+        password (str): The password of the new user.
+
+    Returns:
+        bool: True if the user was added to the database successfully, False if a user with the same email already exists in the database.
+
+    """
+    # Check if user already exists
+    user = Users.query.filter_by(email=email).first()
+    if user:
+        return False
+
+    # Add new user to database
+    followers_user_ids = []  # empty json object
+    new_user = Users(
+        email=email,
+        username=username,
+        password=generate_password_hash(password, method='sha256'),
+        followers=json.dumps(followers_user_ids)
+    )
+    db.session.add(new_user)
+    db.session.commit()
+
+    return True
+
 
 # login.html
 @app.route('/login', methods=['POST', 'GET'])
