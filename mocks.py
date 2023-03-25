@@ -226,7 +226,7 @@ mocked_api_data = {
               "width": 64
             }
           ],
-          "is_playable": true,
+          "is_playable": "true",
           "name": "The Best of Sade",
           "release_date": "1994-10-31",
           "release_date_precision": "day",
@@ -434,7 +434,7 @@ mocked_api_data = {
         ],
         "disc_number": 1,
         "duration_ms": 258693,
-        "explicit": false,
+        "explicit": "false",
         "external_ids": {
           "isrc": "GBBBM8400016"
         },
@@ -443,7 +443,7 @@ mocked_api_data = {
         },
         "href": "https://api.spotify.com/v1/tracks/1Hv1VTm8zeOeybub15mA2R",
         "id": "1Hv1VTm8zeOeybub15mA2R",
-        "is_local": false,
+        "is_local": "false",
         "name": "Smooth Operator - Single Version",
         "popularity": 71,
         "preview_url": "https://p.scdn.co/mp3-preview/43f389ca63d0814eb6e316b42f13011d802373ff?cid=00f7d6d461f14881976d6a7e6cf913d0",
@@ -675,7 +675,7 @@ mocked_api_data = {
               "width": 64
             }
           ],
-          "is_playable": true,
+          "is_playable": "true",
           "name": "Becoming The Don",
           "release_date": "2021-02-20",
           "release_date_precision": "day",
@@ -884,7 +884,7 @@ mocked_api_data = {
         ],
         "disc_number": 1,
         "duration_ms": 208457,
-        "explicit": true,
+        "explicit": "true",
         "external_ids": {
           "isrc": "QZ82C2100003"
         },
@@ -893,7 +893,7 @@ mocked_api_data = {
         },
         "href": "https://api.spotify.com/v1/tracks/1XtY7ZTN4W1diEt5ArXKvm",
         "id": "1XtY7ZTN4W1diEt5ArXKvm",
-        "is_local": false,
+        "is_local": "false",
         "name": "Smooth Operator",
         "popularity": 50,
         "preview_url": "https://p.scdn.co/mp3-preview/b2f08e7d18f206163e69e827e65bcd605dcc6311?cid=00f7d6d461f14881976d6a7e6cf913d0",
@@ -1125,7 +1125,7 @@ mocked_api_data = {
               "width": 64
             }
           ],
-          "is_playable": true,
+          "is_playable": "true",
           "name": "Diamond Life",
           "release_date": "1984-07-16",
           "release_date_precision": "day",
@@ -1333,7 +1333,7 @@ mocked_api_data = {
         ],
         "disc_number": 1,
         "duration_ms": 298893,
-        "explicit": false,
+        "explicit": "false",
         "external_ids": {
           "isrc": "GBBBM8400006"
         },
@@ -1342,7 +1342,7 @@ mocked_api_data = {
         },
         "href": "https://api.spotify.com/v1/tracks/7pLuEMFougkSHXrPBtNxTR",
         "id": "7pLuEMFougkSHXrPBtNxTR",
-        "is_local": false,
+        "is_local": "false",
         "name": "Smooth Operator",
         "popularity": 56,
         "preview_url": "https://p.scdn.co/mp3-preview/7cd5501c4e39b8c44336d20e139252f25a8ddf04?cid=00f7d6d461f14881976d6a7e6cf913d0",
@@ -1354,7 +1354,7 @@ mocked_api_data = {
     "limit": 3,
     "next": "https://api.spotify.com/v1/search?query=smooth+operator&type=track&offset=3&limit=3",
     "offset": 0,
-    "previous": null,
+    "previous": "null",
     "total": 904
   }
 }
