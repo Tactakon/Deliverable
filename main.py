@@ -463,6 +463,74 @@ def AddSong():
     playlist_name=playlist_name,
     songs=json.loads(playlist.songs)))
 
+# sharedplaylistpage
+@login_required
+@app.route('/sharedplaylistpage', methods=['POST', 'GET'])
+def sharedplaylistpage():
+    username = request.args.get('username')
+    playlist_name = request.args.get('playlist_name')
+ 
+    playlist = Playlists.query.filter_by(
+        name=playlist_name, creator=current_user.id).first()
+    if playlist.songs:
+        songs = json.loads(playlist.songs)
+    else:
+        songs = []
+    
+    #API
+    form_data = request.args
+    query = form_data.get("song", "smooth operator")
+    results = search_song(query)
+    (songResults, artistResults, songIDs) = results
+
+    return render_template(
+        'sharedplaylistpage.html',
+        username=username,
+        playlist_name=playlist_name,
+        songs=songs, #dict
+        songResults=songResults,
+        artistResults=artistResults,
+        songIDs=songIDs
+    )
+    
+    
+@app.route("/AddSongBySharedUser", methods=["POST"])
+@login_required
+def AddSongBySharedUser():
+    username = request.form.get('username')
+    playlist_name = request.form.get('playlist_name')
+    password = request.form.get('password')
+    playlist = Playlists.query.filter_by(name=playlist_name).first()
+
+    print("addsong keys", request.form)
+    print(playlist_name)
+    print(playlist.password)
+    print (password)
+   
+    # Check if the password entered by the user matches the password in the database
+    if playlist.password == password:
+        print('Song Added')
+    else:
+        print('Password is incorrect.')
+        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name))
+    
+    playlist = Playlists.query.filter_by(
+        name=playlist_name, creator=current_user.id).first()
+
+    songID = request.form.get('songID')
+    songResult = request.form.get('songResult')
+    artistResult = request.form.get('artistResult')
+
+    #calling AddSongToPlaylist function from databasefunctions.py
+    playlist.songs = AddSongtoPlaylist(playlist.songs, songID, songResult, artistResult)
+
+    db.session.commit()
+    #no longer requires password after first song added
+    return redirect(url_for('playlistpage',
+    username=current_user.username,
+    playlist_name=playlist_name,
+    songs=json.loads(playlist.songs)))
+
 @app.route("/DeleteSong", methods=["POST"])
 @login_required
 def DeleteSong():
