@@ -4,6 +4,7 @@ This module contains unit tests for the playlist song remove function.
 Test cases:
 - testAdd: test that the RemoveSongFromPlaylist function removes a song from a playlist correctly
 """
+#pylint: disable=invalid-name
 import unittest
 import json
 from databasefunctions import RemoveSongFromPlaylist, AddSongtoPlaylist
@@ -78,7 +79,13 @@ class TestingPlaylistSongRemoveFunction(unittest.TestCase):
                       "artistResult": "Artist 4"}, updated_songs_list)
 
 class TestingAddSongtoPlaylistFunction(unittest.TestCase):
+    """
+    This class contains unit tests for the `AddSongtoPlaylist` function.
+    """
     def testAdd(self):
+        """
+        Test the 'AddSongtoPlaylist' function
+        """
         # creating a playlist
         songs = '''[
             {
@@ -102,7 +109,7 @@ class TestingAddSongtoPlaylistFunction(unittest.TestCase):
                 "artistResult": "Artist 4"
             }
         ]'''
-        
+
         songID = 5
         songResult = "Song 5"
         artistResult = "Artist 5"

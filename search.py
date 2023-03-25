@@ -37,11 +37,12 @@ def search_song(query):
     data = sp.search(q=query, limit=3)
     results = parse_results(data)
     return results
-
+# pylint: disable=missing-function-docstring
 def parse_results(data):
     songs = []
     artists = []
     ids = []
+    # pylint: disable=unused-variable
     for idx, track in enumerate(data['tracks']['items']):
         songs.append(track['name'])
         artists.append(track['artists'][0]['name'])

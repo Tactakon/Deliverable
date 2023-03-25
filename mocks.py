@@ -1,3 +1,7 @@
+"""
+This module contains mocked data for testing purposes.
+"""
+# pylint: disable=too-many-lines
 mocked_api_data = {
   "tracks": {
     "href": "https://api.spotify.com/v1/search?query=smooth+operator&type=track&offset=0&limit=3",
@@ -446,7 +450,8 @@ mocked_api_data = {
         "is_local": "false",
         "name": "Smooth Operator - Single Version",
         "popularity": 71,
-        "preview_url": "https://p.scdn.co/mp3-preview/43f389ca63d0814eb6e316b42f13011d802373ff?cid=00f7d6d461f14881976d6a7e6cf913d0",
+        "preview_url": "https://p.scdn.co/mp3-preview/"
+                 "43f389ca63d0814eb6e316b42f13011d802373ff?cid=00f7d6d461f14881976d6a7e6cf913d0",
         "track_number": 3,
         "type": "track",
         "uri": "spotify:track:1Hv1VTm8zeOeybub15mA2R"
@@ -896,7 +901,8 @@ mocked_api_data = {
         "is_local": "false",
         "name": "Smooth Operator",
         "popularity": 50,
-        "preview_url": "https://p.scdn.co/mp3-preview/b2f08e7d18f206163e69e827e65bcd605dcc6311?cid=00f7d6d461f14881976d6a7e6cf913d0",
+        "preview_url": "https://p.scdn.co/mp3-preview/"
+                 "b2f08e7d18f206163e69e827e65bcd605dcc6311?cid=00f7d6d461f14881976d6a7e6cf913d0",
         "track_number": 1,
         "type": "track",
         "uri": "spotify:track:1XtY7ZTN4W1diEt5ArXKvm"
@@ -1345,7 +1351,8 @@ mocked_api_data = {
         "is_local": "false",
         "name": "Smooth Operator",
         "popularity": 56,
-        "preview_url": "https://p.scdn.co/mp3-preview/7cd5501c4e39b8c44336d20e139252f25a8ddf04?cid=00f7d6d461f14881976d6a7e6cf913d0",
+        "preview_url": "https://p.scdn.co/mp3-preview/7cd5501c4e39b8c44336d20e139252f25a8ddf04?"
+                 "cid=00f7d6d461f14881976d6a7e6cf913d0",
         "track_number": 1,
         "type": "track",
         "uri": "spotify:track:7pLuEMFougkSHXrPBtNxTR"
