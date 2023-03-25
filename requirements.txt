@@ -1,14 +1,7 @@
 Flask
-Flask_Login
+Flask-Login
 flask_sqlalchemy
 python-dotenv
 requests
 spotipy
 Werkzeug
-flask
-flask_login
-flask_sqlalchemy
-spotipy
-spotipy.oauth2
-requests
-dotenv
