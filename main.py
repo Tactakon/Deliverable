@@ -239,6 +239,7 @@ def signup():
         password = request.form.get('password')
 
         added_to_db = AddUserToDB(email, username, password)
+        # pylint: disable = no-else-return
         if added_to_db:
             flash('Account created!')
             return redirect(url_for('login'))
@@ -259,7 +260,8 @@ def AddUserToDB(email, username, password):
         password (str): The password of the new user.
 
     Returns:
-        bool: True if the user was added to the database successfully, False if a user with the same email already exists in the database.
+        bool: True if the user was added to the database successfully, 
+        False if a user with the same email already exists in the database.
 
     """
     # Check if user already exists
@@ -486,16 +488,19 @@ def AddSong():
 @login_required
 @app.route('/sharedplaylistpage', methods=['POST', 'GET'])
 def sharedplaylistpage():
+    """
+    Renders the page for a shared playlist.
+    """
     username = request.args.get('username')
     playlist_name = request.args.get('playlist_name')
- 
+
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
     if playlist.songs:
         songs = json.loads(playlist.songs)
     else:
         songs = []
-    
+
     #API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
@@ -511,11 +516,15 @@ def sharedplaylistpage():
         artistResults=artistResults,
         songIDs=songIDs
     )
-    
-    
+
+
 @app.route("/AddSongBySharedUser", methods=["POST"])
 @login_required
 def AddSongBySharedUser():
+    """
+    Adds a song to a shared playlist if the password provided by the user is correct.
+    """
+    # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
     password = request.form.get('password')
@@ -525,14 +534,14 @@ def AddSongBySharedUser():
     print(playlist_name)
     print(playlist.password)
     print (password)
-   
+
     # Check if the password entered by the user matches the password in the database
     if playlist.password == password:
         print('Song Added')
     else:
         print('Password is incorrect.')
         return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name))
-    
+
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
 
