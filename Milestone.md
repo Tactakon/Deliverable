@@ -19,9 +19,7 @@
 - Integrating social media for login and signup.
 - Have the create a playlist function more polished and more details for the user to enter, such as playlist name & comments about the playlist.
 - Design a better UI for inviting people to the playlist page, and have a cleaner look and feel. 
-- The playlist owner can accept or refuse song suggestions at the time the song is requested to add.
-    - i.e., a playlist owner (Tom) has shared his playlist passcode with the listener (Jerry). Jerry enters the passcode for Tom’s playlist. Jerry requests to add a song. There is a notification pop-up on Tom’s end, and he is prompted to select to add this song or deny adding this song. 
-    - This is different from MVP because the MVP will add the song with the passcode and the owner of the playlist will have to manually go back and remove it rather than being prompted by a popup box.
+- The playlist owner will recieve a notification that a new song was added to their playlist when the web app is next opened. 
 - Search bar connected with a database finding a person’s playlist.
 - Ability to like the playlist and follow the playlist owner.
 - Add animations to buttons.
