@@ -4,7 +4,7 @@ This module contains functions for searching songs on Spotify.
 Functions:
 - search_song: search for songs on Spotify and return their names, artists, and ID
 - parse_results: takes json file generated from API call in search_song function 
-  and returns a tuple which contains 3 lists - songs, artists, and ids
+  and returns a tuple which contains 3 lists - songs, artists,ids and imageURLS
 """
 
 import os
@@ -24,7 +24,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLI
                                                            client_secret=SPOTIPY_CLIENT_SECRET))
 def search_song(query):
     """
-    Search for songs on Spotify and return their names, artists, and IDs.
+    Search for songs on Spotify and return their names, artists,IDs and image URLs.
 
     Input:
     - query: the search query for the song
@@ -33,6 +33,7 @@ def search_song(query):
     - songs: a list of the names of the matching songs
     - artists: a list of the names of the artists of the matching songs
     - ids: a list of the IDs of the matching songs
+    - image_urls: a list of image URLS for matching songs
     """
     data = sp.search(q=query, limit=3)
     results = parse_results(data)
@@ -42,9 +43,11 @@ def parse_results(data):
     songs = []
     artists = []
     ids = []
+    image_urls = []
     # pylint: disable=unused-variable
     for idx, track in enumerate(data['tracks']['items']):
         songs.append(track['name'])
         artists.append(track['artists'][0]['name'])
         ids.append(track['id'])
-    return songs, artists, ids
+        image_urls.append(track['album']['images'][0]['url'])
+    return songs, artists, ids, image_urls
