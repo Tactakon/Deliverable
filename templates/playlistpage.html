@@ -113,6 +113,7 @@
             <input type="hidden" name="songID" value="{{songIDs[i]}}" /> <!--API SONG ID-->
             <input type="hidden" name="songResult" value="{{songResults[i]}}" /><!--SONG RESULT-->
             <input type="hidden" name="artistResult" value="{{artistResults[i]}}" /><!--SONG ARTIST-->
+            <input type="hidden" name="imageURL" value="{{imageURLs[i]}}" /><!--IMAGE URL-->
             <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
             <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
             <input hidden="true" name="songs" value={{songs}} />
@@ -126,7 +127,7 @@
   <!-- Container2 is left side -->
   <div class="container2">
     <div class="currentsong">
-      <span><img src="https://wallpaperaccess.com/full/2683982.jpg"></span>
+      <span><img src="https://wallpaperaccess.com/full/2683982.jpg" class ="image1"></span>
       <br>
       <br>
       <span class="currentitle">Song Title</span>
@@ -147,15 +148,17 @@
       <div class="song-list"> <!--Made a loop-->
         {% for song in songs %}
         <div class="song">
+          <img src={{song.imageURL}} class = "image2">
+          <br>
           <span class="number">{{ loop.index }}.</span>
           <span class="title">{{ song.songResult}}</span>
-          <br>
-          <span class="songArtist">by {{ song.artistResult }}</span>
+          <span class="songArtist"> - {{ song.artistResult }}</span>
           <!--Delete work-->
           <form method="POST" action="/DeleteSong">
             <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
             <input type="hidden" name="songResult" value="{{song.songResult}}" /><!--SONG RESULT-->
             <input type="hidden" name="artistResult" value="{{song.artistResult}}" /><!--SONG ARTIST-->
+            <input type="hidden" name="imageURL" value="{{song.imageURL}}" /><!--IMAGE URL-->
             <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
             <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
             <input hidden="true" name="songs" value={{songs}} />

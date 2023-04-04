@@ -71,10 +71,14 @@ body {
   height: 1000px;
 }
 
-img {
+.image1 {
   border-radius: 50%;
   width: 400px;
   height: 400px;
+}
+.image2 {
+width:200px;
+height:200px;
 }
 
 .currentsong {
