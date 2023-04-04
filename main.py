@@ -404,7 +404,7 @@ def playlistpage():
     form_data = request.args
     query = form_data.get("song", "smooth operator")
     results = search_song(query)
-    (songResults, artistResults, songIDs) = results
+    (songResults, artistResults, songIDs, imageURLs) = results
 
     return render_template(
         'playlistpage.html',
@@ -413,7 +413,8 @@ def playlistpage():
         songs=songs, #dict
         songResults=songResults,
         artistResults=artistResults,
-        songIDs=songIDs
+        songIDs=songIDs,
+        imageURLs=imageURLs
     )
 
 @app.route("/AddSharedUserByPlaylistOwner", methods=["POST"])
@@ -473,9 +474,10 @@ def AddSong():
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
     artistResult = request.form.get('artistResult')
+    imageURL = request.form.get('imageURL')
 
     #calling AddSongToPlaylist function from databasefunctions.py
-    playlist.songs = AddSongtoPlaylist(playlist.songs, songID, songResult, artistResult)
+    playlist.songs = AddSongtoPlaylist(playlist.songs, songID, songResult, artistResult,imageURL)
 
     db.session.commit()
 
@@ -505,7 +507,7 @@ def sharedplaylistpage():
     form_data = request.args
     query = form_data.get("song", "smooth operator")
     results = search_song(query)
-    (songResults, artistResults, songIDs) = results
+    (songResults, artistResults, songIDs, imageURLs) = results
 
     return render_template(
         'sharedplaylistpage.html',
@@ -514,7 +516,8 @@ def sharedplaylistpage():
         songs=songs, #dict
         songResults=songResults,
         artistResults=artistResults,
-        songIDs=songIDs
+        songIDs=songIDs,
+        imageURLs=imageURLs
     )
 
 
@@ -548,9 +551,10 @@ def AddSongBySharedUser():
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
     artistResult = request.form.get('artistResult')
+    imageURL = request.form.get('imageURL')
 
     #calling AddSongToPlaylist function from databasefunctions.py
-    playlist.songs = AddSongtoPlaylist(playlist.songs, songID, songResult, artistResult)
+    playlist.songs = AddSongtoPlaylist(playlist.songs, songID, songResult, artistResult,imageURL)
 
     db.session.commit()
     #no longer requires password after first song added
@@ -577,10 +581,11 @@ def DeleteSong():
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
     artistResult = request.form.get('artistResult')
+    imageURL = request.form.get('imageURL')
 
     # calling RemoveSongFromPlaylist function from databasefunctions.py
     playlist.songs = RemoveSongFromPlaylist(
-        playlist.songs, songID, songResult, artistResult)
+        playlist.songs, songID, songResult, artistResult, imageURL)
 
     db.session.commit()
 

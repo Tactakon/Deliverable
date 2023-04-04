@@ -10,10 +10,10 @@ Functions:
 import json
 
 # pylint: disable=invalid-name
-def AddSongtoPlaylist(songs, songID, songResult, artistResult):
+def AddSongtoPlaylist(songs, songID, songResult, artistResult, imageURL):
     """
     Takes the json string from playlist.songs
-    songID, songResult, artistResult of the song to be added
+    songID, songResult, artistResult, imageURL of the song to be added
 
     first converts it into python dict
     then adds the song
@@ -26,7 +26,8 @@ def AddSongtoPlaylist(songs, songID, songResult, artistResult):
     song = {
         "songID": songID,
         "songResult": songResult,
-        "artistResult": artistResult
+        "artistResult": artistResult,
+        "imageURL": imageURL
     }
 
     new_songs.append(song)
@@ -34,10 +35,10 @@ def AddSongtoPlaylist(songs, songID, songResult, artistResult):
 
     return songs
 
-def RemoveSongFromPlaylist(songs, songID, songResult, artistResult):
+def RemoveSongFromPlaylist(songs, songID, songResult, artistResult, imageURL):
     """
     Takes the json string from playlist.songs
-    songID, songResult, artistResult of the song to be removed
+    songID, songResult, artistResult, imageURL of the song to be removed
 
     first converts it into python dict
     then removes the song
@@ -50,7 +51,8 @@ def RemoveSongFromPlaylist(songs, songID, songResult, artistResult):
     song = {
         "songID": songID,
         "songResult": songResult,
-        "artistResult": artistResult
+        "artistResult": artistResult,
+        "imageURL": imageURL
     }
 
     new_songs.remove(song)
