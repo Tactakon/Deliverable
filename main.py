@@ -113,7 +113,7 @@ class Playlists(db.Model):
     password = db.Column(db.String(16))
     playlist_image = db.Column(db.LargeBinary)
     songs = db.Column(db.String(10000))
-    creator = db.Column(db.Integer, db.ForeignKey('users.id'))  # user.id stored
+    creator = db.Column(db.Integer, db.ForeignKey('users.id')) #user.id stored
     user = db.relationship("Users", back_populates="playlists")
 
 
