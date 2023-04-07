@@ -22,6 +22,8 @@ img {
   max-width: 250px;
   max-height: 250px;
   margin-right: 16px;
+  height: fit-content;
+  width: fit-content;
 }
 
 .empty-box-right {
@@ -209,4 +211,18 @@ Top Right Side
   font-size: 16px;
   text-decoration: none;
   cursor: pointer;
+}
+
+.empty-box {
+  width: 250px;
+  height: 250px;
+  color: black;
+  text-align: center;
+  margin-right: 16px;
+}
+
+.empty-box img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
