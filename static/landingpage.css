@@ -1,5 +1,4 @@
-
-.body {
+body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -56,7 +55,7 @@
 
 #exampleproduct {
   margin-left: 2%;
-  margin-top: 2%;
+  margin-top: 4%;
   font-style: italic;
 }
 
@@ -127,7 +126,7 @@
   font-weight: 800;
   color: #FFFFFF;
   padding-top: 10%;
-  width: 50%;
+  width: 64%;
   text-align: center;
   margin: 0 auto;
 }
@@ -152,4 +151,8 @@
 .button2:active {
   background-color: #8CCB1F; /* Even darker green when clicked (active) */
   transform: scale(0.95); /* Slightly smaller button when clicked */
+}
+
+footer {
+  margin-top: -4%;
 }

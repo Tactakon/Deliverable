@@ -31,12 +31,13 @@
         <div class="empty-box">
           <a href="{{ url_for('playlistpage', username=current_user.username, playlist_name=playlist.name, playlist_id=playlist.id, songs=songs) }}"
             class="playlist-link">
-            {% if playlist.image_filename %}
-            <img src="{{ url_for('static', filename='images/' + playlist.image_filename) }}" alt="{{ playlist.name }}">
+            <div class="playlist-name">{{ playlist.name }}</div>
+            {% if playlist.playlist_image %}
+            <img src="{{ url_for('playlist_image', playlist_id=playlist.id) }}" alt="Playlist Image">
             {% else %}
             <img src="{{ url_for('static', filename='images/imglarge/' + random_image) }}" alt="{{ playlist.name }}">
             {% endif %}
-            <div class="playlist-name">{{ playlist.name }}</div>
+            
           </a>
         </div>
         {% endfor %}
