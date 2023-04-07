@@ -8,4 +8,4 @@
     - Secret key error not assigned to app.config
 
 - Error on the deployed app
-    - playlist creation not working properly because it's not taking the random selected image from the available image.
+    - playlist creation not working properly because it's not taking the random selected image from the available images.
