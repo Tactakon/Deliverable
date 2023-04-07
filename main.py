@@ -101,7 +101,6 @@ class Playlists(db.Model):
    # playlist_image = db.Column(db.LargeBinary)
     songs = db.Column(db.String(10000))
     creator = db.Column(db.Integer, db.ForeignKey('users.id')) #user.id stored
-    #listeners_shared_to = db.Column(db.String(1024))
     user = db.relationship("Users", back_populates="playlists")
 
 with app.app_context():
