@@ -29,6 +29,7 @@
       <th>Username</th>
       <th>Password</th>
       <th>Followers</th>
+      <th>Playlists shared with</th>
     </tr>
     {% for user in users %}
     <tr>
@@ -36,7 +37,9 @@
       <td>{{ user.email }}</td>
       <td>{{ user.username }}</td>
       <td>{{ user.password }}</td>
-      <td>{{ user.followers }}</td>
+      <td>{{ user.Followers}}</td>
+      <td>{{ user.playlists_shared_with}}</td>
+
       <td><!--Deleting from Users -->
         <form method="POST" action="{{ url_for('delete_user') }}">
           <input type="hidden" name="user_email" value="{{ user.email }}">

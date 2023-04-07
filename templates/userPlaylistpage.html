@@ -21,16 +21,36 @@
       <div class="left-container">
         <div class="Most-Listened-To">
           <!--Most Listened To-->
-          <h2>Most Listened To</h2>
+          <h2>Created Mixes</h2>
           <!--button to show all/More-->
           <!--Link here to the HTML of Most Listened To-->
-          <button class="More-Most-Listened-To"><b>More ></b></button>
+          <button class="More-Created-Mixes"><a href="{{ url_for('PlaylistMore')}}"><b>More ></b></a></button>
         </div>
         <div class="empty-box-left">
+          {% set images_dir = url_for('static', filename='images/imgsmall') %}
+          <div class="row">
+            <!-- PlaylistMore.html -->
+            {% for playlist in playlists %}
+            <div class="left-img-box">
+              <a href="{{ url_for('playlistpage', username=current_user.username, playlist_name=playlist.name, playlist_id=playlist.id, songs=songs) }}"
+                class="playlist-link">
+                {% if playlist.image_filename %}
+                <img src="{{ url_for('static', filename='images/' + playlist.image_filename) }}"
+                  alt="{{ playlist.name }}">
+                {% else %}
+                <img src="{{ url_for('static', filename='images/imgsmall/' + random_image) }}"
+                  alt="{{ playlist.name }}">
+                {% endif %}
+                <div class="playlist-name">{{ playlist.name }}</div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
           <!--Img add-->
-          <div class="left-img-box">Playlist 1</div>
+          <!--<div class="left-img-box">Playlist 1</div>
           <div class="left-img-box">Playlist 2</div>
           <div class="left-img-box">Playlist 3</div>
+          -->
         </div>
       </div>
       <!--Right side of the page-->
@@ -39,14 +59,15 @@
         <div class="top-right-container">
           <div class="Created-Mixes">
             <!--Created Mixes-->
-            <h2>Created Mixes</h2>
+            <h2>Shared With You</h2>
             <!--button to show all/More-->
             <!--Link here to the HTML of Created Mixes-->
-            <button class="More-Created-Mixes"><a href="{{ url_for('PlaylistMore')}}"><b>More ></b></a></button>
+            <button class="More-Most-Listened-To"><b>More ></b></button>
           </div>
           <div class="empty-box-top-right">
             <div class="row">
-              {% for playlist in playlists %}
+              <!-- PlaylistMore.html -->
+              {% for playlist in shared_playlists %}
               <div class="empty-box">
                 <a href="{{ url_for('playlistpage', username=current_user.username, playlist_name=playlist.name, playlist_id=playlist.id, songs=songs) }}"
                   class="playlist-link">
