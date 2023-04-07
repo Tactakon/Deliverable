@@ -24,9 +24,9 @@ app = flask.Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# each user of the app need their secret key #in .env as SECRET_KEY
-# app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-# will be done in the later sprints
+#each user of the app need their secret key #in .env as SECRET_KEY
+app.config['SECRET_KEY'] = os.urandom(12)
+#will be done in the later sprints
 
 # database boilerplate code
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + \
@@ -34,6 +34,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + \
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+
 
 # Flask-Login setup
 login_manager = LoginManager()
@@ -77,8 +78,6 @@ class Users(UserMixin, db.Model):
         password (str): The user's hashed password.
         followers (str): A string representation of the user's followers.
         playlists (list[Playlists]): A list of playlists owned by the user.
-        playlists_shared_with (str): A string representation of the 
-        playlists that are shared with the user.
 
     """
     id = db.Column(db.Integer, primary_key=True)
@@ -86,9 +85,7 @@ class Users(UserMixin, db.Model):
     username = db.Column(db.String(16))
     password = db.Column(db.String(16))
     followers = db.Column(db.String(1024))
-    playlists_shared_with = db.Column(db.String(1024))
     playlists = db.relationship("Playlists", back_populates="user")
-    
 
 # define the get_id method for Flask-Login
     def get_id(self):
@@ -106,6 +103,8 @@ class Playlists(db.Model):
         playlist_image (db.LargeBinary): The image data for the playlist.
         songs (str): A string representation of the songs in the playlist.
         creator (int): The user ID of the playlist's creator.
+        listeners_shared_to (str): A string representation of the 
+        listeners the playlist is shared with.
         user (User): The User object representing the playlist's owner.
     """
     id = db.Column(db.Integer, primary_key=True)
@@ -113,7 +112,9 @@ class Playlists(db.Model):
     password = db.Column(db.String(16))
     playlist_image = db.Column(db.LargeBinary)
     songs = db.Column(db.String(10000))
-    creator = db.Column(db.Integer, db.ForeignKey('users.id')) #user.id stored
+    creator = db.Column(db.Integer, db.ForeignKey(
+        'users.id'))  # user.id stored
+    listeners_shared_to = db.Column(db.String(1024))
     user = db.relationship("Users", back_populates="playlists")
 
 
@@ -146,12 +147,11 @@ def add_user():
     add_email = flask.request.form.get('email')
     add_username = flask.request.form.get('username')
     add_password = flask.request.form.get('password')
-    empty_list = []
+
     new_user = Users(
         email=add_email,
         username=add_username,
-        password=generate_password_hash(add_password, method='sha256'),
-        playlists_shared_with=json.dumps(empty_list)
+        password=generate_password_hash(add_password, method='sha256')
     )
     db.session.add(new_user)
     db.session.commit()
@@ -230,42 +230,6 @@ def homeheader():
     """
     return flask.render_template('homeheader.html')
 
-@app.route('/playlistsearch')
-def playlistsearch():
-    print('hi')
-    username = request.args.get('username')
-    search_query = request.args.get('search-query')
-    playlist = Playlists.query.filter(Playlists.name.like(f'%{search_query}%')).first()
-
-    if playlist is None:
-        # Playlist not found, handle error
-        return "Playlist not found"
-
-    if playlist.songs:
-        songs = json.loads(playlist.songs)
-    else:
-        songs = []
-
-    #API
-    form_data = request.args
-    query = form_data.get("song", "smooth operator")
-    results = search_song(query)
-    (songResults, artistResults, songIDs, imageURLs) = results
-
-    return redirect(url_for('sharedplaylistpage',
-        username=current_user.username,
-        playlist_name=playlist.name,
-        songs=songs,
-        songResults=songResults,
-        artistResults=artistResults,
-        songIDs=songIDs,
-        imageURLs=imageURLs
-    ))
-
-
-
-
-
 #landfooter.html
 @app.route('/footer')
 def footer():
@@ -342,13 +306,11 @@ def AddUserToDB(email, username, password):
 
     # Add new user to database
     followers_user_ids = []  # empty json object
-    shared= [] # empty json object
     new_user = Users(
         email=email,
         username=username,
         password=generate_password_hash(password, method='sha256'),
-        followers=json.dumps(followers_user_ids),
-        playlists_shared_with=json.dumps(shared)
+        followers=json.dumps(followers_user_ids)
     )
     db.session.add(new_user)
     db.session.commit()
@@ -419,6 +381,7 @@ def createPlaylistPage():
 
         #intialize empty json objects of the songs and listeners_shared_to
         songs = []
+        listeners_shared_to = []
 
         # Create new playlist object
         new_playlist = Playlists(
@@ -426,6 +389,7 @@ def createPlaylistPage():
             password=playlist_passcode,
             creator=current_user.id,
             songs=json.dumps(songs), # now a json string
+            listeners_shared_to=json.dumps(listeners_shared_to)  # now a json string
         )
 
         static_folder = os.path.abspath('static')
@@ -485,7 +449,7 @@ def playlistpage():
     playlist_name = request.args.get('playlist_name')
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name).first()
+        name=playlist_name, creator=current_user.id).first()
     if playlist.songs:
         songs = json.loads(playlist.songs)
     else:
@@ -530,13 +494,9 @@ def AddSharedUserByPlaylistOwner():
 
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
-    print(playlist)
-    print(shareduser.playlists_shared_with)
-    print(shareduser.id)
 
-    shareduser.playlists_shared_with = AddSharedUserByPlaylistCreator(
-        shareduser.playlists_shared_with, playlist.id)
-    print(shareduser.playlists_shared_with)
+    playlist.listeners_shared_to = AddSharedUserByPlaylistCreator(
+        playlist.listeners_shared_to, shareduser.id)
 
     db.session.commit()
 
@@ -558,7 +518,7 @@ def AddSong():
     playlist_name = request.form.get('playlist_name')
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name).first()
+        name=playlist_name, creator=current_user.id).first()
 
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
@@ -571,9 +531,9 @@ def AddSong():
     db.session.commit()
 
     return redirect(url_for('playlistpage',
-    username=current_user.username,
-    playlist_name=playlist_name,
-    songs=json.loads(playlist.songs)))
+        username=current_user.username,
+        playlist_name=playlist_name,
+        songs=json.loads(playlist.songs)))
 
 # sharedplaylistpage
 @login_required
@@ -583,11 +543,11 @@ def sharedplaylistpage():
     Renders the page for a shared playlist.
     """
     username = request.args.get('username')
-    playlist_name = request.args.get('playlist_name', '')
+    playlist_name = request.args.get('playlist_name')
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name).first()
-    if playlist and playlist.songs:
+        name=playlist_name, creator=current_user.id).first()
+    if playlist.songs:
         songs = json.loads(playlist.songs)
     else:
         songs = []
@@ -610,7 +570,6 @@ def sharedplaylistpage():
     )
 
 
-
 @app.route("/AddSongBySharedUser", methods=["POST"])
 @login_required
 def AddSongBySharedUser():
@@ -628,10 +587,10 @@ def AddSongBySharedUser():
         print('Song Added')
     else:
         print('Password is incorrect.')
-        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name, username=username))
+        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name))
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name).first()
+        name=playlist_name, creator=current_user.id).first()
 
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
@@ -661,7 +620,7 @@ def DeleteSong():
     playlist_name = request.form.get('playlist_name')
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name).first()
+        name=playlist_name, creator=current_user.id).first()
 
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
@@ -684,26 +643,18 @@ def DeleteSong():
 @login_required
 def userPlaylistpage():
     """
-    Renders the user's playlist page with their playlists and
-    shared playlists displayed.
+    Renders the user's playlist page with their playlists displayed.
     Returns:
     A rendered HTML template of the user's playlist page with 
-    the user's playlists, shared playlists, and a random image.
+    the user's playlists and a random image.
     """
     playlists = Playlists.query.filter_by(creator=current_user.id).all()[:3]
-    this_user = Users.query.filter_by(id=current_user.id).first()
-    shared_playlists = json.dumps(this_user.playlists_shared_with)
     playlists.reverse()
-    print("this is your playlists ")
-    print(playlists)
-    print("this is your shared playlists ")
-    print(shared_playlists)
     images_dir = os.path.join(app.static_folder, 'images', 'imgsmall')
     random_image = random.choice(os.listdir(images_dir))
     return render_template('userPlaylistpage.html',
     username=current_user.username,
     playlists=playlists,
-    shared_playlists=shared_playlists,
     random_image=random_image)
 
 
@@ -739,6 +690,5 @@ def get_playlists_by_user_id(user_id):
     return playlists
 
 
-
-app.secret_key = os.urandom(12)
-app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)
