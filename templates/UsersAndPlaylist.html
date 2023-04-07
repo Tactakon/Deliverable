@@ -57,15 +57,17 @@
       <th>Name</th>
       <th>Password</th>
       <th>Songs</th>
+      <th>Playlist Image</th>
       <th>Creator</th>
       <th>Listeners Shared To</th>
-      <th>Playlist Image</th> <!-- added playlist image column -->
     </tr>
     {% for playlist in playlists %}
     <tr>
       <td>{{ playlist.id }}</td>
       <td>{{ playlist.name }}</td>
       <td>{{ playlist.password }}</td>
+      <td><img src="{{ url_for('playlist_image', playlist_id=playlist.id) }}" alt="Playlist Image"></td>
+
       <td>{{ playlist.songs }}</td>
       <td>{{ playlist.creator }}</td>
       <td>{{ playlist.listeners_shared_to }}</td>
@@ -75,4 +77,4 @@
   </table>
 </body>
 
-</html
+</html>

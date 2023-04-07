@@ -1,9 +1,17 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #1D1D1D;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+}
+
+/* ---------------- top left box ---------------- */
 footer {
-  position: fixed;
-  bottom: 0;
+  bottom: -500px;
   left: 0;
   right: 0;
-  max-height: fit-content;
 }
 
 
@@ -15,38 +23,17 @@ hr {
   margin: 1em 0;
 }
 
-body {
-  display: flex;
-  flex-direction: row;
-  margin-top: 20px;
-  ;
-}
-
 .container1,
 .container2,
 .container3 {
   width: 33.33%;
-  padding: 10px;
   box-sizing: border-box;
 }
 
 .container1 {
-  margin-top: 30px;
-  padding-left: 20px;
   width: 25%;
-  padding-top: 100px;
+  padding-top: 8%;
   max-height: 100%;
-}
-
-.follow {
-  display: inline-block;
-  padding: 10px 10px;
-  font-size: 14px;
-  text-align: center;
-  background-color: lightgrey;
-  border: none;
-  border-radius: 10px;
-  margin-left: 40px;
 }
 
 .add {
@@ -66,19 +53,38 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 1px;
   padding-left: 250px;
   height: 1000px;
+  margin-top: -2%;
 }
 
-.image1 {
+.img {
   border-radius: 50%;
   width: 400px;
   height: 400px;
 }
+
+img.responsive {
+  max-width: 100%;
+  height: auto;
+}
+
 .image2 {
-width:200px;
-height:200px;
+  width: 200px;
+  height: 200px;
+}
+
+.currentitle {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.currenartist {
+  font-size: 24px;
+  font-weight: 200;
+  text-align: center;
+
 }
 
 .currentsong {
@@ -88,30 +94,34 @@ height:200px;
 .container3 {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
-  padding-left: 250px;
-  max-height: max-content;
+  padding-top: 7.5%;
+  padding-left: 104px;
+  max-height: 1000px;
 
+}
+
+.container3 hr {
+  width: 200%;
 }
 
 .g1 {
   display: inline-block;
-  padding: 15px 15px;
-  font-size: 20px;
+  padding: 6px 12px;
+  font-size: 18px;
   text-align: center;
-  background-color: lightgrey;
+  background-color: #C4FF4C;
   border: none;
-  border-radius: 15px;
+  border-radius: 20px;
 }
 
 .g2 {
   display: inline-block;
-  padding: 15px 15px;
-  font-size: 20px;
+  padding: 6px 12px;
+  font-size: 18px;
   text-align: center;
-  background-color: lightgrey;
+  background-color: #C4FF4C;
   border: none;
-  border-radius: 15px;
+  border-radius: 20px;
 }
 
 .song {
@@ -169,46 +179,32 @@ input[type=password] {
 
 /* Set a style for all buttons */
 button {
-  background-color: #04AA6D;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
+  background-color: #C4FF4C;
+  color: #1D1D1D;
+  padding: 12px 24px;
+  font-size: 16px;
+  margin-top: 2%;
+  margin-bottom: 4%;
   border: none;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  width: 100%;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 button:hover {
-  opacity: 0.8;
+  background-color: #A6E22E;
+  /* Slightly darker green on hover */
+  cursor: pointer;
 }
 
-/* Extra styles for the cancel button */
-.cancelbtn {
-  width: auto;
-  padding: 10px 18px;
-  background-color: #f44336;
+button:active {
+  background-color: #8CCB1F;
+  /* Even darker green when clicked (active) */
+  transform: scale(0.95);
+  /* Slightly smaller button when clicked */
 }
 
-/* Center the image and position the close button */
-.imgcontainer {
-  text-align: center;
-  margin: 24px 0 12px 0;
-  position: relative;
-}
-
-img.avatar {
-  width: 40%;
-  border-radius: 50%;
-}
-
-.container {
-  padding: 16px;
-}
-
-span.psw {
-  float: right;
-  padding-top: 16px;
-}
 
 /* The Modal (background) */
 .modal {
@@ -235,22 +231,24 @@ span.psw {
 
 /* Modal Content/Box */
 .modal-content {
+  padding-top: 2%;
   background-color: #fefefe;
   margin: 5% auto 15% auto;
   /* 5% from the top, 15% from the bottom and centered */
   border: 1px solid #888;
-  width: 80%;
   /* Could be more or less, depending on screen size */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+  height: 40%;
 }
+
 
 /* The Close Button (x) */
 .close {
   position: absolute;
-  right: 25px;
-  top: 0;
-  color: #000;
-  font-size: 35px;
-  font-weight: bold;
+  right: 32px;
 }
 
 .close:hover,
@@ -282,17 +280,5 @@ span.psw {
 
   to {
     transform: scale(1)
-  }
-}
-
-/* Change styles for span and cancel button on extra small screens */
-@media screen and (max-width: 300px) {
-  span.psw {
-    display: block;
-    float: none;
-  }
-
-  .cancelbtn {
-    width: 100%;
   }
 }

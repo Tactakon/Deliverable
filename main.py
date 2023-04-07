@@ -9,7 +9,8 @@ import os
 import random
 import json
 import flask
-from flask import flash, redirect, render_template, request, url_for
+import requests
+from flask import flash, redirect, render_template, request, url_for, make_response
 from flask_login import login_required, current_user, login_user, UserMixin, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -53,6 +54,17 @@ def load_user(user_id):
     """
     return Users.query.get(int(user_id))
 
+#getting the base url
+def get_base_url():
+    """
+    Returns the base URL of the current request, taking into account any reverse proxy servers.
+
+    :return: A string representing the base URL of the current request.
+    """
+    scheme = request.headers.get('X-Forwarded-Proto', 'http')
+    host = request.headers.get('X-Forwarded-Host', request.host)
+    return f'{scheme}://{host}'
+
 # database models
 class Users(UserMixin, db.Model):
     """
@@ -87,6 +99,7 @@ class Playlists(db.Model):
         id (int): The unique identifier for the playlist.
         name (str): The name of the playlist.
         password (str): The password for the playlist (if any).
+        playlist_image (db.LargeBinary): The image data for the playlist.
         songs (str): A string representation of the songs in the playlist.
         creator (int): The user ID of the playlist's creator.
         listeners_shared_to (str): A string representation of the 
@@ -96,11 +109,13 @@ class Playlists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     password = db.Column(db.String(16))
-   # playlist_image = db.Column(db.LargeBinary)
+    playlist_image = db.Column(db.LargeBinary)
     songs = db.Column(db.String(10000))
-    creator = db.Column(db.Integer, db.ForeignKey('users.id')) #user.id stored
+    creator = db.Column(db.Integer, db.ForeignKey(
+        'users.id'))  # user.id stored
     listeners_shared_to = db.Column(db.String(1024))
     user = db.relationship("Users", back_populates="playlists")
+
 
 with app.app_context():
     db.create_all()
@@ -156,6 +171,25 @@ def delete_user():
     db.session.delete(user)
     db.session.commit()
     return redirect(url_for('UsersAndPlaylist'))
+
+
+@app.route('/playlist_image/<int:playlist_id>')
+def playlist_image(playlist_id):
+    """
+    Returns the playlist image for the given playlist ID.
+
+    Args:
+        playlist_id (int): The ID of the playlist.
+
+    Returns:
+        flask.Response: The playlist image as a Flask response object with the correct MIME type.
+    """
+    playlist = Playlists.query.get_or_404(playlist_id)
+    response = make_response(playlist.playlist_image)
+    response.headers.set('Content-Type', 'image/jpeg')
+    return response
+
+
 
 # landing page
 @app.route("/")
@@ -378,6 +412,7 @@ def createPlaylistPage():
         playlist_name = request.form.get('playlist-name')
         playlist_passcode = request.form.get('playlist-passcode')
         playlist_image = request.files.get('playlist-image')
+        
 
         #intialize empty json objects of the songs and listeners_shared_to
         songs = []
@@ -392,10 +427,33 @@ def createPlaylistPage():
             listeners_shared_to=json.dumps(listeners_shared_to)  # now a json string
         )
 
+        static_folder = os.path.abspath('static')
+
+        # get a list of all the images in the imgsmall folder
+        images_folder = os.path.join(static_folder, 'images', 'imgsmall')
+        images = os.listdir(images_folder)
+        images = [img for img in images if img.endswith(
+            ('.jpg', '.jpeg', '.png'))]
+
+        # select a random image from the list
+        random_image = random.choice(images)
+
+        # Generate the image URL
+        base_url = get_base_url()
+        image_url = f'{base_url}{url_for("static", filename=f"images/imgsmall/{random_image}")}'
+
         #If a playlist image was uploaded, save it to the new playlist
         if playlist_image:
             # pylint: disable=attribute-defined-outside-init
             new_playlist.playlist_image = playlist_image.read()
+        # If a playlist image was not uploaded, randomly select and save it
+        else:
+            # read the image file as bytes using requests module
+            image_bytes = requests.get(image_url).content
+
+            # save the image bytes to the new playlist
+            new_playlist.playlist_image = image_bytes
+            
 
         # Add new playlist to the database
         db.session.add(new_playlist)
@@ -424,8 +482,6 @@ def playlistpage():
     """
     username = request.args.get('username')
     playlist_name = request.args.get('playlist_name')
-    print(request.args.keys())
-
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -433,8 +489,6 @@ def playlistpage():
         songs = json.loads(playlist.songs)
     else:
         songs = []
-
-    print("PlaylistPage" , songs)
 
     #API
     form_data = request.args
@@ -475,13 +529,9 @@ def AddSharedUserByPlaylistOwner():
 
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
-    print(playlist)
-    print(playlist.listeners_shared_to)
-    print(shareduser.id)
 
     playlist.listeners_shared_to = AddSharedUserByPlaylistCreator(
         playlist.listeners_shared_to, shareduser.id)
-    print(playlist.listeners_shared_to)
 
     db.session.commit()
 
@@ -501,8 +551,6 @@ def AddSong():
     # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
-    print("addsong keys", request.form)
-    print(playlist_name)
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -569,11 +617,6 @@ def AddSongBySharedUser():
     playlist_name = request.form.get('playlist_name')
     password = request.form.get('password')
     playlist = Playlists.query.filter_by(name=playlist_name).first()
-
-    print("addsong keys", request.form)
-    print(playlist_name)
-    print(playlist.password)
-    print (password)
 
     # Check if the password entered by the user matches the password in the database
     if playlist.password == password:
