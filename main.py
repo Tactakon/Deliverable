@@ -230,6 +230,42 @@ def homeheader():
     """
     return flask.render_template('homeheader.html')
 
+@app.route('/playlistsearch')
+def playlistsearch():
+    print('hi')
+    username = request.args.get('username')
+    search_query = request.args.get('search-query')
+    playlist = Playlists.query.filter(Playlists.name.like(f'%{search_query}%')).first()
+
+    if playlist is None:
+        # Playlist not found, handle error
+        return "Playlist not found"
+
+    if playlist.songs:
+        songs = json.loads(playlist.songs)
+    else:
+        songs = []
+
+    #API
+    form_data = request.args
+    query = form_data.get("song", "smooth operator")
+    results = search_song(query)
+    (songResults, artistResults, songIDs, imageURLs) = results
+
+    return redirect(url_for('sharedplaylistpage',
+        username=current_user.username,
+        playlist_name=playlist.name,
+        songs=songs,
+        songResults=songResults,
+        artistResults=artistResults,
+        songIDs=songIDs,
+        imageURLs=imageURLs
+    ))
+
+
+
+
+
 #landfooter.html
 @app.route('/footer')
 def footer():
@@ -449,7 +485,7 @@ def playlistpage():
     playlist_name = request.args.get('playlist_name')
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name, creator=current_user.id).first()
+        name=playlist_name).first()
     if playlist.songs:
         songs = json.loads(playlist.songs)
     else:
@@ -522,7 +558,7 @@ def AddSong():
     playlist_name = request.form.get('playlist_name')
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name, creator=current_user.id).first()
+        name=playlist_name).first()
 
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
@@ -547,11 +583,11 @@ def sharedplaylistpage():
     Renders the page for a shared playlist.
     """
     username = request.args.get('username')
-    playlist_name = request.args.get('playlist_name')
+    playlist_name = request.args.get('playlist_name', '')
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name, creator=current_user.id).first()
-    if playlist.songs:
+        name=playlist_name).first()
+    if playlist and playlist.songs:
         songs = json.loads(playlist.songs)
     else:
         songs = []
@@ -574,6 +610,7 @@ def sharedplaylistpage():
     )
 
 
+
 @app.route("/AddSongBySharedUser", methods=["POST"])
 @login_required
 def AddSongBySharedUser():
@@ -591,10 +628,10 @@ def AddSongBySharedUser():
         print('Song Added')
     else:
         print('Password is incorrect.')
-        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name))
+        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name, username=username))
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name, creator=current_user.id).first()
+        name=playlist_name).first()
 
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
@@ -624,7 +661,7 @@ def DeleteSong():
     playlist_name = request.form.get('playlist_name')
 
     playlist = Playlists.query.filter_by(
-        name=playlist_name, creator=current_user.id).first()
+        name=playlist_name).first()
 
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
