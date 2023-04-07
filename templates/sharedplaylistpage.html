@@ -1,173 +1,188 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-   <!-- Add fonts -->
+  <!-- Add fonts -->
   <link href="https://fonts.googleapis.com/css?family=Inter&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Archivo+Black&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <link rel="stylesheet" href="../static/playlistpage.css">
 </head>
+
 <body>
   <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="60"
     style="position: fixed; top: 0; left: 0; right: 0; margin-top: -6px;"></iframe>
 
-    <br>
-    <br>
-    <br>
+  <br>
+  <br>
+  <br>
 
   <!-- Container1 is right side -->
   <div class="container1">
     <div class="jammingwith">
-        <!-- <span>Your currenly jamming with</span> --> 
-        <!------------------------ MODAL BOX FOR SHARING ------------------------> 
-        <span>{{ playlist_name }}</span>
-          <button onclick="document.getElementById('id01').style.display='block'" class="btn btn-rounded btn-outline-dark ml-auto" style="width:auto; float: right;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
-            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-          </svg> Share </button>
+      <!-- <span>Your currenly jamming with</span> -->
+      <!------------------------ MODAL BOX FOR SHARING ------------------------>
+      <span>{{ playlist_name }}</span>
+      <button onclick="document.getElementById('id01').style.display='block'"
+        class="btn btn-rounded btn-outline-dark ml-auto" style="width:auto; float: right;"><svg
+          xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share"
+          viewBox="0 0 16 16">
+          <path
+            d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" />
+        </svg> Share </button>
 
-<div id="id01" class="modal">
-  
-  <form class="modal-content animate" action="/AddSharedUserByPlaylistOwner" method="POST">
-    <div id="success-message" style="display:none">USER SUCCESSFULLY ADDED</div>
-    <div class="container">
-      <label for="uname"><b>Share Playlist With </b></label>
-      <input type="text" placeholder="Enter Username" name="shareduser_username" required>
-      <!--Taking current user, playlist name and songs to redirect to the playlist page after the user is added-->
-      <input hidden="true" name="username" value={{username}} />
-      <input hidden="true" name="playlist_name" value={{playlist_name}} />
-      <input hidden="true" name="songs" value={{songs}} />
-      <button type="submit" id= "share-btn">Share</button>
-    </div>
-    <div class="container" style="background-color:#f1f1f1">
-      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
-    </div>
-  </form>
-</div>
+      <div id="id01" class="modal">
 
-<script>
-// Get the modal
-var modal = document.getElementById('id01');
+        <form class="modal-content animate" action="/AddSharedUserByPlaylistOwner" method="POST">
+          <div id="success-message" style="display:none">USER SUCCESSFULLY ADDED</div>
+          <div class="container">
+            <label for="uname"><b>Share Playlist With </b></label>
+            <input type="text" placeholder="Enter Username" name="shareduser_username" required>
+            <!--Taking current user, playlist name and songs to redirect to the playlist page after the user is added-->
+            <input hidden="true" name="username" value={{username}} />
+            <input hidden="true" name="playlist_name" value={{playlist_name}} />
+            <input hidden="true" name="songs" value={{songs}} />
+            <button type="submit" id="share-btn">Share</button>
+          </div>
+          <div class="container" style="background-color:#f1f1f1">
+            <button type="button" onclick="document.getElementById('id01').style.display='none'"
+              class="cancelbtn">Cancel</button>
+          </div>
+        </form>
+      </div>
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
+      <script>
+        // Get the modal
+        var modal = document.getElementById('id01');
 
-  // add event listener to the form submit button
-  document.getElementById('share-btn').addEventListener('click', function (event) {
-    event.preventDefault();
-    var form = document.querySelector('form');
-    var successMessage = document.getElementById('success-message');
-
-    // submit the form using AJAX
-    fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form)
-    })
-      .then(response => {
-        if (response.ok) {
-          successMessage.style.display = 'block';
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
         }
-      })
-  });
-</script>
 
-        <hr/>
-        <span class="user">{{ username }}</span>
-        <!-- <span class="follow">Follow</span> -->
-        <br>
-        <br>
-        <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Pretium aenean pharetra magna ac.</span>
-        test code
+        // add event listener to the form submit button
+        document.getElementById('share-btn').addEventListener('click', function (event) {
+          event.preventDefault();
+          var form = document.querySelector('form');
+          var successMessage = document.getElementById('success-message');
+
+          // submit the form using AJAX
+          fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form)
+          })
+            .then(response => {
+              if (response.ok) {
+                successMessage.style.display = 'block';
+              }
+            })
+        });
+      </script>
+
+      <hr />
+      <span class="user">{{ username }}</span>
+      <!-- <span class="follow">Follow</span> -->
+      <br>
+      <br>
+      <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+        dolore magna aliqua. Pretium aenean pharetra magna ac.</span>
+      test code
     </div>
     <div class="add">
-        <span>Add song to playlist</span>
-        <hr/>
-        <form action="/playlistpage" method="GET">
-            <div class="textcontainer">
-              <input id="songtoadd" name="song" type="text" placeholder="Search Song" class="textbox"/>
-              <input hidden="true" name="username" value={{username}} />
-              <input hidden= "true" name ="playlist_name" value={{playlist_name}} />
-              <input hidden="true" name="songs" value={{songs}} />
-               <input type="submit" value="Search!"/>
-            </div>
+      <span>Add song to playlist</span>
+      <hr />
+      <form action="/sharedplaylistpage" method="GET">
+        <div class="textcontainer">
+          <input id="songtoadd" name="song" type="text" placeholder="Search Song" class="textbox" />
+          <input hidden="true" name="username" value={{username}} />
+          <input hidden="true" name="playlist_name" value={{playlist_name}} />
+          <input hidden="true" name="songs" value={{songs}} />
+          <input type="submit" value="Search!" />
+        </div>
+      </form>
+      <br>
+      <!-- can't figure out how make add button appear inline. see .results class -->
+      <ol class="results">
+        {%for i in range(0,3)%}
+        <li>{{songResults[i]}} by {{artistResults[i]}}
+          <form method="POST" action="/AddSongBySharedUser">
+            <input type="hidden" name="songID" value="{{songIDs[i]}}" /> <!--API SONG ID-->
+            <input type="hidden" name="songResult" value="{{songResults[i]}}" /><!--SONG RESULT-->
+            <input type="hidden" name="artistResult" value="{{artistResults[i]}}" /><!--SONG ARTIST-->
+            <input type="hidden" name="imageURL" value="{{imageURLs[i]}}" /><!--IMAGE URL-->
+            <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
+            <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
+            <input hidden="true" name="songs" value={{songs}} />
+            <input type="password" name="password" placeholder="Enter your password" required>
+            <button type="submit">Add</button>
           </form>
-          <br>
-          <!-- can't figure out how make add button appear inline. see .results class -->
-          <ol class = "results">    
-            {%for i in range(0,3)%}
-              <li>{{songResults[i]}} by {{artistResults[i]}} 
-              <form method="POST" action="/AddSongBySharedUser">
-                <input type="hidden" name="songID" value="{{songIDs[i]}}" /> <!--API SONG ID-->
-                <input type="hidden" name="songResult" value="{{songResults[i]}}" /><!--SONG RESULT-->
-                <input type="hidden" name="artistResult" value="{{artistResults[i]}}" /><!--SONG ARTIST-->
-                <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
-                <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
-                <input hidden="true" name="songs" value={{songs}} />
-                <input type="password" name="password" placeholder="Enter your password" required>
-                <button type="submit">Add</button>
-              </form>
-              </li>
-            {%endfor%}
-          </ol>
+        </li>
+        {%endfor%}
+      </ol>
     </div>
-    </div>
-    <!-- Container2 is left side -->
-    <div class="container2">
+  </div>
+  <!-- Container2 is left side -->
+  <div class="container2">
     <div class="currentsong">
-        <span><img src="https://wallpaperaccess.com/full/2683982.jpg"></span>
-        <br>
-        <br>
-        <span class="currentitle">Song Title</span>
-        <br>
-        <span class="currenartist">Artist Name</span>
+      <span><img src="https://wallpaperaccess.com/full/2683982.jpg" class ="image1"></span>
+      <br>
+      <br>
+      <span class="currentitle">Song Title</span>
+      <br>
+      <span class="currenartist">Artist Name</span>
     </div>
-    </div>
-    <!-- Container3 is right side -->
-    <div class="container3">
-  <div class="queue">
-    <div class="genre">
+  </div>
+  <!-- Container3 is right side -->
+  <div class="container3">
+    <div class="queue">
+      <div class="genre">
         <span class="g1">genre I</span>
         <span class="g2">genre II</span>
       </div>
       <br>
       <span>In Queue</span>
-      <hr/>
-      <div class="song-list">  <!--Made a loop-->
+      <hr />
+      <div class="song-list"> <!--Made a loop-->
         {% for song in songs %}
         <div class="song">
-          <span class="number">{{ loop.index }}</span>
-          <span class="title">{{ song.title }}</span>
+          <img src={{song.imageURL}} class = "image2">
           <br>
-          <span class="songArtist">{{ song.artistResult }}</span>
-<!--Delete work-->
-<form method="POST" action="/DeleteSong">
-  <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
-  <input type="hidden" name="songResult" value="{{song.songResult}}" /><!--SONG RESULT-->
-  <input type="hidden" name="artistResult" value="{{song.artistResult}}" /><!--SONG ARTIST-->
-  <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
-  <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
-  <input hidden="true" name="songs" value={{songs}} />
-  <button type="submit">Delete</button>
-<!-- <span class="time">{{ song.time }}</span> -->
-</form>
+          <span class="number">{{ loop.index }}.</span>
+          <span class="title">{{ song.songResult}}</span>
+          <span class="songArtist"> - {{ song.artistResult }}</span>
+          <!--Delete work-->
+          <form method="POST" action="/DeleteSong">
+            <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
+            <input type="hidden" name="songResult" value="{{song.songResult}}" /><!--SONG RESULT-->
+            <input type="hidden" name="artistResult" value="{{song.artistResult}}" /><!--SONG ARTIST-->
+            <input type="hidden" name="imageURL" value="{{song.imageURL}}" /><!--IMAGE URL-->
+            <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
+            <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
+            <input hidden="true" name="songs" value={{songs}} />
+            <button type="submit">Delete</button>
+            <!-- <span class="time">{{ song.time }}</span> -->
+          </form>
           <!-- <span class="time">{{ song.time }}</span> -->
         </div>
         {% endfor %}
       </div>
-  <div class="musicplayer">
-    <span><img class="playbutton"src="https://th.bing.com/th/id/OIP.TsHYnY8p8GZzra41CeIRVwHaHa?w=180&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"></span>
-    <div class="song-length">
-      <!-- Can use javascript to make progress update dynamically -->
-      <div class="progress-bar">
+      <div class="musicplayer">
+        <span><img class="playbutton"
+            src="https://th.bing.com/th/id/OIP.TsHYnY8p8GZzra41CeIRVwHaHa?w=180&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"></span>
+        <div class="song-length">
+          <!-- Can use javascript to make progress update dynamically -->
+          <div class="progress-bar">
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <footer>
-    <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%" height="100px"style="position: fixed; bottom: 0; left: 0; right: 0;"></iframe>
-  </footer>  
+      <footer>
+        <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%" height="100px"
+          style="position: fixed; bottom: 0; left: 0; right: 0;"></iframe>
+      </footer>
 </body>
+
 </html>
