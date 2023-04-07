@@ -10,7 +10,7 @@ Functions:
 import json
 
 # pylint: disable=invalid-name
-def AddSongtoPlaylist(songs, songID, songResult, artistResult, imageURL):
+def AddSongtoPlaylist(songs, songID, songResult, artistResult, imageURL, selected_genre):
     """
     Takes the json string from playlist.songs
     songID, songResult, artistResult, imageURL of the song to be added
@@ -27,7 +27,8 @@ def AddSongtoPlaylist(songs, songID, songResult, artistResult, imageURL):
         "songID": songID,
         "songResult": songResult,
         "artistResult": artistResult,
-        "imageURL": imageURL
+        "imageURL": imageURL,
+        "genre": genre
     }
 
     new_songs.append(song)

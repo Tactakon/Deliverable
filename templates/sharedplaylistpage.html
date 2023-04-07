@@ -52,6 +52,7 @@
             <!--Taking current user, playlist name and songs to redirect to the playlist page after the user is added-->
             <input hidden="true" name="username" value={{username}} />
             <input hidden="true" name="playlist_name" value={{playlist_name}} />
+            <input hidden="true" name="genre" value={{genre}} />
             <input hidden="true" name="songs" value={{songs}} />
             <button type="submit" id="share-btn">Share!</button>
           </div>
@@ -108,6 +109,7 @@
             class="form-control form-control-lg" />
           <input hidden="true" name="username" value={{username}} />
           <input hidden="true" name="playlist_name" value={{playlist_name}} />
+          <input hidden="true" name="genre" value={{genre}} />
           <input hidden="true" name="songs" value={{songs}} />
           <input type="submit" value="Search!" class="btn btn-dark" style="float:right; margin-bottom: 6%;" />
         </div>
@@ -124,6 +126,7 @@
             <input type="hidden" name="imageURL" value="{{imageURLs[i]}}" /><!--IMAGE URL-->
             <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
             <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
+            <input hidden="true" name="genre" value={{genre}} />
             <input hidden="true" name="songs" value={{songs}} />
             <input type="password" name="password" placeholder="Enter your password" required>
             <button type="submit">Add</button>
@@ -151,7 +154,7 @@
   <div class="container3">
     <div class="queue">
       <div class="genre">
-        <span class="g1">genre I</span>
+        <span class="g1">{{genre}}</span>
         <span class="g2">genre II</span>
       </div>
       <br>
@@ -173,6 +176,7 @@
             <input type="hidden" name="imageURL" value="{{song.imageURL}}" /><!--IMAGE URL-->
             <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
             <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
+            <input hidden="true" name="genre" value={{genre}} />
             <input hidden="true" name="songs" value={{songs}} />
             <button type="submit" style="font-size: small;">Delete<svg xmlns="http://www.w3.org/2000/svg" width="16"
                 height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" style="margin-left: 8px;">
