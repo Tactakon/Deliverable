@@ -3,7 +3,27 @@ body {
     background-color: #FFFFFF;
 }
 
-.content-container {
-    padding-left: 104px;
-    padding-bottom: 104px;
+.button {
+    background-color: #C4FF4C;
+    color: #1D1D1D;
+    padding: 16px 32px;
+    font-size: 22px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.3s;
 }
+
+.button:hover {
+    background-color: #A6E22E; /* Slightly darker green on hover */
+    cursor: pointer;
+}
+
+.button:active {
+    background-color: #8CCB1F; /* Even darker green when clicked (active) */
+    transform: scale(0.95); /* Slightly smaller button when clicked */
+}
+
+footer {
+    margin-top: 5%;
+  }
