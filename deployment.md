@@ -9,3 +9,5 @@
 
 - Error on the deployed app
     - playlist creation not working properly because it's not taking the random selected image from the available images.
+
+- Link: https://verge-deploy.fly.dev/
