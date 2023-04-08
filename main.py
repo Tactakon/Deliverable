@@ -110,6 +110,7 @@ class Playlists(db.Model):
     name = db.Column(db.String(64))
     password = db.Column(db.String(16))
     playlist_image = db.Column(db.LargeBinary)
+    playlist_genre = db.Column(db.String(100))
     songs = db.Column(db.String(10000))
     creator = db.Column(db.Integer, db.ForeignKey(
         'users.id'))  # user.id stored
@@ -256,7 +257,7 @@ def playlistsearch():
     return redirect(url_for('sharedplaylistpage',
         username=current_user.username,
         playlist_name=playlist.name,
-        genre=selected_genre,
+        genre=playlist.playlist_genre,
         songs=songs,
         songResults=songResults,
         artistResults=artistResults,
@@ -427,6 +428,7 @@ def createPlaylistPage():
             name=playlist_name,
             password=playlist_passcode,
             creator=current_user.id,
+            playlist_genre = selected_genre,
             songs=json.dumps(songs), # now a json string
             listeners_shared_to=json.dumps(listeners_shared_to)  # now a json string
         )
@@ -500,15 +502,16 @@ def playlistpage():
     #API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    q = f'genre:{selected_genre} track:{query}'
-    results = search_song(q)
-    (songResults, artistResults, songIDs, imageURLs, selected_genre) = results
+    # q = f'genre:{selected_genre} track:{query}'
+    results = search_song(query)
+
+    (songResults, artistResults, songIDs, imageURLs) = results
 
     return render_template(
         'playlistpage.html',
         username=username,
         playlist_name=playlist_name,
-        genre=selected_genre,
+        genre=playlist.playlist_genre,
         songs=songs, #dict
         songResults=songResults,
         artistResults=artistResults,
@@ -551,6 +554,7 @@ def AddSharedUserByPlaylistOwner():
     genre=selected_genre,
     songs=json.loads(playlist.songs)))
 
+#Adding song to the playlist
 @app.route("/AddSong", methods=["POST"])
 @login_required
 def AddSong():
@@ -562,7 +566,6 @@ def AddSong():
     # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
-    selected_genre = request.args.get('genre')
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -572,16 +575,24 @@ def AddSong():
     artistResult = request.form.get('artistResult')
     imageURL = request.form.get('imageURL')
 
-    #calling AddSongToPlaylist function from databasefunctions.py
-    playlist.songs = AddSongtoPlaylist(playlist.songs, songID, songResult, artistResult,imageURL, selected_genre)
+    # calling AddSongToPlaylist function from databasefunctions.py
+    playlist.songs = AddSongtoPlaylist(
+        playlist.songs, songID, songResult, artistResult, imageURL)
+
+    db.session.commit()
+
+    return redirect(url_for('playlistpage',
+                            username=current_user.username,
+                            playlist_name=playlist_name,
+                            songs=json.loads(playlist.songs)))
 
     db.session.commit()
 
     return redirect(url_for('playlistpage',
     username=current_user.username,
     playlist_name=playlist_name,
-    genre=selected_genre,
-    songs=json.loads(playlist.songs)))
+    genre=playlist.playlist_genre),
+    songs=json.loads(playlist.songs))
 
 # sharedplaylistpage
 @login_required
@@ -601,18 +612,17 @@ def sharedplaylistpage():
     else:
         songs = []
 
-    #API
+    # API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    q = f'genre:{selected_genre} track:{query}'
-    results = search_song(q)
-    (songResults, artistResults, songIDs, imageURLs, selected_genre) = results
+    results = search_song(query)
+    (songResults, artistResults, songIDs, imageURLs) = results
 
     return render_template(
         'sharedplaylistpage.html',
         username=username,
         playlist_name=playlist_name,
-        genre=selected_genre,
+        genre=playlist.playlist_genre,
         songs=songs, #dict
         songResults=songResults,
         artistResults=artistResults,
@@ -658,7 +668,7 @@ def AddSongBySharedUser():
     return redirect(url_for('playlistpage',
     username=current_user.username,
     playlist_name=playlist_name,
-    genre=selected_genre,
+    genre=playlist.playlist_genre,
     songs=json.loads(playlist.songs)))
 
 @app.route("/DeleteSong", methods=["POST"])
@@ -690,7 +700,7 @@ def DeleteSong():
     return redirect(url_for('playlistpage',
     username=current_user.username,
     playlist_name=playlist_name,
-    genre=selected_genre,
+    genre=playlist.playlist_genre,
     songs=json.loads(playlist.songs)))
 
 # userPlaylistpage.html
