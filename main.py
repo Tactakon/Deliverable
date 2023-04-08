@@ -461,7 +461,8 @@ def playlistpage():
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
-    if playlist.songs:
+    #Batya helped with this
+    if playlist != None and playlist.songs: 
         songs = json.loads(playlist.songs)
     else:
         songs = []
@@ -534,6 +535,10 @@ def AddSong():
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
+    
+    if playlist is None:
+     # You can return an error message or redirect to another page if the playlist is not found
+        return "Playlist not found", 404
 
     songID = request.form.get('songID')
     songResult = request.form.get('songResult')
