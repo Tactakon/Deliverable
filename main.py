@@ -371,7 +371,7 @@ def login():
 
         # pylint: disable=unused-variable
         playlists = Playlists.query.filter_by(
-            creator=current_user.id).all()[:5]
+            creator=current_user.id).all()
         return redirect(url_for('userPlaylistpage'))
 
     return flask.render_template('login.html')
@@ -477,10 +477,8 @@ def playlistpage():
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
     description = playlist.description
-    print("PlaylistpageHTML: Description:")
-    print(description)
 
-    #Batya helped with this
+    #Error handling if songs is empty
     if playlist != None and playlist.songs: 
         songs = json.loads(playlist.songs)
     else:
@@ -491,6 +489,7 @@ def playlistpage():
     query = form_data.get("song", "smooth operator")
     results = search_song(query)
     (songResults, artistResults, songIDs, imageURLs) = results
+
 
     return render_template(
         'playlistpage.html',
@@ -699,20 +698,23 @@ def userPlaylistpage():
     A rendered HTML template of the user's playlist page with 
     the user's playlists, shared playlists, and a random image.
     """
-    playlists = Playlists.query.filter_by(creator=current_user.id).all()[:5]
-    this_user = Users.query.filter_by(id=current_user.id).first()
-    shared_playlists = json.dumps(this_user.shared_playlists)
+    playlists = Playlists.query.filter_by(creator=current_user.id).all()
     playlists.reverse()
-    print("this is your playlists ")
-    print(playlists)
-    print("this is your shared playlists ")
-    print(shared_playlists)
+
+    this_user = Users.query.filter_by(id=current_user.id).first()
+    shared_playlists = json.loads(this_user.shared_playlists)
+    shared_playlists_with_user = []
+    for shared_playlist in shared_playlists:
+        shared_playlist_with_user = Playlists.query.filter_by(
+            id=shared_playlist['playlistID']).first()
+        shared_playlists_with_user.append(shared_playlist_with_user)
+
     images_dir = os.path.join(app.static_folder, 'images', 'imgsmall')
     random_image = random.choice(os.listdir(images_dir))
     return render_template('userPlaylistpage.html',
                            username=current_user.username,
                            playlists=playlists,
-                           shared_playlists=shared_playlists,
+                           shared_playlists=shared_playlists_with_user,
                            random_image=random_image)
 
 
@@ -728,9 +730,28 @@ def PlaylistMore():
     """
     playlists = get_playlists_by_user_id(current_user.id)
     playlists.reverse()
+    # Error handling
     images_dir = os.path.join(app.static_folder, 'images', 'imglarge')
     random_image = random.choice(os.listdir(images_dir))
     return render_template('PlaylistMore.html', playlists=playlists, random_image=random_image)
+
+
+# SharedPlaylistMore.html
+@app.route('/SharedPlaylistMore')
+@login_required
+def SharedPlaylistMore():
+    """
+    Renders the 'SharedPlaylistMore.html' template with a list of playlists that have
+    been shared with the current logged-in user.
+    Returns:
+        str: A rendered HTML template with the shared playlists and random image.
+    """
+    shared_playlists = get_shared_playlists_by_user_id(current_user.id)
+    shared_playlists.reverse()
+    # Error handling
+    images_dir = os.path.join(app.static_folder, 'images', 'imglarge')
+    random_image = random.choice(os.listdir(images_dir))
+    return render_template('SharedPlaylistMore.html', shared_playlists=shared_playlists, random_image=random_image)
 
 
 def get_playlists_by_user_id(user_id):
@@ -744,6 +765,30 @@ def get_playlists_by_user_id(user_id):
     playlists = Playlists.query.filter_by(creator=user_id).all()
     return playlists
 
+
+def get_shared_playlists_by_user_id(user_id):
+    """
+    Retrieves the shared playlists of a user with the given ID.
+
+    Args:
+        user_id (int): The ID of the user whose shared playlists to retrieve.
+
+    Returns:
+        list: A list of playlists that have been shared with the user, represented
+        as Playlists objects.
+
+    Raises:
+        AttributeError: If the user with the given ID does not exist in the database,
+        or if their shared_playlists field is not a valid JSON string.
+    """
+    this_user = Users.query.filter_by(id=user_id).first()
+    shared_playlists = json.loads(this_user.shared_playlists)
+    shared_playlists_with_user = []
+    for shared_playlist in shared_playlists:
+        shared_playlist_with_user = Playlists.query.filter_by(
+            id=shared_playlist['playlistID']).first()
+        shared_playlists_with_user.append(shared_playlist_with_user)
+    return shared_playlists_with_user
 
 if __name__ == "__main__":
     app.run(debug=True)
