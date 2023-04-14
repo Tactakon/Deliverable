@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Verge</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            line-height: 1.5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content-container {
+            max-width: 60%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .page-content {
+            margin-bottom: 40px;
+        }
+
+        .page-content p {
+            margin-bottom: 20px;
+        }
+
+        .intro {
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Include header -->
+    <iframe name="header" src="{{ url_for('header')}}" frameborder="0" scrolling="no" width="100%"
+        height="80px"></iframe>
+
+    <div class="content-container">
+        <div class="page-header">
+            <h1>About Us</h1>
+        </div>
+        <div class="page-content">
+            <p class="intro">Welcome to Verge, the collaborative playlist web application created by a group of Georgia
+                State University computer science students for our Capstone project. <br> Verge is a platform that allows you
+                to share your music taste with your friends and discover new songs together.</p>
+
+            <p>At Verge, we believe that music is better together. That's why we created a collaborative community where
+                you can work together in real-time with your friends to create the ultimate playlist. You can share your
+                favorite songs and discover new ones that you may have never come across before.</p>
+
+            <p>Our web app is passcode protected, ensuring that only authorized collaborators have access to make
+                changes to the playlist. This creates a private and secure playlist experience where you can feel
+                confident in sharing your music preferences.</p>
+
+            <p>We designed Verge to make collaboration seamless and enjoyable, whether you're a professional playlist
+                curator or just someone who enjoys good tunes. Our platform makes it easy for everyone to play a part in
+                creating amazing playlists for any moment.</p>
+
+            <p>We are excited to invite you to join our Verge community and unlock the perfect soundtrack for any
+                occasion. Music, made together.</p>
+
+            <p>Our team consists of Kirstyn, Derrick, Kinjal, and John.</p>
+        </div>
+    </div>
+
+    <footer>
+        <iframe src="{{ url_for('footer')}}" frameborder="0" scrolling="no" width="100%" height="204px;"></iframe>
+    </footer>
+</body>
+
+</html>

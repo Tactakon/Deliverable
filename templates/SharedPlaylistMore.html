@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../static/PlaylistMore.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+
+<body>
+    <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%"
+        style="margin-top: -6px; "></iframe>
+    <div class="container">
+        <div class="header">
+            <a href="{{ url_for('userPlaylistpage')}}" class="back-link">
+                <svg onclick="history.back()" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    fill="currentColor" class="bi bi-arrow-left-circle back-button" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z" />
+                </svg>
+            </a>
+            <h3 class="playlist-title">Shared With You</h3>
+        </div>
+
+        {% set images_dir = url_for('static', filename='images/imglarge') %}
+        <div class="scroll-container">
+            <div class="row">
+                <!-- SharedPlaylistMore.html -->
+                {% for shared_playlist in shared_playlists %}
+                <div class="empty-box">
+                <a href="{{ url_for('sharedplaylistpage', username=current_user.username, playlist_name=shared_playlist.name) }}"
+                    class="playlist-link">
+                    {% if shared_playlist.playlist_image %}
+                    <img src="{{ url_for('playlist_image', playlist_id=shared_playlist.id) }}" alt="Playlist Image">
+                    {% endif %}
+                    <div class="playlist-name">{{ shared_playlist.name }}</div>
+                </a>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <footer>
+        <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%"
+            height="100%"></iframe>
+    </footer>
+</body>
+
+</html>

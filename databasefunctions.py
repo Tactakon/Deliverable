@@ -62,18 +62,40 @@ def RemoveSongFromPlaylist(songs, songID, songResult, artistResult, imageURL):
     return songs
 
 
+def AddSharedPlaylistID(shared_playlists, playlistID):
+    """
+    Takes the json string from user.playlists_shared_with
+     playlistID -->  ID of the shared playlists of the user to be added
+
+    first converts it into python dict
+    then adds the  playlistID
+    then converts it backs to the string
+
+    retuns playlists_shared_with as string
+
+    """
+    print("In Database functions")
+
+    add_shared_playlists = json.loads(shared_playlists)
+    sharedPlaylist = {
+        "playlistID": playlistID
+    }
+    print(sharedPlaylist)
+
+    add_shared_playlists.append(sharedPlaylist)
+    playlists_shared_with = json.dumps(add_shared_playlists)
+
+    return playlists_shared_with
+
 
 def AddSharedUserByPlaylistCreator(listeners_shared_to, sharedUserID):
     """
     Takes the json string from playlist.listeners_shared_to
     sharedUserID --> UserID of the shareduser of the playlist to be added
-
     first converts it into python dict
     then adds the sharedUserID
     then converts it backs to the string
-
     retuns listeners_shared_to as string
-
     """
     print("In Database functions")
 

@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="60"
+  <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100"
   style="position: fixed; top: 0; left: 0; right: 0;"></iframe>
   <!-- Container1 is left top side -->
   <div class="container1" style="margin-left: 2%;">
@@ -40,8 +40,8 @@
         <form class="modal-content animate" action="/AddSharedUserByPlaylistOwner" method="POST">
           <div id="success-message" style="display:none">USER SUCCESSFULLY ADDED</div>
           <span onclick="document.getElementById('id01').style.display='none'" class="close"
-            style="top: 4%; right: 4%; font-size: 30px;">&times;</span>
-          <div class="container modal-container" style="display: flex; flex-direction: column; align-items: center; width: 40%;">
+            style="top: 4%; right: 4%; font-size: 32px;">&times;</span>
+          <div class="container modal-container" style="display: flex; flex-direction: column; align-items: center; width: 60%;">
             <div class="input-label" style="padding-top: 8%; font-size: 20px; font-weight: 400; color: #1D1D1D;">
               <label for="uname"><b>Share {{ playlist_name }} With </b></label>
             </div>
@@ -95,9 +95,8 @@
       <!-- <span class="follow">Follow</span> -->
       <br>
       <br>
-      <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-        dolore magna aliqua. Pretium aenean pharetra magna ac.</span>
-      test code
+      <span>{{ description }}</span>
+      
     </div>
     <div class="add">
       <span style="text-transform: uppercase; font-weight:bold;">ADD SONGS</span>
@@ -168,17 +167,18 @@
       </div>
       <br>
       <span style="text-transform: uppercase; font-weight:bold;">In Queue</span>
-      <hr />
-      <div class="song-list"> <!--Made a loop-->
-        {% for song in songs %}
-        <div class="song">
-          <img src={{song.imageURL}} class="image2">
-          <br>
-          <span class="number">{{ loop.index }}.</span>
-          <span class="title">{{ song.songResult}}</span>
-          <span class="songArtist"> - {{ song.artistResult }}</span>
+<hr />
+<div class="song-list"> <!--Made a loop-->
+  {% for song in songs %}
+  <div class="song d-flex align-items-center">
+    <img src={{song.imageURL}} class="image2" style="max-height: 64px; max-width: 64px; margin-right: 10px;margin-bottom: 24px;">
+    <div style="margin-bottom: 25px;">
+      <span class="number" style="font-size: 14px;">{{ loop.index }}.</span>
+      <span class="title" style="font-size: 14px;"><b>{{ song.songResult}}</b></span>
+      <span class="songArtist" style="font-size: 14px; padding-right: 1%;"> - {{ song.artistResult }}</span>
+    </div>
           <!--Delete work-->
-          <form method="POST" action="/DeleteSong">
+          <form method="POST" action="/DeleteSong"  class="ml-auto">
             <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
             <input type="hidden" name="songResult" value="{{song.songResult}}" /><!--SONG RESULT-->
             <input type="hidden" name="artistResult" value="{{song.artistResult}}" /><!--SONG ARTIST-->
@@ -187,8 +187,8 @@
             <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
             <input hidden="true" name="genre" value={{genre}} />
             <input hidden="true" name="songs" value={{songs}} />
-            <button type="submit" style="font-size: small;">Delete<svg xmlns="http://www.w3.org/2000/svg" width="16"
-                height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" style="margin-left: 8px;">
+            <button type="submit" class="d-flex align-items-center" style="font-size: small; margin-bottom: 28px; padding-left: 12px; padding-right: 12px;"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+              height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                 <path
                   d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
               </svg></button>
