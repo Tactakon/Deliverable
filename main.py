@@ -295,7 +295,15 @@ def signup():
         # pylint: disable = no-else-return
         if added_to_db:
             flash('Account created!')
-            return redirect(url_for('login'))
+
+            # Retrieve the newly created user object
+            user = Users.query.filter_by(email=email).first()
+
+            # Log the user in
+            login_user(user)
+
+            # Redirect to the userPlaylistpage
+            return redirect(url_for('userPlaylistpage'))
         else:
             flash('Email address already exists')
             return render_template('signup.html')
@@ -717,6 +725,45 @@ def get_playlists_by_user_id(user_id):
     playlists = Playlists.query.filter_by(creator=user_id).all()
     return playlists
 
+# AboutUs.html
+@app.route('/AboutUs.html')
+def about_us():
+    return render_template('AboutUs.html')
+
+# AboutUs2.html
+@app.route('/AboutUs2.html')
+def about_us2():
+    return render_template('AboutUs2.html')
+
+# Support.html
+@app.route('/Support.html')
+def support():
+    return render_template('Support.html')
+
+# Support2.html
+@app.route('/Support2.html')
+def support2():
+    return render_template('Support2.html')
+
+# TermsofUse.html
+@app.route('/TermsofUse.html')
+def terms_of_use():
+    return render_template('TermsofUse.html')
+
+# TermsofUse2.html
+@app.route('/TermsofUse2.html')
+def terms_of_use2():
+    return render_template('TermsofUse2.html')
+
+# PrivacyPolicy.html
+@app.route('/PrivacyPolicy.html')
+def privacy_policy():
+    return render_template('PrivacyPolicy.html')
+
+# PrivacyPolicy2.html
+@app.route('/PrivacyPolicy2.html')
+def privacy_policy2():
+    return render_template('PrivacyPolicy2.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

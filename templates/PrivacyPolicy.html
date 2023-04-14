@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Verge</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            line-height: 1.5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content-container {
+            max-width: 60%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .page-content {
+            margin-bottom: 40px;
+        }
+
+        .page-content p {
+            margin-bottom: 20px;
+        }
+        .page-content ol {
+            margin-left: 20px;
+        }
+
+        .intro {
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Include header -->
+    <iframe name="header" src="{{ url_for('header')}}" frameborder="0" scrolling="no" width="100%"
+        height="80px"></iframe>
+
+        <div class="content-container">
+            <div class="page-header">
+                <h1>Privacy Policy</h1>
+            </div>
+            <div class="page-content">
+                <p>Verge is a collaborative playlist web application created by a group of Georgia State University computer science students for our Capstone project. By using Verge, you agree to the following terms and conditions:</p>
+    
+                <ol>
+                    <li>Verge uses the Spotify API to access music content. By using Verge, you agree to comply with Spotify's Terms of Use and any other applicable Spotify policies.</li><br>
+                    <li>You must be at least 18 years old to use Verge.</li><br>
+                    <li>You may not use Verge for any illegal or unauthorized purpose. You must comply with all applicable laws and regulations in your use of Verge.</li><br>
+                    <li>Verge is provided "as is" without any warranty of any kind. We do not guarantee the accuracy, completeness, timeliness, reliability, suitability, availability, or functionality of Verge. We are not liable for any damages arising from your use of Verge.</li><br>
+                    <li>We may modify these terms of use at any time without notice. Your continued use of Verge after any modifications indicates your acceptance of the modified terms.</li>
+                </ol>
+            
+                <p>If you have any questions or concerns regarding these terms of use, please contact us at <a href="mailto:vergeproject.help@gmail.com">vergeproject.help@gmail.com</a>.</p>
+            </div>
+        </div>
+    
+
+    <footer>
+        <iframe src="{{ url_for('footer')}}" frameborder="0" scrolling="no" width="100%" height="204px;"></iframe>
+    </footer>
+</body>
+
+</html>
