@@ -27,8 +27,8 @@ def AddSongtoPlaylist(songs, songID, songResult, artistResult, imageURL, selecte
         "songID": songID,
         "songResult": songResult,
         "artistResult": artistResult,
-        "imageURL": imageURL,
-        "genre": genre
+        "imageURL": imageURL
+        
     }
 
     new_songs.append(song)

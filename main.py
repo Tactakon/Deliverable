@@ -491,7 +491,6 @@ def playlistpage():
     playlist_name = request.args.get('playlist_name')
     selected_genre = request.args.get('genre')
     
-
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
     if playlist.songs:
@@ -502,11 +501,11 @@ def playlistpage():
     #API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    # q = f'genre:{selected_genre} track:{query}'
-    results = search_song(query)
+    q = f'genre:{selected_genre} track:{query}'
+    results = search_song(q)
 
     (songResults, artistResults, songIDs, imageURLs) = results
-
+ 
     return render_template(
         'playlistpage.html',
         username=username,
@@ -566,6 +565,7 @@ def AddSong():
     # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
+    selected_genre = request.args.get('genre')
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -577,7 +577,7 @@ def AddSong():
 
     # calling AddSongToPlaylist function from databasefunctions.py
     playlist.songs = AddSongtoPlaylist(
-        playlist.songs, songID, songResult, artistResult, imageURL)
+        playlist.songs, songID, songResult, artistResult, imageURL, selected_genre)
 
     db.session.commit()
 
@@ -585,14 +585,6 @@ def AddSong():
                             username=current_user.username,
                             playlist_name=playlist_name,
                             songs=json.loads(playlist.songs)))
-
-    db.session.commit()
-
-    return redirect(url_for('playlistpage',
-    username=current_user.username,
-    playlist_name=playlist_name,
-    genre=playlist.playlist_genre),
-    songs=json.loads(playlist.songs))
 
 # sharedplaylistpage
 @login_required
@@ -615,7 +607,8 @@ def sharedplaylistpage():
     # API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    results = search_song(query)
+    q = f'genre:{selected_genre} track:{query}'
+    results = search_song(q)
     (songResults, artistResults, songIDs, imageURLs) = results
 
     return render_template(
