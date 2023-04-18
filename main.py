@@ -111,6 +111,7 @@ class Playlists(db.Model):
     description = db.Column(db.String(10000))
     playlist_image = db.Column(db.LargeBinary)
     songs = db.Column(db.String(10000))
+    playlist_genre = db.Column(db.String(100))
     creator = db.Column(db.Integer, db.ForeignKey(
         'users.id'))  # user.id stored
     listeners_shared_to = db.Column(db.String(1024))
@@ -227,6 +228,7 @@ def playlistsearch():
     print('hi')
     username = request.args.get('username')
     search_query = request.args.get('search-query')
+    selected_genre = request.args.get('genre')
     playlist = Playlists.query.filter(
         Playlists.name.like(f'%{search_query}%')).first()
 
@@ -242,13 +244,17 @@ def playlistsearch():
     # API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    results = search_song(query)
+    q = f'genre:{selected_genre} track:{query}'
+    results = search_song(q)
     (songResults, artistResults, songIDs, imageURLs) = results
 
+    print(current_user)
+
     return redirect(url_for('sharedplaylistpage',
-                            username=current_user.username,
+                            username=username,
                             playlist_name=playlist.name,
                             songs=songs,
+                            genre=playlist.playlist_genre,
                             songResults=songResults,
                             artistResults=artistResults,
                             songIDs=songIDs,
@@ -407,11 +413,13 @@ def createPlaylistPage():
         playlist_description = request.form.get('playlist-description')
         playlist_passcode = request.form.get('playlist-passcode')
         playlist_image = request.files.get('playlist-image')
+        selected_genre = request.form['playlist-genre']
 
         print("description")
         print(playlist_description)
 
         # intialize empty json objects of the songs and listeners_shared_to
+        
         songs = []
         listeners_shared_to = []
 
@@ -421,6 +429,7 @@ def createPlaylistPage():
             password=playlist_passcode,
             description=playlist_description,
             creator=current_user.id,
+            playlist_genre = selected_genre,
             songs=json.dumps(songs),  # now a json string
             listeners_shared_to=json.dumps(
                 listeners_shared_to)  # now a json string
@@ -463,6 +472,7 @@ def createPlaylistPage():
         return redirect(url_for('playlistpage',
                                 username=current_user.username,
                                 playlist_name=playlist_name,
+                                genre=selected_genre,
                                 songs=songs))  # want to send a dict so that it could loop
 
     return flask.render_template('createPlaylistPage.html', username=current_user.username)
@@ -481,6 +491,7 @@ def playlistpage():
     """
     username = request.args.get('username')
     playlist_name = request.args.get('playlist_name')
+    selected_genre = request.args.get('genre')
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -495,7 +506,8 @@ def playlistpage():
     # API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    results = search_song(query)
+    q = f'genre:{selected_genre} track:{query}'
+    results = search_song(q)
     (songResults, artistResults, songIDs, imageURLs) = results
 
 
@@ -505,6 +517,7 @@ def playlistpage():
         playlist_name=playlist_name,
         description=description,
         songs=songs,  # dict
+        genre=playlist.playlist_genre,
         songResults=songResults,
         artistResults=artistResults,
         songIDs=songIDs,
@@ -527,6 +540,7 @@ def AddSharedUserByPlaylistOwner():
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
     shareduser_username = request.form.get('shareduser_username')
+    selected_genre = request.args.get('genre')
 
     shareduser = Users.query.filter_by(username=shareduser_username).first()
 
@@ -552,6 +566,7 @@ def AddSharedUserByPlaylistOwner():
     return redirect(url_for('playlistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
+                            genre=selected_genre,
                             songs=json.loads(playlist.songs)))
 
 #Adding song to the playlist
@@ -566,6 +581,7 @@ def AddSong():
     # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
+    selected_genre = request.args.get('genre')
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -581,7 +597,7 @@ def AddSong():
 
     # calling AddSongToPlaylist function from databasefunctions.py
     playlist.songs = AddSongtoPlaylist(
-        playlist.songs, songID, songResult, artistResult, imageURL)
+        playlist.songs, songID, songResult, artistResult, imageURL, selected_genre)
 
     db.session.commit()
 
@@ -599,6 +615,7 @@ def sharedplaylistpage():
     """
     username = request.args.get('username')
     playlist_name = request.args.get('playlist_name', '')
+    selected_genre = request.args.get('genre')
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -610,7 +627,8 @@ def sharedplaylistpage():
     # API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    results = search_song(query)
+    q = f'genre:{selected_genre} track:{query}'
+    results = search_song(q)
     (songResults, artistResults, songIDs, imageURLs) = results
 
     return render_template(
@@ -618,6 +636,7 @@ def sharedplaylistpage():
         username=username,
         playlist_name=playlist_name,
         songs=songs,  # dict
+        genre=playlist.playlist_genre,
         songResults=songResults,
         artistResults=artistResults,
         songIDs=songIDs,
@@ -635,6 +654,7 @@ def AddSongBySharedUser():
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
     password = request.form.get('password')
+    selected_genre = request.args.get('genre')
     playlist = Playlists.query.filter_by(name=playlist_name).first()
 
     # Check if the password entered by the user matches the password in the database
@@ -661,6 +681,7 @@ def AddSongBySharedUser():
     return redirect(url_for('playlistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
+                            genre=playlist.playlist_genre,
                             songs=json.loads(playlist.songs)))
 
 #Deleting song
@@ -675,6 +696,7 @@ def DeleteSong():
     # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
+    selected_genre = request.args.get('genre')
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -693,6 +715,7 @@ def DeleteSong():
     return redirect(url_for('playlistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
+                            genre=playlist.playlist_genre,
                             songs=json.loads(playlist.songs)))
 
 # userPlaylistpage.html
