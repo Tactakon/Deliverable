@@ -63,6 +63,7 @@
       <th>Password</th>
       <th>Description</th>
       <th>Songs</th>
+      <th>Playlist genre</th>
       <th>Playlist Image</th>
       <th>Creator</th>
       <th>Listeners Shared To</th>
@@ -75,6 +76,7 @@
       <td>{{ playlist.description }}</td>
       <td><img src="{{ url_for('playlist_image', playlist_id=playlist.id) }}" alt="Playlist Image"></td>
       <td>{{ playlist.songs }}</td>
+      <td>{{ playlist.playlist_genre }}</td>
       <td>{{ playlist.creator }}</td>
       <td>{{ playlist.listeners_shared_to }}</td>
       <!--playlist image displayed-->>

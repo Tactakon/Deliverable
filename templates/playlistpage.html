@@ -53,6 +53,7 @@
             <input hidden="true" name="username" value={{username}} />
             <input hidden="true" name="playlist_name" value={{playlist_name}} />
             <input hidden="true" name="songs" value={{songs}} />
+            <input hidden="true" name="genre" value={{genre}} />
             <button type="submit" id="share-btn">Share!</button>
           </div>
         </form>
@@ -108,12 +109,14 @@
           <input hidden="true" name="username" value={{username}} />
           <input hidden="true" name="playlist_name" value={{playlist_name}} />
           <input hidden="true" name="songs" value={{songs}} />
+          <input hidden="true" name="genre" value={{genre}} />
           <input type="submit" value="Search!" class="btn btn-dark" style="float:right; margin-bottom: 6%;" />
         </div>
       </form>
       <br>
       <!-- can't figure out how make add button appear inline. see .results class -->
       <ol class="results">
+        {% if songResults[0]|length !=0 %}
         {%for i in range(0,3)%}
         <li>{{songResults[i]}} by {{artistResults[i]}}
           <form method="POST" action="/AddSong">
@@ -124,6 +127,7 @@
             <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
             <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
             <input hidden="true" name="songs" value={{songs}} />
+            <input hidden="true" name="genre" value={{genre}} />
             <button type="submit" style="font-size: small;">ADD<svg xmlns="http://www.w3.org/2000/svg" width="16"
                 height="16" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16"
                 style="margin-left: 8px;">
@@ -131,8 +135,13 @@
                   d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
               </svg></button>
           </form>
-        </li>
         {%endfor%}
+        {%else%}
+        <h1>
+          Search a song to Add
+        </h1>
+      </li>
+      {%endif%}
       </ol>
     </div>
   </div>
@@ -154,7 +163,7 @@
   <div class="container3">
     <div class="queue">
       <div class="genre">
-        <span class="g1">genre I</span>
+        <span class="g1">{{ genre }}</span>
         <span class="g2">genre II</span>
       </div>
       <br>
@@ -178,6 +187,7 @@
             <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
             <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
             <input hidden="true" name="songs" value={{songs}} />
+            <input hidden="true" name="genre" value={{genre}} />
             <button type="submit" class="d-flex align-items-center" style="font-size: small; margin-bottom: 28px; padding-left: 12px; padding-right: 12px;"><svg xmlns="http://www.w3.org/2000/svg" width="20"
               height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                 <path
