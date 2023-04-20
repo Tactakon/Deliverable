@@ -194,6 +194,9 @@ def add_user():
 # error tester
 @app.route('/error')
 def error():
+    """
+    Checks if error handling/error page works
+    """
     raise ValueError("An error occurred")
 
 # deleting values from Users table
