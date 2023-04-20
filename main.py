@@ -165,6 +165,7 @@ def add_user():
 
     return redirect(url_for('UsersAndPlaylist'))
 
+# error tester
 @app.route('/error')
 def error():
     raise ValueError("An error occurred")
