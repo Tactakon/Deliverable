@@ -13,7 +13,7 @@
 
 <body>
   <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100"
-  style="position: fixed; top: 0; left: 0; right: 0;"></iframe>
+    style="position: fixed; top: 0; left: 0; right: 0;"></iframe>
   <!-- Container1 is left top side -->
   <div class="container1" style="margin-left: 2%;">
     <div class="jammingwith">
@@ -41,7 +41,8 @@
           <div id="success-message" style="display:none">USER SUCCESSFULLY ADDED</div>
           <span onclick="document.getElementById('id01').style.display='none'" class="close"
             style="top: 4%; right: 4%; font-size: 32px;">&times;</span>
-          <div class="container modal-container" style="display: flex; flex-direction: column; align-items: center; width: 60%;">
+          <div class="container modal-container"
+            style="display: flex; flex-direction: column; align-items: center; width: 60%;">
             <div class="input-label" style="padding-top: 8%; font-size: 20px; font-weight: 400; color: #1D1D1D;">
               <label for="uname"><b>Share {{ playlist_name }} With </b></label>
             </div>
@@ -145,8 +146,7 @@
   <!-- Container2 is middle -->
   <div class="container2">
     <div class="currentsong">
-      <span><img src="../static/images/imgsmall/FunkyYellow.png" class="img"
-          style="width: 600px; height: auto;"></span>
+      <span><img src="../static/images/imgsmall/FunkyYellow.png" class="img" style="width: 600px; height: auto;"></span>
       <br>
       <br>
       <span class="currentitle">Song Title</span>
@@ -163,16 +163,17 @@
       </div>
       <br>
       <span style="text-transform: uppercase; font-weight:bold;">In Queue</span>
-<hr />
-<div class="song-list"> <!--Made a loop-->
-  {% for song in songs %}
-  <div class="song d-flex align-items-center">
-    <img src={{song.imageURL}} class="image2" style="max-height: 64px; max-width: 64px; margin-right: 10px;margin-bottom: 24px;">
-    <div style="margin-bottom: 25px;">
-      <span class="number" style="font-size: 14px;">{{ loop.index }}.</span>
-      <span class="title" style="font-size: 14px;"><b>{{ song.songResult}}</b></span>
-      <span class="songArtist" style="font-size: 14px; padding-right: 1%;"> - {{ song.artistResult }}</span>
-    </div>
+      <hr />
+      <div class="song-list"> <!--Made a loop-->
+        {% for song in songs %}
+        <div class="song d-flex align-items-center">
+          <img src={{song.imageURL}} class="image2"
+            style="max-height: 64px; max-width: 64px; margin-right: 10px;margin-bottom: 24px;">
+          <div style="margin-bottom: 25px;">
+            <span class="number" style="font-size: 14px;">{{ loop.index }}.</span>
+            <span class="title" style="font-size: 14px;"><b>{{ song.songResult}}</b></span>
+            <span class="songArtist" style="font-size: 14px;"> - {{ song.artistResult }}</span>
+          </div>
           <!--Delete work-->
           <div id="{{loop.index}}" class="modal">
           <form method="POST" action="/DeleteSong"  class="modal-content animate">
@@ -245,9 +246,10 @@
         </div>
       </div>
     -->
-    <footer>
-      <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="none" width="100%" height="96px"
-        style="position: absolute; bottom: 0; left: 0; right: 0; margin-bottom: -22%;"></iframe>
-    </footer>    
+      <footer>
+        <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="none" width="100%" height="96px"
+          style="position: absolute; bottom: 0; left: 0; right: 0; margin-bottom: -22%;"></iframe>
+      </footer>
 </body>
+
 </html>

@@ -31,10 +31,10 @@
                 <div class="empty-box">
                 <a href="{{ url_for('sharedplaylistpage', username=current_user.username, playlist_name=shared_playlist.name) }}"
                     class="playlist-link">
+                    <div class="playlist-name" style="text-align: center; padding-bottom: 2%;">{{ shared_playlist.name }}</div>
                     {% if shared_playlist.playlist_image %}
                     <img src="{{ url_for('playlist_image', playlist_id=shared_playlist.id) }}" alt="Playlist Image">
                     {% endif %}
-                    <div class="playlist-name">{{ shared_playlist.name }}</div>
                 </a>
                 </div>
                 {% endfor %}
@@ -49,9 +49,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <footer>
-        <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%"
-            height="100%"></iframe>
-    </footer>
+        <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="none" width="100%" height="96px"
+          style="position: absolute; bottom: 0; left: 0; right: 0; margin-bottom: -2%;"></iframe>
+      </footer>
 </body>
 
 </html>

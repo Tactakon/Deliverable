@@ -234,8 +234,8 @@ button:active {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 40%;
-  height: 40%;
+  width: 50%;
+  height: 50%;
 }
 
 
@@ -278,7 +278,8 @@ button:active {
 }
 
 .song-list {
-  max-height: 70%; /* Adjust this value according to your desired height */
+  max-height: 70%;
+  /* Adjust this value according to your desired height */
   overflow-y: auto;
 }
 
