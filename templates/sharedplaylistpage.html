@@ -105,7 +105,7 @@
       <hr />
       <form action="/sharedplaylistpage" method="GET">
         <div class="textcontainer">
-          <input id="songtoadd" name="song" type="text" placeholder="Search Song"
+          <input id="songtoadd" name="song" type="text" placeholder="Search Songs to Add"
             class="form-control form-control-lg" />
           <input hidden="true" name="username" value={{username}} />
           <input hidden="true" name="playlist_name" value={{playlist_name}} />
@@ -137,10 +137,6 @@
             </svg></button>
           </form>
         {%endfor%}
-        {%else%}
-        <h1>
-          Search a song to Add
-        </h1>
       </li>
       {%endif%}
       </ol>
