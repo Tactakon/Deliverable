@@ -23,6 +23,14 @@ from databasefunctions import (
 
 app = flask.Flask(__name__)
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Log the exception
+    app.logger.error(f"Unhandled exception: {str(e)}")
+    
+    # Render a custom error page
+    return render_template('error.html', error=str(e))
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # each user of the app need their secret key #in .env as SECRET_KEY
@@ -186,7 +194,12 @@ def add_user():
 
     return redirect(url_for('UsersAndPlaylist'))
 
-#deleting values from Users table
+# error tester
+@app.route('/error')
+def error():
+    raise ValueError("An error occurred")
+
+# deleting values from Users table
 @app.route('/delete_user', methods=['POST'])
 def delete_user():
     """

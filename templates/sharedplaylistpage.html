@@ -105,7 +105,7 @@
       <hr />
       <form action="/sharedplaylistpage" method="GET">
         <div class="textcontainer">
-          <input id="songtoadd" name="song" type="text" placeholder="Search Song"
+          <input id="songtoadd" name="song" type="text" placeholder="Search Songs to Add"
             class="form-control form-control-lg" />
           <input hidden="true" name="username" value={{username}} />
           <input hidden="true" name="playlist_name" value={{playlist_name}} />
@@ -137,10 +137,6 @@
             </svg></button>
           </form>
         {%endfor%}
-        {%else%}
-        <h1>
-          Search a song to Add
-        </h1>
       </li>
       {%endif%}
       </ol>
@@ -165,7 +161,6 @@
     <div class="queue">
       <div class="genre">
         <span class="g1">{{ genre }}</span>
-        <span class="g2">genre II</span>
       </div>
       <br>
       <span style="text-transform: uppercase; font-weight:bold;">In Queue</span>
@@ -180,24 +175,64 @@
       <span class="songArtist" style="font-size: 14px; padding-right: 1%;"> - {{ song.artistResult }}</span>
     </div>
           <!--Delete work-->
-          <form method="POST" action="/DeleteSong"  class="ml-auto">
-            <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
-            <input type="hidden" name="songResult" value="{{song.songResult}}" /><!--SONG RESULT-->
-            <input type="hidden" name="artistResult" value="{{song.artistResult}}" /><!--SONG ARTIST-->
-            <input type="hidden" name="imageURL" value="{{song.imageURL}}" /><!--IMAGE URL-->
-            <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
-            <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
-            <input hidden="true" name="songs" value={{songs}} />
-            <input hidden="true" name="genre" value={{genre}} />
-            <button type="submit" class="d-flex align-items-center" style="font-size: small; margin-bottom: 28px; padding-left: 12px; padding-right: 12px;"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+          <div id="{{loop.index}}" class="modal">
+          <form method="POST" action="/DeleteSong"  class="modal-content animate">
+            <div id="success-message" style="display:none">SONG DELETED</div>
+            <span onclick="document.getElementById('{{loop.index}}').style.display='none'" class="close"
+            style="top: 4%; right: 4%; font-size: 32px;">&times;</span>
+            <div class="container modal-container" style="display: flex; flex-direction: column; align-items: center; width: 60%;">
+              <div class="input-label" style="padding-top: 8%; font-size: 20px; font-weight: 400; color: #1D1D1D;">
+                <label for="uname"><b>Are you sure you want to delete {{ song.songResult }} by {{song.artistResult}} ? </b></label>
+              </div>
+              <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
+              <input type="hidden" name="songResult" value="{{song.songResult}}" /><!--SONG RESULT-->
+              <input type="hidden" name="artistResult" value="{{song.artistResult}}" /><!--SONG ARTIST-->
+              <input type="hidden" name="imageURL" value="{{song.imageURL}}" /><!--IMAGE URL-->
+              <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
+              <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
+              <input hidden="true" name="songs" value={{songs}} />
+              <input hidden="true" name="genre" value={{genre}} />
+              <button type="submit" id="delete-btn">Delete!</button>
+            </div>
+          </form>
+          </div>
+            <button type="submit" class="d-flex align-items-center" onclick="document.getElementById('{{loop.index}}').style.display='block'" style="font-size: small; margin-bottom: 28px; padding-left: 12px; padding-right: 12px;"><svg xmlns="http://www.w3.org/2000/svg" width="20"
               height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                 <path
                   d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
               </svg></button>
             <!-- <span class="time">{{ song.time }}</span> -->
-          </form>
+          </div>
           <!-- <span class="time">{{ song.time }}</span> -->
         </div>
+        <script>
+          // Get the modal
+          var modal = document.getElementById('{{loop.index}}');
+  
+          // When the user clicks anywhere outside of the modal, close it
+          window.onclick = function (event) {
+            if (event.target == modal) {
+              modal.style.display = "none";
+            }
+          }
+  
+          // add event listener to the form submit button
+          document.getElementById('delete-btn').addEventListener('click', function (event) {
+            var form = document.querySelector('form');
+            var successMessage = document.getElementById('success-message');
+  
+            // submit the form using AJAX
+            fetch(form.action, {
+              method: 'POST',
+              body: new FormData(form)
+            })
+              .then(response => {
+                if (response.ok) {
+                  successMessage.style.display = 'block';
+                }
+              })
+          });
+        </script>
         {% endfor %}
       </div>
       <!--
