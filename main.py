@@ -16,6 +16,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from search import search_song
+import time
 from databasefunctions import (
     AddSongtoPlaylist, RemoveSongFromPlaylist, AddSharedPlaylistID, AddSharedUserByPlaylistCreator
 )
@@ -30,6 +31,31 @@ def handle_exception(e):
     
     # Render a custom error page
     return render_template('error.html', error=str(e))
+
+def retry(func):
+    """Decorator function for retrying API calls"""
+    max_retries = 3
+    retry_interval = 5
+
+    def wrapper(*args, **kwargs):
+        for i in range(max_retries):
+            try:
+                response = func(*args, **kwargs)
+                # Check if the response is successful
+                if response.status_code == 200:
+                    return response
+                else:
+                    # Raise an exception for unsuccessful response
+                    raise Exception(f'API call unsuccessful: {response.status_code}')
+            except Exception as e:
+                print(f'Error: {e}')
+                # Wait for a certain interval before retrying
+                time.sleep(retry_interval)
+        else:
+            # Return error message if maximum retries is reached
+            raise Exception('API call failed after maximum retries')
+
+    return wrapper
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -197,6 +223,9 @@ def add_user():
 # error tester
 @app.route('/error')
 def error():
+    """
+    Checks if error handling/error page works
+    """
     raise ValueError("An error occurred")
 
 # deleting values from Users table
@@ -308,6 +337,7 @@ def homeheader():
     return flask.render_template('homeheader.html', unread_count=unread_count)
 
 #searching playlist
+@retry
 @app.route('/playlistsearch')
 @login_required
 def playlistsearch():
@@ -580,6 +610,7 @@ def createPlaylistPage():
 
 # playlistpage
 @login_required
+@retry
 @app.route('/playlistpage', methods=['POST', 'GET'])
 @login_required
 def playlistpage():
@@ -738,6 +769,8 @@ def AddSong():
                             songs=json.loads(playlist.songs)))
 
 # sharedplaylistpage
+@login_required
+@retry
 @app.route('/sharedplaylistpage', methods=['POST', 'GET'])
 @login_required
 def sharedplaylistpage():
@@ -915,6 +948,40 @@ def DeleteSong():
     db.session.commit()
     
     return redirect(url_for('playlistpage',
+                            username=current_user.username,
+                            playlist_name=playlist_name,
+                            genre=playlist.playlist_genre,
+                            songs=json.loads(playlist.songs)))
+
+#Deleting song
+@app.route("/DeleteSongBySharedUser", methods=["POST"])
+@login_required
+def DeleteSongBySharedUser():
+    """
+    Deletes a song from a playlist.
+    Returns:
+    A redirect to the playlist page with the newly deleted song displayed.
+    """
+    # pylint: disable=unused-variable
+    username = request.form.get('username')
+    playlist_name = request.form.get('playlist_name')
+    selected_genre = request.args.get('genre')
+
+    playlist = Playlists.query.filter_by(
+        name=playlist_name).first()
+
+    songID = request.form.get('songID')
+    songResult = request.form.get('songResult')
+    artistResult = request.form.get('artistResult')
+    imageURL = request.form.get('imageURL')
+
+    # calling RemoveSongFromPlaylist function from databasefunctions.py
+    playlist.songs = RemoveSongFromPlaylist(
+        playlist.songs, songID, songResult, artistResult, imageURL)
+
+    db.session.commit()
+
+    return redirect(url_for('sharedplaylistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
                             genre=playlist.playlist_genre,

@@ -177,7 +177,7 @@
           </div>
           <!--Delete work-->
           <div id="{{loop.index}}" class="modal">
-          <form method="POST" action="/DeleteSong"  class="modal-content animate">
+          <form method="POST" action="/DeleteSongBySharedUser"  class="modal-content animate">
             <div id="success-message" style="display:none">SONG DELETED</div>
             <span onclick="document.getElementById('{{loop.index}}').style.display='none'" class="close"
             style="top: 4%; right: 4%; font-size: 32px;">&times;</span>
