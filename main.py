@@ -597,7 +597,7 @@ def AddSong():
 
     # calling AddSongToPlaylist function from databasefunctions.py
     playlist.songs = AddSongtoPlaylist(
-        playlist.songs, songID, songResult, artistResult, imageURL, selected_genre)
+        playlist.songs, songID, songResult, artistResult, imageURL)
 
     db.session.commit()
 
