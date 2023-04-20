@@ -724,7 +724,7 @@ def get_playlists_by_user_id(user_id):
 
 @app.route('/Spotify_login')
 def Spotify_login():
-    scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state'
+    scope = 'streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state'
     redirect_uri = url_for('spotify_callback', _external=True)
     print(redirect_uri)
     return redirect(f'https://accounts.spotify.com/authorize?response_type=code&client_id={SPOTIPY_CLIENT_ID}&scope={scope}&redirect_uri={redirect_uri}')
@@ -745,15 +745,15 @@ def spotify_callback():
         refresh_token = response.json()['refresh_token']
         session['access_token'] = access_token
         session['refresh_token'] = refresh_token
-        return redirect(url_for('index'))
+        return redirect(url_for('play_music'))
     else:
         return 'Error: Unable to obtain access token'
 @app.route('/play_music')
-def index():
+def play_music():
     access_token = session.get('access_token')
     if not access_token:
         return redirect(url_for('Spotify_login'))
-    return render_template('play_music.html', access_token=access_token)
+    return render_template('music_player.html', access_token=access_token)
 
 
 if __name__ == "__main__":

@@ -3,100 +3,59 @@
 
 <head>
   <title>My App</title>
-  <script src="https://sdk.scdn.co/spotify-player.js"></script>
 </head>
 
 <body>
-
+  <h1>Spotify Web Playback SDK Quick Start</h1>
+  <button id="togglePlay">Toggle Play</button>
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
     window.onSpotifyWebPlaybackSDKReady = () => {
       const token = '{{ access_token }}';
       const player = new Spotify.Player({
-        name: 'My Web Player',
-        getOAuthToken: cb => { cb(token); }
+        name: 'Web Playback SDK Quick Start Player',
+        getOAuthToken: cb => { cb(token); },
+        volume: 0.5
       });
-       // Error handling
-        player.addListener('initialization_error', ({ message }) => { console.error(message); });
-        player.addListener('authentication_error', ({ message }) => { console.error(message); });
-        player.addListener('account_error', ({ message }) => { console.error(message); });
-        player.addListener('playback_error', ({ message }) => { console.error(message); });
 
-        // Playback status updates
-        player.addListener('player_state_changed', state => { console.log(state); });
+      // Ready
+      player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+      });
 
-        // Ready
-        player.addListener('ready', ({ device_id }) => {
-            console.log('Ready with Device ID', device_id);
-        });
+      // Not Ready
+      player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+      });
 
-        // Not Ready
-        player.addListener('not_ready', ({ device_id }) => {
-            console.log('Device ID has gone offline', device_id);
-        });
+      player.addListener('initialization_error', ({ message }) => {
+        console.error(message);
+      });
 
-        // Connect to the player!
-        player.connect().then(success => {
-              if (success) {
-                  console.log('The Web Playback SDK successfully connected to Spotify!');
-              }
-        });
+      player.addListener('authentication_error', ({ message }) => {
+        console.error(message);
+      });
 
-        window.onclick = myFunction;
+      player.addListener('account_error', ({ message }) => {
+        console.error(message);
+      });
 
-        // Pause or Play current song
-        function myFunction() {
-            player.togglePlay()
+      document.getElementById('togglePlay').onclick = function () {
+        player.togglePlay();
+      };
+
+      player.connect().then(success => {
+        if (success) {
+          console.log('The Web Playback SDK successfully connected to Spotify!');
         }
-    };
+      });
+    }
   </script>
-  <button onclick="play()">Play</button>
-  <button onclick="pause()">Pause</button>
-  <button onclick="next()">Next</button>
+
 
 </body>
 
 </html>
 
 
-
-
-
-
-<!--
-  <script>
-      window.onSpotifyWebPlaybackSDKReady = () => {
-          const token = '{{ access_token }}';
-          const player = new Spotify.Player({
-              name: 'My Web Player',
-              getOAuthToken: cb => { cb(token); }
-          });
-          player.connect();
-      };
-  </script>
-  
-
-  player.connect().then(success => {
-              if (success) {
-                  console.log('The Web Playback SDK successfully connected to Spotify!');
-              }
-          });
-    };
-    function play() {
-      player.resume();
-    }
-
-    function pause() {
-      player.pause();
-    }
-
-    function next() {
-      player.nextTrack();
-    }
-
-    player.addListener('player_state_changed', state => {
-      if (state) {
-        console.log('Current track: ', state.track_window.current_track);
-      } else {
-        console.log('No playback');
-      }
--->
+<!--src="../static/play_music.js"-->
