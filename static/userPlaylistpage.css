@@ -141,7 +141,6 @@ Top Right Side
   height: 275px;
   color: black;
   text-align: center;
-  padding: 10px;
 }
 
 .empty-box img {
@@ -154,7 +153,7 @@ Top Right Side
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-}
+} 
 
 /* Show 4 empty-box elements per row on larger screens */
 @media only screen and (min-width: 768px) {

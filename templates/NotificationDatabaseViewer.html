@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>NotificationDatabaseViewer</title>
+	<style>
+		table {
+			border-collapse: collapse;
+			margin-bottom: 20px;
+			width: 100%;
+			max-width: 800px;
+			font-family: Arial, sans-serif;
+			font-size: 14px;
+			line-height: 1.4;
+			color: #333;
+		}
+
+		table th, table td {
+			padding: 8px;
+			text-align: left;
+			border: 1px solid #ccc;
+		}
+
+		table th {
+			background-color: #f2f2f2;
+			font-weight: bold;
+		}
+
+		table tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		h1 {
+			font-size: 24px;
+			margin-top: 40px;
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Notifications</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Message</th>
+				<th>Action</th>
+				<th>Timestamp</th>
+				<th>Users</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for notification in notifications %}
+			<tr>
+				<td>{{ notification.id }}</td>
+				<td>{{ notification.message }}</td>
+				<td>{{ notification.action }}</td>
+				<td>{{ notification.timestamp }}</td>
+				<td>
+					<ul>
+						{% for user in notification.users %}
+						<li>{{ user.username }}</li>
+						{% endfor %}
+					</ul>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<h1>Notification Users</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Notification ID</th>
+				<th>User ID</th>
+				<th>Read</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for notification_user in notification_users %}
+			<tr>
+				<td>{{ notification_user.notification_id }}</td>
+				<td>{{ notification_user.user_id }}</td>
+				<td>{{ notification_user.read }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</body>
+</html>
