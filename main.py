@@ -918,7 +918,7 @@ def DeleteSong():
     playlist.songs = RemoveSongFromPlaylist(
         playlist.songs, songID, songResult, artistResult, imageURL)
         
-  # Create a notification when a song is added to a playlist
+  # Create a notification when a song is deleted to a playlist
     notification = Notification(
         message=f"{songResult} has been deleted from {playlist.name} by {current_user.username}.",
         action=playlist.name,
@@ -965,8 +965,19 @@ def DeleteSongBySharedUser():
     # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
+    password = request.form.get('password')
     selected_genre = request.args.get('genre')
+    playlist = Playlists.query.filter_by(name=playlist_name).first()
 
+    print(password)
+
+        # Check if the password entered by the user matches the password in the database
+    if playlist.password == password:
+        print('Song Deleted')
+    else:
+        print('Password is incorrect.')
+        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name, username=username))
+    
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
 
@@ -981,7 +992,7 @@ def DeleteSongBySharedUser():
 
     db.session.commit()
 
-    return redirect(url_for('sharedplaylistpage',
+    return redirect(url_for('playlistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
                             genre=playlist.playlist_genre,
