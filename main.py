@@ -572,7 +572,7 @@ def createPlaylistPage():
                 listeners_shared_to)  # now a json string
         )
 
-        static_folder = ('/mnt/c/users/jb300/Software/group_deliverables/static')
+        static_folder = os.path.abspath('static')
 
         # get a list of all the images in the imgsmall folder
         images_folder = os.path.join(static_folder, 'images', 'imgsmall')
@@ -1151,6 +1151,7 @@ def get_shared_playlists_by_user_id(user_id):
             id=shared_playlist['playlistID']).first()
         shared_playlists_with_user.append(shared_playlist_with_user)
     return shared_playlists_with_user
+
 @app.route('/Spotify_login')
 def Spotify_login():
     scope = 'streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state'
