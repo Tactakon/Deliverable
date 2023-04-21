@@ -410,7 +410,7 @@ def createPlaylistPage():
             songs=json.dumps(songs),  # now a json string
         )
 
-        static_folder = '/mnt/c/users/jb300/Software/group_deliverables/static'
+        static_folder = ('/mnt/c/users/jb300/Software/group_deliverables/static')
 
         # get a list of all the images in the imgsmall folder
         images_folder = os.path.join(static_folder, 'images', 'imgsmall')
