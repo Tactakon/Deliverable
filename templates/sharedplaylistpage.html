@@ -156,32 +156,38 @@
     </div>
   </div>
 
-  <!-- Container3 is right side -->
-  <div class="container3">
-    <div class="queue">
-      <div class="genre">
-        <span class="g1">{{ genre }}</span>
-      </div>
-      <br>
-      <span style="text-transform: uppercase; font-weight:bold;">In Queue</span>
-      <hr />
-      <div class="song-list"> <!--Made a loop-->
+<!-- Container3 is right side -->
+<div class="container3">
+  <div class="queue">
+    <div class="genre">
+      <span class="g1">{{ genre }}</span>
+    </div>
+    <br>
+    <span style="text-transform: uppercase; font-weight:bold;">In Queue</span>
+    <hr />
+      <div class="song-list" style="width: 340px;"> <!--Made a loop-->
         {% for song in songs %}
-        <div class="song d-flex align-items-center">
+        <div class="song d-flex align-items-center" >
           <img src={{song.imageURL}} class="image2"
-            style="max-height: 64px; max-width: 64px; margin-right: 10px;margin-bottom: 24px;">
-          <div style="margin-bottom: 25px;">
+            style="max-height: 76px; max-width: 76px; margin-right: 10px;margin-bottom: 24px;" >
+          <div style="margin-bottom: 25px; ">
             <span class="number" style="font-size: 14px;">{{ loop.index }}.</span>
             <span class="title" style="font-size: 14px;"><b>{{ song.songResult}}</b></span>
             <span class="songArtist" style="font-size: 14px;"> - {{ song.artistResult }}</span>
+            <button type="submit" class="d-flex align-items-center" onclick="document.getElementById('{{loop.index}}').style.display='block'" style="font-size: small; padding-left: 12px; padding-right: 12px;"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+              height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                <path
+                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+              </svg></button>
           </div>
           <!--Delete work-->
           <div id="{{loop.index}}" class="modal">
-          <form method="POST" action="/DeleteSongBySharedUser"  class="modal-content animate">
-            <div id="success-message" style="display:none">SONG DELETED</div>
-            <span onclick="document.getElementById('{{loop.index}}').style.display='none'" class="close"
-            style="top: 4%; right: 4%; font-size: 32px;">&times;</span>
-            <div class="container modal-container" style="display: flex; flex-direction: column; align-items: center; width: 60%;">
+            <div style="height: 80%; overflow-y: auto;">
+            <form method="POST" action="/DeleteSong" class="modal-content animate">
+                <div id="success-message" style="display:none">SONG DELETED</div>
+                <span onclick="document.getElementById('{{loop.index}}').style.display='none'" class="close"
+                style="top: 4%; right: 4%; font-size: 32px;">&times;</span>
+                <div class="container modal-container" style="display: flex; flex-direction: column; align-items: center; width: 60%; height: 300px; overflow: auto;">
               <div class="input-label" style="padding-top: 8%; font-size: 20px; font-weight: 400; color: #1D1D1D;">
                 <label for="uname"><b>Are you sure you want to delete {{ song.songResult }} by {{song.artistResult}} ? </b></label>
               </div>
@@ -198,11 +204,6 @@
             </div>
           </form>
           </div>
-            <button type="submit" class="d-flex align-items-center" onclick="document.getElementById('{{loop.index}}').style.display='block'" style="font-size: small; margin-bottom: 28px; padding-left: 12px; padding-right: 12px;"><svg xmlns="http://www.w3.org/2000/svg" width="20"
-              height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                <path
-                  d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
-              </svg></button>
             <!-- <span class="time">{{ song.time }}</span> -->
           </div>
           <!-- <span class="time">{{ song.time }}</span> -->
@@ -237,17 +238,8 @@
         </script>
         {% endfor %}
       </div>
-      <!--
-      <div class="musicplayer">
-        <span><img class="playbutton"
-            src="https://th.bing.com/th/id/OIP.TsHYnY8p8GZzra41CeIRVwHaHa?w=180&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"></span>
-        <div class="song-length">
-          Can use javascript to make progress update dynamically 
-          <div class="progress-bar">
-          </div>
-        </div>
       </div>
-    -->
+    </div>
       <footer>
         <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="none" width="100%" height="96px"
           style="position: absolute; bottom: 0; left: 0; right: 0; margin-bottom: -22%;"></iframe>
