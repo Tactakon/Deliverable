@@ -965,8 +965,16 @@ def DeleteSongBySharedUser():
     # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
+    password = request.form.get('password')
     selected_genre = request.args.get('genre')
 
+        # Check if the password entered by the user matches the password in the database
+    if playlist.password == password:
+        print('Song Deleted')
+    else:
+        print('Password is incorrect.')
+        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name, username=username))
+    
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
 
