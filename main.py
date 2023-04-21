@@ -17,10 +17,15 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from search import search_song
 import time
+from flask import session
 from databasefunctions import (
     AddSongtoPlaylist, RemoveSongFromPlaylist, AddSharedPlaylistID, AddSharedUserByPlaylistCreator
 )
+from dotenv import find_dotenv, load_dotenv
 
+load_dotenv(find_dotenv())
+SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
+SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
 
 app = flask.Flask(__name__)
 
@@ -1143,6 +1148,40 @@ def get_shared_playlists_by_user_id(user_id):
             id=shared_playlist['playlistID']).first()
         shared_playlists_with_user.append(shared_playlist_with_user)
     return shared_playlists_with_user
+
+@app.route('/Spotify_login')
+def Spotify_login():
+    scope = 'streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state'
+    redirect_uri = url_for('spotify_callback', _external=True)
+    print(redirect_uri)
+    return redirect(f'https://accounts.spotify.com/authorize?response_type=code&client_id={SPOTIPY_CLIENT_ID}&scope={scope}&redirect_uri={redirect_uri}')
+
+@app.route('/spotify_callback')
+def spotify_callback():
+    auth_code = request.args.get('code')
+    data = {
+        'grant_type': 'authorization_code',
+        'code': auth_code,
+        'redirect_uri': url_for('spotify_callback', _external=True),
+        'client_id': SPOTIPY_CLIENT_ID,
+        'client_secret': SPOTIPY_CLIENT_SECRET
+    }
+    response = requests.post('https://accounts.spotify.com/api/token', data=data)
+    if response.status_code == 200:
+        access_token = response.json()['access_token']
+        refresh_token = response.json()['refresh_token']
+        session['access_token'] = access_token
+        session['refresh_token'] = refresh_token
+        return redirect(url_for('play_music'))
+    else:
+        return 'Error: Unable to obtain access token'
+@app.route('/play_music')
+def play_music():
+    access_token = session.get('access_token')
+    if not access_token:
+        return redirect(url_for('Spotify_login'))
+    return render_template('music_player.html', access_token=access_token)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
