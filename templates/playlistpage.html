@@ -13,7 +13,7 @@
 
 <body>
   <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100"
-  style="position: fixed; top: 0; left: 0; right: 0;"></iframe>
+    style="position: fixed; top: 0; left: 0; right: 0;"></iframe>
   <!-- Container1 is left top side -->
   <div class="container1" style="margin-left: 2%;">
     <div class="jammingwith">
@@ -41,7 +41,8 @@
           <div id="success-message" style="display:none">USER SUCCESSFULLY ADDED</div>
           <span onclick="document.getElementById('id01').style.display='none'" class="close"
             style="top: 4%; right: 4%; font-size: 32px;">&times;</span>
-          <div class="container modal-container" style="display: flex; flex-direction: column; align-items: center; width: 60%;">
+          <div class="container modal-container"
+            style="display: flex; flex-direction: column; align-items: center; width: 60%;">
             <div class="input-label" style="padding-top: 8%; font-size: 20px; font-weight: 400; color: #1D1D1D;">
               <label for="uname"><b>Share {{ playlist_name }} With </b></label>
             </div>
@@ -53,6 +54,7 @@
             <input hidden="true" name="username" value={{username}} />
             <input hidden="true" name="playlist_name" value={{playlist_name}} />
             <input hidden="true" name="songs" value={{songs}} />
+            <input hidden="true" name="genre" value={{genre}} />
             <button type="submit" id="share-btn">Share!</button>
           </div>
         </form>
@@ -95,26 +97,27 @@
       <!-- <span class="follow">Follow</span> -->
       <br>
       <br>
-      <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-        dolore magna aliqua. Pretium aenean pharetra magna ac.</span>
-      test code
+      <span>{{ description }}</span>
+      
     </div>
     <div class="add">
       <span style="text-transform: uppercase; font-weight:bold;">ADD SONGS</span>
       <hr />
       <form action="/playlistpage" method="GET">
         <div class="textcontainer">
-          <input id="songtoadd" name="song" type="text" placeholder="Search Song"
+          <input id="songtoadd" name="song" type="text" placeholder="Search Songs to Add"
             class="form-control form-control-lg" />
           <input hidden="true" name="username" value={{username}} />
           <input hidden="true" name="playlist_name" value={{playlist_name}} />
           <input hidden="true" name="songs" value={{songs}} />
+          <input hidden="true" name="genre" value={{genre}} />
           <input type="submit" value="Search!" class="btn btn-dark" style="float:right; margin-bottom: 6%;" />
         </div>
       </form>
       <br>
       <!-- can't figure out how make add button appear inline. see .results class -->
       <ol class="results">
+        {% if songResults[0]|length !=0 %}
         {%for i in range(0,3)%}
         <li>{{songResults[i]}} by {{artistResults[i]}}
           <form method="POST" action="/AddSong">
@@ -125,6 +128,7 @@
             <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
             <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
             <input hidden="true" name="songs" value={{songs}} />
+            <input hidden="true" name="genre" value={{genre}} />
             <button type="submit" style="font-size: small;">ADD<svg xmlns="http://www.w3.org/2000/svg" width="16"
                 height="16" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16"
                 style="margin-left: 8px;">
@@ -132,8 +136,9 @@
                   d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z" />
               </svg></button>
           </form>
-        </li>
         {%endfor%}
+      </li>
+      {%endif%}
       </ol>
     </div>
   </div>
@@ -141,8 +146,7 @@
   <!-- Container2 is middle -->
   <div class="container2">
     <div class="currentsong">
-      <span><img src="../static/images/imgsmall/FunkyYellow.png" class="img"
-          style="width: 600px; height: auto;"></span>
+      <span><img src="../static/images/imgsmall/FunkyYellow.png" class="img" style="width: 600px; height: auto;"></span>
       <br>
       <br>
       <span class="currentitle">Song Title</span>
@@ -151,45 +155,89 @@
     </div>
   </div>
 
-  <!-- Container3 is right side -->
-  <div class="container3">
-    <div class="queue">
-      <div class="genre">
-        <span class="g1">genre I</span>
-        <span class="g2">genre II</span>
-      </div>
-      <br>
-      <span style="text-transform: uppercase; font-weight:bold;">In Queue</span>
-<hr />
-<div class="song-list"> <!--Made a loop-->
-  {% for song in songs %}
-  <div class="song d-flex align-items-center">
-    <img src={{song.imageURL}} class="image2" style="max-height: 64px; max-width: 64px; margin-right: 10px;margin-bottom: 24px;">
-    <div style="margin-bottom: 25px;">
-      <span class="number" style="font-size: 14px;">{{ loop.index }}.</span>
-      <span class="title" style="font-size: 14px;"><b>{{ song.songResult}}</b></span>
-      <span class="songArtist" style="font-size: 14px;"> - {{ song.artistResult }}</span>
+<!-- Container3 is right side -->
+<div class="container3">
+  <div class="queue">
+    <div class="genre">
+      <span class="g1">{{ genre }}</span>
     </div>
-          <!--Delete work-->
-          <form method="POST" action="/DeleteSong"  class="ml-auto">
-            <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
-            <input type="hidden" name="songResult" value="{{song.songResult}}" /><!--SONG RESULT-->
-            <input type="hidden" name="artistResult" value="{{song.artistResult}}" /><!--SONG ARTIST-->
-            <input type="hidden" name="imageURL" value="{{song.imageURL}}" /><!--IMAGE URL-->
-            <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
-            <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
-            <input hidden="true" name="songs" value={{songs}} />
-            <button type="submit" class="d-flex align-items-center" style="font-size: small; margin-bottom: 28px; padding-left: 16px; padding-right: 16px;"><svg xmlns="http://www.w3.org/2000/svg" width="20"
+    <br>
+    <span style="text-transform: uppercase; font-weight:bold;">In Queue</span>
+    <hr />
+      <div class="song-list" style="width: 340px;"> <!--Made a loop-->
+        {% for song in songs %}
+        <div class="song d-flex align-items-center" >
+          <img src={{song.imageURL}} class="image2"
+            style="max-height: 76px; max-width: 76px; margin-right: 10px;margin-bottom: 24px;" >
+          <div style="margin-bottom: 25px; ">
+            <span class="number" style="font-size: 14px;">{{ loop.index }}.</span>
+            <span class="title" style="font-size: 14px;"><b>{{ song.songResult}}</b></span>
+            <span class="songArtist" style="font-size: 14px;"> - {{ song.artistResult }}</span>
+            <button type="submit" class="d-flex align-items-center" onclick="document.getElementById('{{loop.index}}').style.display='block'" style="font-size: small; padding-left: 12px; padding-right: 12px;"><svg xmlns="http://www.w3.org/2000/svg" width="20"
               height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                 <path
                   d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
               </svg></button>
-            <!-- <span class="time">{{ song.time }}</span> -->
+          </div>
+          <!--Delete work-->
+          <div id="{{loop.index}}" class="modal">
+            <div style="height: 80%; overflow-y: auto;">
+            <form method="POST" action="/DeleteSong" class="modal-content animate">
+                <div id="success-message" style="display:none">SONG DELETED</div>
+                <span onclick="document.getElementById('{{loop.index}}').style.display='none'" class="close"
+                style="top: 4%; right: 4%; font-size: 32px;">&times;</span>
+                <div class="container modal-container" style="display: flex; flex-direction: column; align-items: center; width: 60%; height: 300px; overflow: auto;">
+              <div class="input-label" style="padding-top: 8%; font-size: 20px; font-weight: 400; color: #1D1D1D;">
+                <label for="uname"><b>Are you sure you want to delete {{ song.songResult }} by {{song.artistResult}} ? </b></label>
+              </div>
+              <input type="hidden" name="songID" value="{{song.songID}}" /> <!--API SONG ID-->
+              <input type="hidden" name="songResult" value="{{song.songResult}}" /><!--SONG RESULT-->
+              <input type="hidden" name="artistResult" value="{{song.artistResult}}" /><!--SONG ARTIST-->
+              <input type="hidden" name="imageURL" value="{{song.imageURL}}" /><!--IMAGE URL-->
+              <input hidden="true" name="username" value={{username}} /><!--CREATOR OF PLAYLIST-->
+              <input hidden="true" name="playlist_name" value={{playlist_name}} /><!--PLAYLIST NAME-->
+              <input hidden="true" name="songs" value={{songs}} />
+              <input hidden="true" name="genre" value={{genre}} />
+              <button type="submit" id="delete-btn">Delete!</button>
+            </div>
           </form>
+          </div>
+            <!-- <span class="time">{{ song.time }}</span> -->
+          </div>
           <!-- <span class="time">{{ song.time }}</span> -->
         </div>
+        <script>
+          // Get the modal
+          var modal = document.getElementById('{{loop.index}}');
+  
+          // When the user clicks anywhere outside of the modal, close it
+          window.onclick = function (event) {
+            if (event.target == modal) {
+              modal.style.display = "none";
+            }
+          }
+  
+          // add event listener to the form submit button
+          document.getElementById('delete-btn').addEventListener('click', function (event) {
+            var form = document.querySelector('form');
+            var successMessage = document.getElementById('success-message');
+  
+            // submit the form using AJAX
+            fetch(form.action, {
+              method: 'POST',
+              body: new FormData(form)
+            })
+              .then(response => {
+                if (response.ok) {
+                  successMessage.style.display = 'block';
+                }
+              })
+          });
+        </script>
         {% endfor %}
       </div>
+      </div>
+    </div>
       <!--
       <div class="musicplayer">
         <span><img class="playbutton"
@@ -201,9 +249,10 @@
         </div>
       </div>
     -->
-    <footer>
-      <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="none" width="100%" height="96px"
-        style="position: absolute; bottom: 0; left: 0; right: 0; margin-bottom: -22%;"></iframe>
-    </footer>    
+      <footer>
+        <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="none" width="100%" height="96px"
+          style="position: absolute; bottom: 0; left: 0; right: 0; margin-bottom: -22%;"></iframe>
+      </footer>
 </body>
+
 </html>

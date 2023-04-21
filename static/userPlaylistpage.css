@@ -3,21 +3,16 @@ body {
   color: #1D1D1D;
   font-family: Arial, Helvetica, sans-serif;
 }
-
 /* ------------------ Headers ------------------ */
-
 h1 {
   font-weight: 600;
   font-size: xx-large;
 }
-
 h2 {
   font-weight: 500;
   font-size: x-large;
 }
-
 /* ------------------ img boxes (top right) ------------------ */
-
 img {
   max-width: 250px;
   max-height: 250px;
@@ -33,7 +28,6 @@ img {
   flex-wrap: wrap;
   margin-bottom: -40px;
 }
-
 .right-img-box {
   width: 250px;
   height: 250px;
@@ -42,100 +36,37 @@ img {
   text-align: center;
   margin-right: 16px;
 }
-
 .row {
   display: flex;
   flex-wrap: nowrap;
+  gap: 10px;
 }
-
 /* ------------------ page formatting ------------------ */
-
 .container {
   margin-top: -48px;
 }
-
 .margins {
   margin-left: 104px;
   margin-right: 104px;
   margin-bottom: -64px;
   display: flex;
 }
-
 .pagecontents {
   display: flex;
   height: 100%;
   width: 100%;
 }
-
 /* ------------------ playlist link stuff ------------------ */
-
 a.playlist-link {
   color: #1D1D1D;
 }
-
 a.playlist-link:hover {
   color: #7f7f7f;
 }
-
 .playlist-name {
   margin-top: 8px;
   /* add 8px of margin to the top of the playlist name */
 }
-
-/* 
-Left side of the page
-Most Listened to 
-Left side of the page contains:
-The left container
-  Most-Listened-To
-  Button for More-Most-Listened-To
-  Empty Box left
-    left-img-box for playlist icons
-*/
-
-.left-container {
-  width: 50%;
-  background-color: light grey;
-  padding: 16px;
-  text-align: left;
-  height: 800px;
-  margin-right: 20px;
-  justify-content: center;
-
-}
-
-.empty-box-left {
-  width: 100%;
-  height: 808px;
-  max-height: 800px;
-  display: flex;
-  justify-content: space-between;
-
-}
-
-.Most-Listened-To {
-  justify-content: space-between;
-  display: flex;
-
-}
-
-.More-Most-Listened-To {
-  background-color: transparent;
-  color: black;
-  padding: 0px 0px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.left-img-box {
-  width: 30%;
-  height: 608px;
-  background-color: lightgrey;
-}
-
 /* 
 Right side of the page conatins:
 right-container
@@ -155,29 +86,23 @@ Top Right Side
       right-img-box for playlist icons
 */
 .right-container {
-  width: 50%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   height: 100%;
-
 }
-
-
 .top-right-container {
   background-color: light grey;
   padding: 16px 16px;
-
   text-align: left;
   height: 40%;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
-
 .Created-Mixes {
   justify-content: space-between;
   display: flex;
 }
-
 .More-Created-Mixes {
   background-color: transparent;
   color: black;
@@ -188,21 +113,19 @@ Top Right Side
   text-decoration: none;
   cursor: pointer;
 }
-
 .bottom-right-container {
   background-color: light grey;
   padding: 16px 16px;
   text-align: left;
   height: 40%;
   width: 100%;
+  margin-bottom: 20px;
 }
-
-.Liked-Mixes {
+.Shared-With-You {
   justify-content: space-between;
   display: flex;
 }
-
-.More-Liked-Mixes {
+.More-Shared-With-You {
   background-color: transparent;
   color: black;
   padding-right: 48px;
@@ -214,15 +137,40 @@ Top Right Side
 }
 
 .empty-box {
-  width: 250px;
-  height: 250px;
+  width: 20%;
+  height: 275px;
   color: black;
   text-align: center;
-  margin-right: 16px;
 }
 
 .empty-box img {
   object-fit: cover;
   width: 100%;
   height: 100%;
+}
+
+.empty-box-top-right {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+} 
+
+/* Show 4 empty-box elements per row on larger screens */
+@media only screen and (min-width: 768px) {
+  .row {
+    width: 100%;
+  }
+  .empty-box {
+    width: calc(25% - 10px); /* Adjust the width as per your requirement */
+  }
+}
+
+/* Show 2 empty-box elements per row on smaller screens */
+@media only screen and (max-width: 767px) {
+  .row {
+    width: 100%;
+  }
+  .empty-box {
+    width: calc(50% - 10px); /* Adjust the width as per your requirement */
+  }
 }

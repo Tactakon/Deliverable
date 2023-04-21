@@ -14,10 +14,12 @@ from flask import flash, redirect, render_template, request, url_for, make_respo
 from flask_login import login_required, current_user, login_user, UserMixin, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 from search import search_song
+import time
 from flask import session
 from databasefunctions import (
-    AddSongtoPlaylist, RemoveSongFromPlaylist, AddSharedUserByPlaylistCreator
+    AddSongtoPlaylist, RemoveSongFromPlaylist, AddSharedPlaylistID, AddSharedUserByPlaylistCreator
 )
 from dotenv import find_dotenv, load_dotenv
 
@@ -27,11 +29,43 @@ SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
 
 app = flask.Flask(__name__)
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Log the exception
+    app.logger.error(f"Unhandled exception: {str(e)}")
+    
+    # Render a custom error page
+    return render_template('error.html', error=str(e))
+
+def retry(func):
+    """Decorator function for retrying API calls"""
+    max_retries = 3
+    retry_interval = 5
+
+    def wrapper(*args, **kwargs):
+        for i in range(max_retries):
+            try:
+                response = func(*args, **kwargs)
+                # Check if the response is successful
+                if response.status_code == 200:
+                    return response
+                else:
+                    # Raise an exception for unsuccessful response
+                    raise Exception(f'API call unsuccessful: {response.status_code}')
+            except Exception as e:
+                print(f'Error: {e}')
+                # Wait for a certain interval before retrying
+                time.sleep(retry_interval)
+        else:
+            # Return error message if maximum retries is reached
+            raise Exception('API call failed after maximum retries')
+
+    return wrapper
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 # each user of the app need their secret key #in .env as SECRET_KEY
 app.config['SECRET_KEY'] = os.urandom(12)
-# will be done in the later sprints
 
 # database boilerplate code
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///' + \
@@ -78,7 +112,7 @@ class Users(UserMixin, db.Model):
         password (str): The user's hashed password.
         followers (str): A string representation of the user's followers.
         playlists (list[Playlists]): A list of playlists owned by the user.
-        playlists_shared_with (str): A string representation of the 
+        shared_playlists (str): A string representation of the 
         playlists that are shared with the user.
     """
     id = db.Column(db.Integer, primary_key=True)
@@ -86,7 +120,7 @@ class Users(UserMixin, db.Model):
     username = db.Column(db.String(16))
     password = db.Column(db.String(16))
     followers = db.Column(db.String(1024))
-    playlists_shared_with = db.Column(db.String(1024))
+    shared_playlists = db.Column(db.String(1024))
     playlists = db.relationship("Playlists", back_populates="user")
 
 
@@ -102,20 +136,55 @@ class Playlists(db.Model):
         id (int): The unique identifier for the playlist.
         name (str): The name of the playlist.
         password (str): The password for the playlist (if any).
+        description (str): The description for the playlist (if any).
         playlist_image (db.LargeBinary): The image data for the playlist.
         songs (str): A string representation of the songs in the playlist.
         creator (int): The user ID of the playlist's creator.
+        listeners_shared_to (str): A string representation of the 
+        users with whom the playlist is shared with.
         user (User): The User object representing the playlist's owner.
     """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     password = db.Column(db.String(16))
+    description = db.Column(db.String(10000))
     playlist_image = db.Column(db.LargeBinary)
     songs = db.Column(db.String(10000))
+    playlist_genre = db.Column(db.String(100))
     creator = db.Column(db.Integer, db.ForeignKey(
         'users.id'))  # user.id stored
+    listeners_shared_to = db.Column(db.String(1024))
     user = db.relationship("Users", back_populates="playlists")
 
+class Notification(db.Model):
+    """
+    Represents a notification in the application.
+    Attributes:
+        id (int): The unique identifier for the notification.
+        message (str): The message to be displayed in the notification.
+        action (str): The playlist on which the action is taken
+        timestamp (datetime): The timestamp of when the notification was created.
+        users (list[Users]): A list of users associated with the notification.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(10000))
+    action = db.Column(db.String(100))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    users = db.relationship('Users', secondary='notification_users')
+
+class NotificationUsers(db.Model):
+    """
+    Represents the many-to-many relationship between notifications and users.
+    Attributes:
+        notification_id (int): The ID of the notification associated with the relationship.
+        user_id (int): The ID of the user associated with the relationship.
+        read (bool): Whether the notification has been read by the associated user.
+    """
+    notification_id = db.Column(db.Integer, db.ForeignKey(
+        'notification.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(
+        'users.id'), primary_key=True)
+    read = db.Column(db.Boolean, default=False)
 
 with app.app_context():
     db.create_all()
@@ -144,17 +213,25 @@ def add_user():
     add_email = flask.request.form.get('email')
     add_username = flask.request.form.get('username')
     add_password = flask.request.form.get('password')
-    empty_list = []
+    shared_playlists = []
     new_user = Users(
         email=add_email,
         username=add_username,
         password=generate_password_hash(add_password, method='sha256'),
-        playlists_shared_with=json.dumps(empty_list)
+        playlists_shared_with=json.dumps(shared_playlists)
     )
     db.session.add(new_user)
     db.session.commit()
 
     return redirect(url_for('UsersAndPlaylist'))
+
+# error tester
+@app.route('/error')
+def error():
+    """
+    Checks if error handling/error page works
+    """
+    raise ValueError("An error occurred")
 
 # deleting values from Users table
 @app.route('/delete_user', methods=['POST'])
@@ -169,6 +246,47 @@ def delete_user():
     db.session.delete(user)
     db.session.commit()
     return redirect(url_for('UsersAndPlaylist'))
+
+#################
+@app.route('/NotificationDatabaseViewer')
+def NotificationDatabaseViewer():
+    """
+    Renders the Notification Database Viewer page, which displays a table of notifications
+    and their associated users, as well as a table of notification-user relationships.
+    """
+    # Replace this with your database query logic
+    notifications = Notification.query.all()
+    notification_users = NotificationUsers.query.all()
+
+    return render_template('NotificationDatabaseViewer.html',
+                           notifications=notifications,
+                           notification_users=notification_users)
+
+@app.route('/notifications')
+@login_required
+def notifications():
+
+    # Get all notifications associated with the user
+    user_notifications = NotificationUsers.query.filter_by(
+        user_id=current_user.id).all()
+    
+
+    all_notificatons = []
+
+    for user_notification in user_notifications:
+        user_notification.read = True
+        print( user_notification.read)
+        print(user_notification.notification_id)
+        #getting the notification ID from the notificationUsers table
+        id_notification = user_notification.notification_id
+        #getting the notification from the notification table
+        notification = Notification.query.filter_by(
+            id=id_notification).first()
+        all_notificatons.append(notification)
+
+    db.session.commit()
+
+    return render_template("notifications.html", notifications=all_notificatons)
 
 #Getting the playlist image
 @app.route('/playlist_image/<int:playlist_id>')
@@ -219,16 +337,41 @@ def homeheader():
     Returns:
         A rendered HTML template of the header section of the playlist page.
     """
-    return flask.render_template('homeheader.html')
+    unread_count = NotificationUsers.query.filter_by(
+        user_id=current_user.id, read=False).count()
+    return flask.render_template('homeheader.html', unread_count=unread_count)
 
 #searching playlist
+@retry
 @app.route('/playlistsearch')
+@login_required
 def playlistsearch():
-    print('hi')
+    """
+    Searches for a playlist by name and filters songs based on genre and query parameters.
+
+    Parameters:
+    None
+
+    Returns:
+    A redirect to the sharedplaylistpage route with the following parameters:
+    - username: the username of the user who created the playlist
+    - playlist_name: the name of the playlist
+    - playlist_creator: the username of the user who created the playlist
+    - songs: a list of songs in the playlist
+    - genre: the genre of the playlist
+    - songResults: a list of song results from the API search
+    - artistResults: a list of artist results from the API search
+    - songIDs: a list of song IDs from the API search
+    - imageURLs: a list of image URLs from the API search
+    """
     username = request.args.get('username')
     search_query = request.args.get('search-query')
+    selected_genre = request.args.get('genre')
     playlist = Playlists.query.filter(
         Playlists.name.like(f'%{search_query}%')).first()
+    
+    playlist_creator = Users.query.filter_by(id=playlist.creator).first()
+    playlist_creator = playlist_creator.username
 
     if playlist is None:
         # Playlist not found, handle error
@@ -242,19 +385,21 @@ def playlistsearch():
     # API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    results = search_song(query)
+    q = f'genre:{selected_genre} track:{query}'
+    results = search_song(q)
     (songResults, artistResults, songIDs, imageURLs) = results
 
     return redirect(url_for('sharedplaylistpage',
-                            username=current_user.username,
+                            username=username,
                             playlist_name=playlist.name,
+                            playlist_creator=playlist_creator,
                             songs=songs,
+                            genre=playlist.playlist_genre,
                             songResults=songResults,
                             artistResults=artistResults,
                             songIDs=songIDs,
                             imageURLs=imageURLs
                             ))
-
 
 # landfooter.html
 @app.route('/footer')
@@ -300,7 +445,15 @@ def signup():
         # pylint: disable = no-else-return
         if added_to_db:
             flash('Account created!')
-            return redirect(url_for('login'))
+
+            # Retrieve the newly created user object
+            user = Users.query.filter_by(email=email).first()
+
+            # Log the user in
+            login_user(user)
+
+            # Redirect to the userPlaylistpage
+            return redirect(url_for('userPlaylistpage'))
         else:
             flash('Email address already exists')
             return render_template('signup.html')
@@ -326,13 +479,13 @@ def AddUserToDB(email, username, password):
 
     # Add new user to database
     followers_user_ids = []  # empty json object
-    shared = []  # empty json object
+    shared_playlists = []  # empty json object
     new_user = Users(
         email=email,
         username=username,
         password=generate_password_hash(password, method='sha256'),
         followers=json.dumps(followers_user_ids),
-        playlists_shared_with=json.dumps(shared)
+        shared_playlists=json.dumps(shared_playlists)
     )
     db.session.add(new_user)
     db.session.commit()
@@ -351,6 +504,7 @@ def login():
         page if the login was successful,
         otherwise a rendered HTML template of the login page with an error message.
     """
+
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
@@ -369,12 +523,10 @@ def login():
         # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
 
-        # pylint: disable=unused-variable
-        playlists = Playlists.query.filter_by(
-            creator=current_user.id).all()[:3]
+        # Redirect the user to their playlist page
         return redirect(url_for('userPlaylistpage'))
 
-    return flask.render_template('login.html')
+    return render_template('login.html')
 
 # Json objects declared
 # while creating a new playlist
@@ -393,21 +545,31 @@ def createPlaylistPage():
         a redirect to the playlist page.
         Otherwise, a rendered HTML template of the create playlist page with an error message.
     """
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    
     if request.method == 'POST':
         # Retrieve form data
         playlist_name = request.form.get('playlist-name')
+        playlist_description = request.form.get('playlist-description')
         playlist_passcode = request.form.get('playlist-passcode')
         playlist_image = request.files.get('playlist-image')
+        selected_genre = request.form['playlist-genre']
 
         # intialize empty json objects of the songs and listeners_shared_to
         songs = []
+        listeners_shared_to = []
 
         # Create new playlist object
         new_playlist = Playlists(
             name=playlist_name,
             password=playlist_passcode,
+            description=playlist_description,
             creator=current_user.id,
+            playlist_genre = selected_genre,
             songs=json.dumps(songs),  # now a json string
+            listeners_shared_to=json.dumps(
+                listeners_shared_to)  # now a json string
         )
 
         static_folder = ('/mnt/c/users/jb300/Software/group_deliverables/static')
@@ -445,13 +607,17 @@ def createPlaylistPage():
         return redirect(url_for('playlistpage',
                                 username=current_user.username,
                                 playlist_name=playlist_name,
+                                genre=selected_genre,
                                 songs=songs))  # want to send a dict so that it could loop
 
+    # if the request method is GET
     return flask.render_template('createPlaylistPage.html', username=current_user.username)
 
 # playlistpage
 @login_required
+@retry
 @app.route('/playlistpage', methods=['POST', 'GET'])
+@login_required
 def playlistpage():
     """
     Renders the playlist page and handles the addition and removal of songs from the playlist.
@@ -461,12 +627,18 @@ def playlistpage():
         a redirect back to the playlist page.
         Otherwise, a rendered HTML template of the playlist page with an error message.
     """
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
     username = request.args.get('username')
     playlist_name = request.args.get('playlist_name')
+    selected_genre = request.args.get('genre')
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
-    #Batya helped with this
+    description = playlist.description
+
+    #Error handling if songs is empty
     if playlist != None and playlist.songs: 
         songs = json.loads(playlist.songs)
     else:
@@ -475,14 +647,18 @@ def playlistpage():
     # API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    results = search_song(query)
+    q = f'genre:{selected_genre} track:{query}'
+    results = search_song(q)
     (songResults, artistResults, songIDs, imageURLs) = results
+
 
     return render_template(
         'playlistpage.html',
         username=username,
         playlist_name=playlist_name,
+        description=description,
         songs=songs,  # dict
+        genre=playlist.playlist_genre,
         songResults=songResults,
         artistResults=artistResults,
         songIDs=songIDs,
@@ -491,6 +667,7 @@ def playlistpage():
 
 #Adding a shared user
 @app.route("/AddSharedUserByPlaylistOwner", methods=["POST"])
+@login_required
 def AddSharedUserByPlaylistOwner():
     """
     Add a shared user to a playlist owned by the current user.
@@ -505,24 +682,32 @@ def AddSharedUserByPlaylistOwner():
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
     shareduser_username = request.form.get('shareduser_username')
+    selected_genre = request.args.get('genre')
 
     shareduser = Users.query.filter_by(username=shareduser_username).first()
 
     playlist = Playlists.query.filter_by(
         name=playlist_name, creator=current_user.id).first()
     print(playlist)
-    print(shareduser.playlists_shared_with)
+    print(shareduser.shared_playlists)
     print(shareduser.id)
 
-    shareduser.playlists_shared_with = AddSharedUserByPlaylistCreator(
-        shareduser.playlists_shared_with, playlist.id)
-    print(shareduser.playlists_shared_with)
+    #adding to shared playlists
+    shareduser.shared_playlists = AddSharedPlaylistID(
+        shareduser.shared_playlists, playlist.id)
+    print(shareduser.shared_playlists)
+
+    #adding to listeners shared to
+    playlist.listeners_shared_to = AddSharedUserByPlaylistCreator(
+        playlist.listeners_shared_to, shareduser.id)
+    print(playlist.listeners_shared_to)
 
     db.session.commit()
 
     return redirect(url_for('playlistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
+                            genre=selected_genre,
                             songs=json.loads(playlist.songs)))
 
 #Adding song to the playlist
@@ -537,6 +722,7 @@ def AddSong():
     # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
+    selected_genre = request.args.get('genre')
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -556,6 +742,32 @@ def AddSong():
 
     db.session.commit()
 
+    # Create a notification when a song is added to a playlist
+    notification = Notification(
+        message=f"{songResult} has been added to {playlist.name} by {current_user.username}.",
+        action=playlist.name,
+        timestamp=datetime.utcnow()
+    )
+
+    # Convert the string to a list of dictionaries
+    listeners_shared_to = json.loads(playlist.listeners_shared_to)
+
+    # Add users who should receive the notification
+    creator = Users.query.get(playlist.creator)
+    notification.users.append(creator)  # CREATOR
+
+    # SHARED
+    for listener in listeners_shared_to:
+        shared_user_id = listener.get("sharedUserID")
+        shared_user = Users.query.get(shared_user_id)
+        notification.users.append(shared_user)
+
+    # Add the notification to the session
+    db.session.add(notification)
+
+    # Commit the session to save the notification to the database
+    db.session.commit()
+
     return redirect(url_for('playlistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
@@ -563,13 +775,23 @@ def AddSong():
 
 # sharedplaylistpage
 @login_required
+@retry
 @app.route('/sharedplaylistpage', methods=['POST', 'GET'])
+@login_required
 def sharedplaylistpage():
     """
     Renders the page for a shared playlist.
     """
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
     username = request.args.get('username')
     playlist_name = request.args.get('playlist_name', '')
+    selected_genre = request.args.get('genre')
+
+    playlist = Playlists.query.filter_by(
+        name=playlist_name).first()
+    description = playlist.description
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -578,17 +800,24 @@ def sharedplaylistpage():
     else:
         songs = []
 
+    playlist_creator = Users.query.filter_by(id=playlist.creator).first()
+    playlist_creator = playlist_creator.username
+
     # API
     form_data = request.args
     query = form_data.get("song", "smooth operator")
-    results = search_song(query)
+    q = f'genre:{selected_genre} track:{query}'
+    results = search_song(q)
     (songResults, artistResults, songIDs, imageURLs) = results
 
     return render_template(
         'sharedplaylistpage.html',
         username=username,
         playlist_name=playlist_name,
+        playlist_creator=playlist_creator,
+        description=description,
         songs=songs,  # dict
+        genre=playlist.playlist_genre,
         songResults=songResults,
         artistResults=artistResults,
         songIDs=songIDs,
@@ -606,6 +835,7 @@ def AddSongBySharedUser():
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
     password = request.form.get('password')
+    selected_genre = request.args.get('genre')
     playlist = Playlists.query.filter_by(name=playlist_name).first()
 
     # Check if the password entered by the user matches the password in the database
@@ -628,10 +858,43 @@ def AddSongBySharedUser():
         playlist.songs, songID, songResult, artistResult, imageURL)
 
     db.session.commit()
+ 
+  # Create a notification when a song is added to a playlist
+    notification = Notification(
+        message=f"{songResult} has been added to {playlist.name} by {current_user.username}.",
+        action=playlist.name,
+        timestamp=datetime.utcnow()
+    )
+    print(notification)
+
+    # Convert the string to a list of dictionaries
+    listeners_shared_to = json.loads(playlist.listeners_shared_to)
+
+    # Add users who should receive the notification
+    creator = Users.query.get(playlist.creator)
+    notification.users.append(creator)  # CREATOR
+    print("Creator ", notification.users)
+
+    # SHARED
+    for listener in listeners_shared_to:
+        shared_user_id = listener.get("sharedUserID")
+        shared_user = Users.query.get(shared_user_id)
+        notification.users.append(shared_user)
+
+    if current_user not in notification.users:
+        notification.users.append(current_user)
+
+    # Add the notification to the session
+    db.session.add(notification)
+
+    # Commit the session to save the notification to the database
+    db.session.commit()
+
     # no longer requires password after first song added
     return redirect(url_for('playlistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
+                            genre=playlist.playlist_genre,
                             songs=json.loads(playlist.songs)))
 
 #Deleting song
@@ -646,7 +909,80 @@ def DeleteSong():
     # pylint: disable=unused-variable
     username = request.form.get('username')
     playlist_name = request.form.get('playlist_name')
+    selected_genre = request.args.get('genre')
 
+    playlist = Playlists.query.filter_by(
+        name=playlist_name).first()
+
+    songID = request.form.get('songID')
+    songResult = request.form.get('songResult')
+    artistResult = request.form.get('artistResult')
+    imageURL = request.form.get('imageURL')
+
+    # calling RemoveSongFromPlaylist function from databasefunctions.py
+    playlist.songs = RemoveSongFromPlaylist(
+        playlist.songs, songID, songResult, artistResult, imageURL)
+        
+  # Create a notification when a song is deleted to a playlist
+    notification = Notification(
+        message=f"{songResult} has been deleted from {playlist.name} by {current_user.username}.",
+        action=playlist.name,
+        timestamp=datetime.utcnow()
+    )
+    
+    # Convert the string to a list of dictionaries
+    listeners_shared_to = json.loads(playlist.listeners_shared_to)
+
+    # Add users who should receive the notification
+    creator = Users.query.get(playlist.creator)
+    notification.users.append(creator)  # CREATOR
+
+    # SHARED
+    for listener in listeners_shared_to:
+        shared_user_id = listener.get("sharedUserID")
+        shared_user = Users.query.get(shared_user_id)
+        notification.users.append(shared_user)
+
+    if current_user not in notification.users:
+        notification.users.append(current_user)
+
+    # Add the notification to the session
+    db.session.add(notification)
+
+    # Commit the session to save the notification to the database
+    db.session.commit()
+    
+    return redirect(url_for('playlistpage',
+                            username=current_user.username,
+                            playlist_name=playlist_name,
+                            genre=playlist.playlist_genre,
+                            songs=json.loads(playlist.songs)))
+
+#Deleting song
+@app.route("/DeleteSongBySharedUser", methods=["POST"])
+@login_required
+def DeleteSongBySharedUser():
+    """
+    Deletes a song from a playlist.
+    Returns:
+    A redirect to the playlist page with the newly deleted song displayed.
+    """
+    # pylint: disable=unused-variable
+    username = request.form.get('username')
+    playlist_name = request.form.get('playlist_name')
+    password = request.form.get('password')
+    selected_genre = request.args.get('genre')
+    playlist = Playlists.query.filter_by(name=playlist_name).first()
+
+    print(password)
+
+        # Check if the password entered by the user matches the password in the database
+    if playlist.password == password:
+        print('Song Deleted')
+    else:
+        print('Password is incorrect.')
+        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name, username=username))
+    
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
 
@@ -664,6 +1000,7 @@ def DeleteSong():
     return redirect(url_for('playlistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
+                            genre=playlist.playlist_genre,
                             songs=json.loads(playlist.songs)))
 
 # userPlaylistpage.html
@@ -677,20 +1014,26 @@ def userPlaylistpage():
     A rendered HTML template of the user's playlist page with 
     the user's playlists, shared playlists, and a random image.
     """
-    playlists = Playlists.query.filter_by(creator=current_user.id).all()[:3]
-    this_user = Users.query.filter_by(id=current_user.id).first()
-    shared_playlists = json.dumps(this_user.playlists_shared_with)
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
+    playlists = Playlists.query.filter_by(creator=current_user.id).all()
     playlists.reverse()
-    print("this is your playlists ")
-    print(playlists)
-    print("this is your shared playlists ")
-    print(shared_playlists)
+
+    this_user = Users.query.filter_by(id=current_user.id).first()
+    shared_playlists = json.loads(this_user.shared_playlists)
+    shared_playlists_with_user = []
+    for shared_playlist in shared_playlists:
+        shared_playlist_with_user = Playlists.query.filter_by(
+            id=shared_playlist['playlistID']).first()
+        shared_playlists_with_user.append(shared_playlist_with_user)
+
     images_dir = os.path.join(app.static_folder, 'images', 'imgsmall')
     random_image = random.choice(os.listdir(images_dir))
     return render_template('userPlaylistpage.html',
                            username=current_user.username,
                            playlists=playlists,
-                           shared_playlists=shared_playlists,
+                           shared_playlists=shared_playlists_with_user,
                            random_image=random_image)
 
 
@@ -704,12 +1047,35 @@ def PlaylistMore():
     Returns:
         A rendered HTML template displaying the user's playlists.
     """
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
     playlists = get_playlists_by_user_id(current_user.id)
     playlists.reverse()
+    # Error handling
     images_dir = os.path.join(app.static_folder, 'images', 'imglarge')
     random_image = random.choice(os.listdir(images_dir))
     return render_template('PlaylistMore.html', playlists=playlists, random_image=random_image)
 
+# SharedPlaylistMore.html
+@app.route('/SharedPlaylistMore')
+@login_required
+def SharedPlaylistMore():
+    """
+    Renders the 'SharedPlaylistMore.html' template with a list of playlists that have
+    been shared with the current logged-in user.
+    Returns:
+        str: A rendered HTML template with the shared playlists and random image.
+    """
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
+    shared_playlists = get_shared_playlists_by_user_id(current_user.id)
+    shared_playlists.reverse()
+    # Error handling
+    images_dir = os.path.join(app.static_folder, 'images', 'imglarge')
+    random_image = random.choice(os.listdir(images_dir))
+    return render_template('SharedPlaylistMore.html', shared_playlists=shared_playlists, random_image=random_image)
 
 def get_playlists_by_user_id(user_id):
     """
@@ -722,6 +1088,69 @@ def get_playlists_by_user_id(user_id):
     playlists = Playlists.query.filter_by(creator=user_id).all()
     return playlists
 
+# AboutUs.html
+@app.route('/AboutUs.html')
+def about_us():
+    return render_template('AboutUs.html')
+
+# AboutUs2.html
+@app.route('/AboutUs2.html')
+def about_us2():
+    return render_template('AboutUs2.html')
+
+# Support.html
+@app.route('/Support.html')
+def support():
+    return render_template('Support.html')
+
+# Support2.html
+@app.route('/Support2.html')
+def support2():
+    return render_template('Support2.html')
+
+# TermsofUse.html
+@app.route('/TermsofUse.html')
+def terms_of_use():
+    return render_template('TermsofUse.html')
+
+# TermsofUse2.html
+@app.route('/TermsofUse2.html')
+def terms_of_use2():
+    return render_template('TermsofUse2.html')
+
+# PrivacyPolicy.html
+@app.route('/PrivacyPolicy.html')
+def privacy_policy():
+    return render_template('PrivacyPolicy.html')
+
+# PrivacyPolicy2.html
+@app.route('/PrivacyPolicy2.html')
+def privacy_policy2():
+    return render_template('PrivacyPolicy2.html')
+
+def get_shared_playlists_by_user_id(user_id):
+    """
+    Retrieves the shared playlists of a user with the given ID.
+
+    Args:
+        user_id (int): The ID of the user whose shared playlists to retrieve.
+
+    Returns:
+        list: A list of playlists that have been shared with the user, represented
+        as Playlists objects.
+
+    Raises:
+        AttributeError: If the user with the given ID does not exist in the database,
+        or if their shared_playlists field is not a valid JSON string.
+    """
+    this_user = Users.query.filter_by(id=user_id).first()
+    shared_playlists = json.loads(this_user.shared_playlists)
+    shared_playlists_with_user = []
+    for shared_playlist in shared_playlists:
+        shared_playlist_with_user = Playlists.query.filter_by(
+            id=shared_playlist['playlistID']).first()
+        shared_playlists_with_user.append(shared_playlist_with_user)
+    return shared_playlists_with_user
 @app.route('/Spotify_login')
 def Spotify_login():
     scope = 'streaming user-read-private user-read-email user-read-playback-state user-modify-playback-state'

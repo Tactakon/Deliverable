@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="../static/createPlaylistPage.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"
+        integrity="sha384-ajZ0XmMa8d6HPlDyG7nKSJlBdxn1fKs3U6Zf3TJvXG1xUceMkP5FFwVEva/SOQdJ" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .notification {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: #E9ECEF;
+        }
+
+        .notification.unread {
+            background-color: lightgray;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            margin: 0;
+            color: black;
+        }
+
+        /* Hide the scrollbar for the iframe */
+        iframe::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <script>
+
+    </script>
+</head>
+
+<body>
+    <iframe name="header" src="{{ url_for('homeheader')}}" frameborder="0" scrolling="no" width="100%" height="100%"
+        style="margin-top: -6px; "></iframe>
+    <br>
+
+    <div class="container">
+        <h1>Notifications</h1>
+        {% for notification in notifications %}
+        <div class=notification>
+            <p class="message">{{ notification.message }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer>
+        <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%"
+            height="304px;"></iframe>
+    </footer>
+</body>
+
+</html>

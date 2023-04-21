@@ -10,29 +10,20 @@
 <body>
   <header>
     <nav class="navbar navbar-expand-lg navbar-light" style="margin-right: 5%; margin-left: 5%;">
-      <a class="navbar-brand" href="#" id="logo">VERGE</a>
+      <a class="navbar-brand" href="/" target="_top" id="logo">VERGE</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto" id="navlinks">
-          <li class="nav-item">
-            <a class="nav-link" href="#" style="margin-left: 24px;">Playlist</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" style="margin-left: 24px;">Passcode</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" style="margin-left: 24px;">Collaboration</a>
-          </li>
-        </ul>
-        <!-- linked the button so that it displays the login page. top makes it change the whole page instead of just the header frame. -->
-        <a href="login" target="_top"><button type="button" class="btn btn-dark"
+        <div class="ml-auto">
+          <!-- linked the button so that it displays the login page. top makes it change the whole page instead of just the header frame. -->
+          <a href="login" target="_top"><button type="button" class="btn btn-dark btn-lg"
             style="">Sign In</button></a>
+        </div>
       </div>
     </nav>
-  </header>
+  </header>  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnEIESU6Xjz6vepYj3EgM#"
     crossorigin="anonymous"></script>

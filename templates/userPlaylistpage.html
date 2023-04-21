@@ -10,64 +10,27 @@
     style="margin-top: -6px;"></iframe>
   <br>
   <div class="container">
-    <div style="padding-left: 10%;">
+    <div style="padding-left: 8%;">      
       <h1>Welcome {{username}}!</h1>
     </div>
   </div>
   <div class="margins">
     <!--Page Contents-->
-    <div class="pagecontents">
-      <!--Left side of the page-->
-      <div class="left-container">
-        <div class="Most-Listened-To">
-          <!--Most Listened To-->
-          <h2>Created Mixes</h2>
-          <!--button to show all/More-->
-          <!--Link here to the HTML of Most Listened To-->
-          <button class="More-Created-Mixes"><a href="{{ url_for('PlaylistMore')}}"><b>More ></b></a></button>
-        </div>
-        <div class="empty-box-left">
-          {% set images_dir = url_for('static', filename='images/imgsmall') %}
-          <div class="row">
-            <!-- PlaylistMore.html -->
-            {% for playlist in playlists %}
-            <div class="left-img-box">
-              <a href="{{ url_for('playlistpage', username=current_user.username, playlist_name=playlist.name, playlist_id=playlist.id, songs=songs) }}"
-                class="playlist-link">
-                {% if playlist.image_filename %}
-                <img src="{{ url_for('static', filename='images/' + playlist.image_filename) }}"
-                  alt="{{ playlist.name }}">
-                {% else %}
-                <img src="{{ url_for('static', filename='images/imgsmall/' + random_image) }}"
-                  alt="{{ playlist.name }}">
-                {% endif %}
-                <div class="playlist-name">{{ playlist.name }}</div>
-              </a>
-            </div>
-            {% endfor %}
-          </div>
-          <!--Img add-->
-          <!--<div class="left-img-box">Playlist 1</div>
-          <div class="left-img-box">Playlist 2</div>
-          <div class="left-img-box">Playlist 3</div>
-          -->
-        </div>
-      </div>
-      <!--Right side of the page-->
+    <div class="pagecontents">    
+      <!--Right side of the page--><!--Now expanded throughout-->
       <div class="right-container">
-        <!--Top Right-->
+        <!--Top -->
         <div class="top-right-container">
           <div class="Created-Mixes">
             <!--Created Mixes-->
-            <h2>Shared With You</h2>
+            <h2>Created Mixes</h2>
             <!--button to show all/More-->
             <!--Link here to the HTML of Created Mixes-->
-            <button class="More-Most-Listened-To"><b>More ></b></button>
+            <button style="margin-right: -2.5%;" class="More-Created-Mixes"><a href="{{ url_for('PlaylistMore')}}"><b>More ></b></a></button>
           </div>
           <div class="empty-box-top-right">
             <div class="row">
-              <!-- PlaylistMore.html -->
-              {% for playlist in shared_playlists %}
+              {% for playlist in playlists[-5:] %}
               <div class="empty-box">
                 <a href="{{ url_for('playlistpage', username=current_user.username, playlist_name=playlist.name, playlist_id=playlist.id, songs=songs) }}"
                   class="playlist-link">
@@ -81,26 +44,37 @@
             </div>
           </div>
         </div>
-        <!--Bottom Right-->
+        <!--Bottom -->
         <div class="bottom-right-container">
-          <div class="Liked-Mixes">
+          <div class="Shared-With-You">
             <!--Liked Mixes-->
-            <h2>Liked Mixes</h2>
+            <h2>Shared With You</h2>
             <!--button to show all/More-->
             <!--Link here to the HTML of Liked Mixes-->
-            <button class="More-Liked-Mixes"><b>More ></b></button>
+            <button style="margin-right: -2.5%;" class="More-Created-Mixes"><a href="{{ url_for('SharedPlaylistMore')}}"><b>More ></b></a></button>
           </div>
-          <div class="empty-box-right">
-            <!--Img add-->
-            <div class="right-img-box">Playlist 7</div>
-            <div class="right-img-box">Playlist 8</div>
-            <div class="right-img-box">Playlist 9</div>
+          <div class="empty-box-top-right">
+            <div class="row">
+              {% for shared_playlist in shared_playlists[-5:] %}
+              <div class="empty-box">
+                <a href="{{ url_for('sharedplaylistpage', username=current_user.username, playlist_name=shared_playlist.name) }}"
+                  class="playlist-link">
+                  {% if shared_playlist.playlist_image %}
+                  <img src="{{ url_for('playlist_image', playlist_id=shared_playlist.id) }}" alt="Playlist Image">
+                  {% endif %}
+                  <div class="playlist-name">{{ shared_playlist.name }}</div>
+                </a>
+              </div>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   </div>
+  <br>
+  <br>
   <footer>
     <iframe src="{{ url_for('uponsigninfooter')}}" frameborder="0" scrolling="no" width="100%" height="100%;"></iframe>
   </footer>

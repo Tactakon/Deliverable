@@ -29,6 +29,7 @@
       <th>Username</th>
       <th>Password</th>
       <th>Followers</th>
+      <th>Shared Playlist</th>
       <th>Playlists shared with</th>
     </tr>
     {% for user in users %}
@@ -37,7 +38,8 @@
       <td>{{ user.email }}</td>
       <td>{{ user.username }}</td>
       <td>{{ user.password }}</td>
-      <td>{{ user.Followers}}</td>
+      <td>{{ user.followers}}</td>
+      <td>{{ user.shared_playlists}}</td>
       <td>{{ user.playlists_shared_with}}</td>
 
       <td><!--Deleting from Users -->
@@ -59,7 +61,9 @@
       <th>ID</th>
       <th>Name</th>
       <th>Password</th>
+      <th>Description</th>
       <th>Songs</th>
+      <th>Playlist genre</th>
       <th>Playlist Image</th>
       <th>Creator</th>
       <th>Listeners Shared To</th>
@@ -69,9 +73,10 @@
       <td>{{ playlist.id }}</td>
       <td>{{ playlist.name }}</td>
       <td>{{ playlist.password }}</td>
+      <td>{{ playlist.description }}</td>
       <td><img src="{{ url_for('playlist_image', playlist_id=playlist.id) }}" alt="Playlist Image"></td>
-
       <td>{{ playlist.songs }}</td>
+      <td>{{ playlist.playlist_genre }}</td>
       <td>{{ playlist.creator }}</td>
       <td>{{ playlist.listeners_shared_to }}</td>
       <!--playlist image displayed-->>
