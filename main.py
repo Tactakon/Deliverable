@@ -439,8 +439,6 @@ def signup():
         added_to_db = AddUserToDB(email, username, password)
         # pylint: disable = no-else-return
         if added_to_db:
-            flash('Account created!')
-
             # Retrieve the newly created user object
             user = Users.query.filter_by(email=email).first()
 
@@ -598,7 +596,6 @@ def createPlaylistPage():
         db.session.add(new_playlist)
         db.session.commit()
 
-        flash('Playlist created!')
         return redirect(url_for('playlistpage',
                                 username=current_user.username,
                                 playlist_name=playlist_name,

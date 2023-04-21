@@ -89,6 +89,7 @@
               }
             })
         });
+        
       </script>
       <!------------------------ END MODAL BOX FOR SHARING ------------------------>
 
@@ -145,13 +146,13 @@
 
   <!-- Container2 is middle -->
   <div class="container2">
-    <div class="currentsong">
+    <div class="currentsong" id="current-song">
       <span><img src="../static/images/imgsmall/FunkyYellow.png" class="img" style="width: 600px; height: auto;"></span>
       <br>
       <br>
-      <span class="currentitle">Song Title</span>
+      <span class="currentitle"></span>
       <br>
-      <span class="currenartist">Artist Name</span>
+      <span class="currenartist"></span>
     </div>
   </div>
 
@@ -166,7 +167,7 @@
     <hr />
       <div class="song-list" style="width: 340px;"> <!--Made a loop-->
         {% for song in songs %}
-        <div class="song d-flex align-items-center" >
+        <div class="song d-flex align-items-center" data-title="{{ song.songResult }}" data-artist="{{ song.artistResult }}" data-image="{{ song.imageURL }}">
           <img src={{song.imageURL}} class="image2"
             style="max-height: 76px; max-width: 76px; margin-right: 10px;margin-bottom: 24px;" >
           <div style="margin-bottom: 25px; ">
@@ -234,6 +235,27 @@
               })
           });
         </script>
+        <script>
+          // Get all the song divs
+          var songDivs = document.querySelectorAll('.song');
+
+          // Add click event listener to each song div
+          songDivs.forEach(function (div) {
+            div.addEventListener('click', function (event) {
+              // Get the song information from the clicked div's data attributes
+              var title = this.dataset.title;
+              var artist = this.dataset.artist;
+              var image = this.dataset.image;
+
+              // Update the contents of the current song div
+              var currentSongDiv = document.getElementById('current-song');
+              currentSongDiv.querySelector('.currentitle').textContent = title;
+              currentSongDiv.querySelector('.currenartist').textContent = artist;
+              currentSongDiv.querySelector('img').src = image;
+            });
+          });
+        </script>
+
         {% endfor %}
       </div>
       </div>
