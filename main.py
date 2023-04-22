@@ -1,3 +1,6 @@
+# pylint: disable = no-member
+# pylint: disable = invalid-name
+# pylint: disable = too-many-lines
 """
 This module serves as the main entry point for our Python program, Verge. 
 It contains code that initializes the application and begins the primary execution loop. 
@@ -8,27 +11,33 @@ including logic for data processing, user interaction, and system management.
 import os
 import random
 import json
+import time
+from datetime import datetime
 import flask
 import requests
-from flask import flash, redirect, render_template, request, url_for, make_response
+from flask import flash, redirect, render_template, request, url_for, make_response, session
 from flask_login import login_required, current_user, login_user, UserMixin, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from dotenv import find_dotenv, load_dotenv
 from search import search_song
-import time
 from databasefunctions import (
     AddSongtoPlaylist, RemoveSongFromPlaylist, AddSharedPlaylistID, AddSharedUserByPlaylistCreator
 )
 
+load_dotenv(find_dotenv())
+SPOTIPY_CLIENT_ID = os.getenv("SPOTIPY_CLIENT_ID")
+SPOTIPY_CLIENT_SECRET = os.getenv("SPOTIPY_CLIENT_SECRET")
 
 app = flask.Flask(__name__)
 
 @app.errorhandler(Exception)
 def handle_exception(e):
+    """Redirects user to the error.html page which 
+       lets the user know that an error has occured"""
     # Log the exception
     app.logger.error(f"Unhandled exception: {str(e)}")
-    
+
     # Render a custom error page
     return render_template('error.html', error=str(e))
 
@@ -36,8 +45,12 @@ def retry(func):
     """Decorator function for retrying API calls"""
     max_retries = 3
     retry_interval = 5
-
     def wrapper(*args, **kwargs):
+        # pylint: disable = unused-variable
+        # pylint: disable = broad-exception-raised
+        # pylint: disable = useless-else-on-loop
+        # pylint: disable = broad-exception-caught
+        # pylint: disable = no-else-return
         for i in range(max_retries):
             try:
                 response = func(*args, **kwargs)
@@ -185,7 +198,6 @@ with app.app_context():
     db.create_all()
 
 # displaying the Users and Playlist model
-# pylint: disable=invalid-name
 @app.route('/UsersAndPlaylist')
 def UsersAndPlaylist():
     """
@@ -249,6 +261,7 @@ def NotificationDatabaseViewer():
     Renders the Notification Database Viewer page, which displays a table of notifications
     and their associated users, as well as a table of notification-user relationships.
     """
+    # pylint: disable = redefined-outer-name
     # Replace this with your database query logic
     notifications = Notification.query.all()
     notification_users = NotificationUsers.query.all()
@@ -260,11 +273,20 @@ def NotificationDatabaseViewer():
 @app.route('/notifications')
 @login_required
 def notifications():
+    """
+    Displays notifications about playlist interactions
+    and commits notifications to the database
+    args:
+        none
+    returns:
+        render notifications.html while passing 
+        all notifications as a parameter
+    """
 
     # Get all notifications associated with the user
     user_notifications = NotificationUsers.query.filter_by(
         user_id=current_user.id).all()
-    
+
 
     all_notificatons = []
 
@@ -364,7 +386,7 @@ def playlistsearch():
     selected_genre = request.args.get('genre')
     playlist = Playlists.query.filter(
         Playlists.name.like(f'%{search_query}%')).first()
-    
+
     playlist_creator = Users.query.filter_by(id=playlist.creator).first()
     playlist_creator = playlist_creator.username
 
@@ -538,9 +560,11 @@ def createPlaylistPage():
         a redirect to the playlist page.
         Otherwise, a rendered HTML template of the create playlist page with an error message.
     """
+    # pylint: disable = redefined-outer-name
+    # pylint: disable = missing-timeout
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-    
+
     if request.method == 'POST':
         # Retrieve form data
         playlist_name = request.form.get('playlist-name')
@@ -630,8 +654,9 @@ def playlistpage():
         name=playlist_name).first()
     description = playlist.description
 
+    #pylint: disable = singleton-comparison
     #Error handling if songs is empty
-    if playlist != None and playlist.songs: 
+    if playlist != None and playlist.songs:
         songs = json.loads(playlist.songs)
     else:
         songs = []
@@ -718,7 +743,7 @@ def AddSong():
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
-    
+
     if playlist is None:
      # You can return an error message or redirect to another page if the playlist is not found
         return "Playlist not found", 404
@@ -835,7 +860,9 @@ def AddSongBySharedUser():
         print('Song Added')
     else:
         print('Password is incorrect.')
-        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name, username=username))
+        return redirect(url_for('sharedplaylistpage',
+                                playlist_name=playlist_name,
+                                username=username))
 
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
@@ -850,7 +877,7 @@ def AddSongBySharedUser():
         playlist.songs, songID, songResult, artistResult, imageURL)
 
     db.session.commit()
- 
+
   # Create a notification when a song is added to a playlist
     notification = Notification(
         message=f"{songResult} has been added to {playlist.name} by {current_user.username}.",
@@ -914,14 +941,14 @@ def DeleteSong():
     # calling RemoveSongFromPlaylist function from databasefunctions.py
     playlist.songs = RemoveSongFromPlaylist(
         playlist.songs, songID, songResult, artistResult, imageURL)
-        
+
   # Create a notification when a song is deleted to a playlist
     notification = Notification(
         message=f"{songResult} has been deleted from {playlist.name} by {current_user.username}.",
         action=playlist.name,
         timestamp=datetime.utcnow()
     )
-    
+
     # Convert the string to a list of dictionaries
     listeners_shared_to = json.loads(playlist.listeners_shared_to)
 
@@ -943,7 +970,7 @@ def DeleteSong():
 
     # Commit the session to save the notification to the database
     db.session.commit()
-    
+
     return redirect(url_for('playlistpage',
                             username=current_user.username,
                             playlist_name=playlist_name,
@@ -973,8 +1000,10 @@ def DeleteSongBySharedUser():
         print('Song Deleted')
     else:
         print('Password is incorrect.')
-        return redirect(url_for('sharedplaylistpage',  playlist_name=playlist_name, username=username))
-    
+        return redirect(url_for('sharedplaylistpage',
+                                playlist_name=playlist_name,
+                                username=username))
+
     playlist = Playlists.query.filter_by(
         name=playlist_name).first()
 
@@ -1067,7 +1096,9 @@ def SharedPlaylistMore():
     # Error handling
     images_dir = os.path.join(app.static_folder, 'images', 'imglarge')
     random_image = random.choice(os.listdir(images_dir))
-    return render_template('SharedPlaylistMore.html', shared_playlists=shared_playlists, random_image=random_image)
+    return render_template('SharedPlaylistMore.html',
+                           shared_playlists=shared_playlists,
+                           random_image=random_image)
 
 def get_playlists_by_user_id(user_id):
     """
@@ -1080,44 +1111,44 @@ def get_playlists_by_user_id(user_id):
     playlists = Playlists.query.filter_by(creator=user_id).all()
     return playlists
 
-# AboutUs.html
 @app.route('/AboutUs.html')
 def about_us():
+    """ AboutUs.html """
     return render_template('AboutUs.html')
 
-# AboutUs2.html
 @app.route('/AboutUs2.html')
 def about_us2():
+    """ AboutUs2.html """
     return render_template('AboutUs2.html')
 
-# Support.html
 @app.route('/Support.html')
 def support():
+    """ Support.html """
     return render_template('Support.html')
 
-# Support2.html
 @app.route('/Support2.html')
 def support2():
+    """ Support2.html """
     return render_template('Support2.html')
 
-# TermsofUse.html
 @app.route('/TermsofUse.html')
 def terms_of_use():
+    """ TermsofUse.html """
     return render_template('TermsofUse.html')
 
-# TermsofUse2.html
 @app.route('/TermsofUse2.html')
 def terms_of_use2():
+    """ TermsofUse2.html """
     return render_template('TermsofUse2.html')
 
-# PrivacyPolicy.html
 @app.route('/PrivacyPolicy.html')
 def privacy_policy():
+    """ PrivacyPolicy.html """
     return render_template('PrivacyPolicy.html')
 
-# PrivacyPolicy2.html
 @app.route('/PrivacyPolicy2.html')
 def privacy_policy2():
+    """ PrivacyPolicy2.html """
     return render_template('PrivacyPolicy2.html')
 
 def get_shared_playlists_by_user_id(user_id):
@@ -1143,6 +1174,64 @@ def get_shared_playlists_by_user_id(user_id):
             id=shared_playlist['playlistID']).first()
         shared_playlists_with_user.append(shared_playlist_with_user)
     return shared_playlists_with_user
+
+@app.route('/Spotify_login')
+def Spotify_login():
+    """ 
+    Redirects Users to a page where they sign in to 
+    their Spoifty Premium account. After, they are 
+    redirecred to the spotify_callback function
+    """
+    scope = '''streaming
+               user-read-private
+               user-read-email
+               user-read-playback-state
+               user-modify-playback-state'''
+    redirect_uri = url_for('spotify_callback', _external=True)
+    print(redirect_uri)
+    return redirect(f'''https://accounts.spotify.com
+                        /authorize?response_type=code&client_id={SPOTIPY_CLIENT_ID}
+                        &scope={scope}&redirect_uri={redirect_uri}''')
+
+@app.route('/spotify_callback')
+def spotify_callback():
+    """
+    Gets Auth code from the spotify login and encodes it as well
+    as our developer credentials to a python dictionary. It then 
+    requests an authorization token from Spotify. Upon success,
+    it redirects user to the play_music function
+    """
+    # pylint: disable = missing-timeout
+    # pylint: disable = no-else-return
+    auth_code = request.args.get('code')
+    data = {
+        'grant_type': 'authorization_code',
+        'code': auth_code,
+        'redirect_uri': url_for('spotify_callback', _external=True),
+        'client_id': SPOTIPY_CLIENT_ID,
+        'client_secret': SPOTIPY_CLIENT_SECRET
+    }
+    response = requests.post('https://accounts.spotify.com/api/token', data=data)
+    if response.status_code == 200:
+        access_token = response.json()['access_token']
+        refresh_token = response.json()['refresh_token']
+        session['access_token'] = access_token
+        session['refresh_token'] = refresh_token
+        return redirect(url_for('play_music'))
+    else:
+        return 'Error: Unable to obtain access token'
+@app.route('/play_music')
+def play_music():
+    """
+    If an access token can be aquired from the flask session,
+    it redirects user to the music_player.html file. If not,
+    it redirects you to the Spotify_login route.
+    """
+    access_token = session.get('access_token')
+    if not access_token:
+        return redirect(url_for('Spotify_login'))
+    return render_template('music_player.html', access_token=access_token)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

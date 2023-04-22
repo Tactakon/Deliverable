@@ -167,7 +167,7 @@
     <hr />
       <div class="song-list" style="width: 340px;"> <!--Made a loop-->
         {% for song in songs %}
-        <div class="song d-flex align-items-center" data-title="{{ song.songResult }}" data-artist="{{ song.artistResult }}" data-image="{{ song.imageURL }}">
+        <div class="song d-flex align-items-center" data-id="{{song.songID}}" data-title="{{ song.songResult }}" data-artist="{{ song.artistResult }}" data-image="{{ song.imageURL }}">
           <img src={{song.imageURL}} class="image2"
             style="max-height: 76px; max-width: 76px; margin-right: 10px;margin-bottom: 24px;" >
           <div style="margin-bottom: 25px; ">
@@ -246,12 +246,14 @@
               var title = this.dataset.title;
               var artist = this.dataset.artist;
               var image = this.dataset.image;
+              var id = this.dataset.id;
 
               // Update the contents of the current song div
               var currentSongDiv = document.getElementById('current-song');
               currentSongDiv.querySelector('.currentitle').textContent = title;
               currentSongDiv.querySelector('.currenartist').textContent = artist;
               currentSongDiv.querySelector('img').src = image;
+              window.open("http://open.spotify.com/track/" + id);
             });
           });
         </script>
